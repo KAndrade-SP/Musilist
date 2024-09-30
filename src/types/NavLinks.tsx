@@ -1,5 +1,5 @@
 export const navLinks = [
     { path: '/', label: 'Overview' },
-    { path: '/musiclist', label: 'Music List' },
+    { path: '/songlist', label: 'Song List' },
     { path: '/favorites', label: 'Favorites' },
 ]

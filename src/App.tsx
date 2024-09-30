@@ -5,7 +5,7 @@ import { Route, Routes } from "react-router-dom"
 
 import Home from "./pages/Home/Home"
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage"
-import MusicList from "./pages/MusicList/MusicList"
+import SongList from "./pages/SongList/SongList"
 
 function App() {
 
@@ -22,8 +22,8 @@ function App() {
             element={<Home />}
           />
           <Route
-            path="/musiclist"
-            element={<MusicList />}
+            path="/songlist"
+            element={<SongList />}
           />
           <Route
             path="/favorites"
