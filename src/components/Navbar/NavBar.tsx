@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
-import { navLinks } from '../../types/NavLinks'
 import { Link } from 'react-router-dom'
-
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '../../redux/store'
+import { loginWithGoogle, logout } from '../../redux/reducers/authSlice'
 import MusilistLogo from '../../assets/MusilistLogo.png'
-import { IconDeviceDesktopAnalytics, IconHome, IconMenuDeep, IconMusicSearch, IconMusicStar, IconPlaylist, IconSettings, IconX } from '@tabler/icons-react'
+import { navLinks } from '../../types/NavLinks'
+
+import styled, { useTheme } from 'styled-components'
+import { IconDeviceDesktopAnalytics, IconHome, IconMenuDeep, IconMusicSearch, IconMusicStar, IconPlaylist, IconSettings, IconUserCircle, IconX } from '@tabler/icons-react'
 
 const NavbarContainer = styled.nav`
   ${({ theme: { colors } }) => `
@@ -122,22 +125,68 @@ const NavLink = styled(Link)`
 
 const Options = styled.div`
   display: flex;
+  flex-direction: row;
+  gap: 1rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     display: none;
   }
 `
 
+const UserWrapper = styled.div`
+  position: relative; 
+  cursor: pointer;
+`
+
+const OptionsDropdown = styled.div`
+  ${({ theme: { colors } }) => `
+    background-color: ${colors.grayBackground};
+    width: 20vh;
+    border-radius: 15px;
+    padding: 1rem;
+
+    position: absolute;
+    top: 100%;
+    right: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    justify-items: center;
+    overflow-y: auto;
+    z-index: 100;
+  `}
+`
+
 const Navbar: React.FC = () => {
 
-  const [isHovered, setIsHovered] = useState(false)
+  const [isSearchHovered, setIsSearchHovered] = useState(false)
+  const [isUserHovered, setIsUserHovered] = useState(false)
   const theme = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const [toggle, setToggle] = useState(false)
 
+  const dispatch = useDispatch<AppDispatch>()
+  const { user, loading, error } = useSelector((state: RootState) => state.auth)
+
+  const handleLogin = () => {
+    dispatch(loginWithGoogle())
+  }
+
+  const handleLogout = () => {
+    dispatch(logout())
+  }
+
+  const handleMouseEnter = () => {
+    setIsUserHovered(true)
+  }
+
+  const handleMouseLeave = () => {
+    setIsUserHovered(false)
+  }
+
   const outsideClick = (e: MouseEvent) => {
     const element = ref.current
-    
+
     if (toggle && element && !element.contains(e.target as Node)) {
       setToggle(false)
     }
@@ -184,12 +233,31 @@ const Navbar: React.FC = () => {
             <IconMusicSearch
               size={32}
               style={{
-                color: isHovered ? theme.colors.lightPurple : theme.colors.textWhite,
+                color: isSearchHovered ? theme.colors.lightPurple : theme.colors.textWhite,
                 cursor: 'pointer'
               }}
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
+              onMouseEnter={() => setIsSearchHovered(true)}
+              onMouseLeave={() => setIsSearchHovered(false)}
             />
+
+            <UserWrapper
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            >
+              <IconUserCircle
+                size={32}
+                style={{
+                  color: isUserHovered ? theme.colors.lightPurple : theme.colors.textWhite,
+                  cursor: 'pointer'
+                }}
+              />
+
+              {isUserHovered &&
+                <OptionsDropdown>
+                  teste
+                </OptionsDropdown>
+              }
+            </UserWrapper>
           </Options>
 
           <DropdownIcon onClick={handleClick}>
@@ -225,7 +293,7 @@ const Navbar: React.FC = () => {
               Home
             </DropdownLabel>
           </DropdownItem>
-          
+
           <DropdownItem to={'/songlist'}>
             <IconPlaylist />
             <DropdownLabel>
