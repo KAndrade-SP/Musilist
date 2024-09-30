@@ -24,8 +24,7 @@ export const GlobalStyle = createGlobalStyle`
     body {
         font-family: 'Mulish';
         transition: .4s;
-        font-size: ${({ theme: { fontSizes } }) => fontSizes.normalFontSize};
-        background-color: ${({ theme: { colors } }) => colors.grayBackground};
+        background-color: ${({ theme: { colors } }) => colors.darkBackground};
         color: ${({ theme: { colors } }) => colors.textWhite};
     }
 
