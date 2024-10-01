@@ -7,7 +7,7 @@ import MusilistLogo from '../../assets/MusilistLogo.png'
 import { navLinks } from '../../types/NavLinks'
 
 import styled, { useTheme } from 'styled-components'
-import { IconDeviceDesktopAnalytics, IconHome, IconMenuDeep, IconMusicSearch, IconMusicStar, IconPlaylist, IconSettings, IconUserCircle, IconX } from '@tabler/icons-react'
+import { IconDeviceDesktopAnalytics, IconHome, IconLogout, IconMenuDeep, IconMusicSearch, IconMusicStar, IconPlaylist, IconSettings, IconUserCircle, IconX } from '@tabler/icons-react'
 
 const NavbarContainer = styled.nav`
   ${({ theme: { colors } }) => `
@@ -62,6 +62,16 @@ const DropdownItem = styled(Link)`
     justify-content: center;
     align-items: center;
     gap: 5px;
+
+    &:hover {
+      svg {
+        color: ${colors.lightPurple}
+      }
+
+      span {
+        color: ${colors.lightPurple}
+      }
+    }
   `}
 `
 
@@ -123,9 +133,31 @@ const NavLink = styled(Link)`
   `}
 `
 
+const LoginButton = styled.button`
+  ${({ theme: { colors, fontSizes } }) => `
+    color: ${colors.textWhite};
+    background: transparent;
+    padding: 10px 20px;
+    border: 2px solid transparent;
+    border-radius: 5px;
+    font-size: ${fontSizes.smallFontSize};
+    cursor: pointer;
+    background-image: linear-gradient(135deg, #7020C0, #5A0EA0);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    transition: transform 0.2s ease, background 0.2s ease;
+
+    &:hover {
+      transform: scale(1.05); 
+      background-image: linear-gradient(135deg, #5A0EA0, #7020C0);
+    }
+  `}
+`;
+
 const Options = styled.div`
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 1rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -136,6 +168,18 @@ const Options = styled.div`
 const UserWrapper = styled.div`
   position: relative; 
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const UserIcon = styled.img`
+  width: 36px;
+  border-radius: 100%;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `
 
 const OptionsDropdown = styled.div`
@@ -150,7 +194,6 @@ const OptionsDropdown = styled.div`
     right: 0;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
     justify-items: center;
     overflow-y: auto;
     z-index: 100;
@@ -240,24 +283,47 @@ const Navbar: React.FC = () => {
               onMouseLeave={() => setIsSearchHovered(false)}
             />
 
-            <UserWrapper
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <IconUserCircle
-                size={32}
-                style={{
-                  color: isUserHovered ? theme.colors.lightPurple : theme.colors.textWhite,
-                  cursor: 'pointer'
-                }}
-              />
+            {user
+              ?
+              <UserWrapper
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
+              >
+                {user?.photoURL
+                  ?
+                  <UserIcon src={user.photoURL || ''} alt={user.displayName || 'User'} />
+                  :
+                  <IconUserCircle
+                    size={32}
+                    style={{
+                      color: isUserHovered ? theme.colors.lightPurple : theme.colors.textWhite,
+                      cursor: 'pointer'
+                    }}
+                  />
+                }
 
-              {isUserHovered &&
-                <OptionsDropdown>
-                  teste
-                </OptionsDropdown>
-              }
-            </UserWrapper>
+                {isUserHovered &&
+                  <OptionsDropdown>
+                    <DropdownItem to={'/'}>
+                      <IconSettings />
+                      <DropdownLabel>
+                        Settings
+                      </DropdownLabel>
+                    </DropdownItem>
+
+                    <DropdownItem to={'/'} onClick={handleLogout}>
+                      <IconLogout />
+                      <DropdownLabel>
+                        Logout
+                      </DropdownLabel>
+                    </DropdownItem>
+                  </OptionsDropdown>
+                }
+              </UserWrapper>
+              :
+              <LoginButton onClick={handleLogin}>Fazer login</LoginButton>
+            }
+
           </Options>
 
           <DropdownIcon onClick={handleClick}>
