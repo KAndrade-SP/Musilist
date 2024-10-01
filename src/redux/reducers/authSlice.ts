@@ -13,12 +13,14 @@ interface AuthState {
     user: User | null
     loading: boolean
     error: string | null
+    initializing: boolean
 }
 
 const initialState: AuthState = {
     user: null,
     loading: false,
     error: null,
+    initializing: true,
 }
 
 export const loginWithGoogle = createAsyncThunk(
@@ -54,6 +56,7 @@ const authSlice = createSlice({
     reducers: {
         setUser(state, action: PayloadAction<User | null>) {
             state.user = action.payload
+            state.initializing = false
         },
     },
     extraReducers: (builder) => {
