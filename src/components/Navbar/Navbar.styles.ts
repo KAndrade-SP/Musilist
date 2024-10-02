@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
-export const NavbarContainer = styled.nav`
+export const NavbarContainer = styled.header`
   ${({ theme: { colors } }) => `
     background-color: ${colors.grayBackground};
     color: ${colors.textWhite};
@@ -11,7 +11,7 @@ export const NavbarContainer = styled.nav`
   `}
 `
 
-export const NavbarContent = styled.div`
+export const NavbarContent = styled.nav`
   max-width: 1440px;
   margin: 0 auto;
   display: flex;
