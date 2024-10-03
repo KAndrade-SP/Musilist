@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import { logout } from '../../redux/reducers/authSlice'
@@ -94,10 +94,10 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <NavbarContainer>
-        <NavbarContent>
+      <NavbarContainer role='banner'>
+        <NavbarContent role='navigation'>
 
-          <LogoLink to={'/'}>
+          <LogoLink to={'/'} aria-label="logo link">
             <Logo src={MusilistLogo} alt="Musilist Logo"></Logo>
           </LogoLink>
 
@@ -115,6 +115,7 @@ const Navbar: React.FC = () => {
 
           <Options>
             <IconMusicSearch
+              aria-label="search"
               size={32}
               style={{
                 color: isSearchHovered ? theme.colors.lightPurple : theme.colors.textWhite,
@@ -127,14 +128,16 @@ const Navbar: React.FC = () => {
             {user
               ?
               <UserWrapper
+                aria-label="user options"
                 onMouseEnter={handleMouseEnter}
                 onMouseLeave={handleMouseLeave}
               >
                 {user?.photoURL
                   ?
-                  <UserIcon src={user.photoURL || ''} alt={user.displayName || 'User'} />
+                  <UserIcon src={user.photoURL || ''} alt={user.displayName + "photo" || 'User photo'} />
                   :
                   <IconUserCircle
+                    aria-label="user icon"
                     size={32}
                     style={{
                       color: isUserHovered ? theme.colors.lightPurple : theme.colors.textWhite,
@@ -167,7 +170,7 @@ const Navbar: React.FC = () => {
 
           </Options>
 
-          <DropdownIcon onClick={handleClick}>
+          <DropdownIcon role="button" aria-label="toggle menu icons" onClick={handleClick}>
             {!toggle
               ?
               <IconMenuDeep
@@ -192,7 +195,7 @@ const Navbar: React.FC = () => {
       </NavbarContainer>
 
       {toggle &&
-        <NavbarDropdown ref={ref} onClick={handleClick}>
+        <NavbarDropdown ref={ref} role="menu" aria-label="dropdown menu" onClick={handleClick}>
 
           <DropdownItem to={'/'}>
             <IconHome />
