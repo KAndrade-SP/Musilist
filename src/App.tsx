@@ -13,6 +13,11 @@ import FavoritesPage from "./pages/FavoritesPage/FavoritesPage"
 import SongList from "./pages/SongList/SongList"
 import Login from "./pages/Login/Login"
 import PublicRoute from "./components/PublicRoute"
+import Stats from "./pages/Stats/Stats"
+import SettingsPage from "./pages/SettingsPage/SettingsPage"
+import PrivateRoute from "./components/PrivateRoute"
+import SearchPage from "./pages/SearchPage/SearchPage"
+import NotificationsPage from "./pages/NotificationsPage/NotificationsPage"
 
 function App() {
 
@@ -79,12 +84,48 @@ function App() {
                 }
               />
               <Route
+                path="/browse"
+                element={<SearchPage />}
+              />
+              <Route
                 path="/songlist"
-                element={<SongList />}
+                element={
+                  <PrivateRoute>
+                    <SongList />
+                  </PrivateRoute>
+                }
               />
               <Route
                 path="/favorites"
-                element={<FavoritesPage />}
+                element={
+                  <PrivateRoute>
+                    <FavoritesPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/stats"
+                element={
+                  <PrivateRoute>
+                    <Stats />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/settings"
+                element={
+                  <PrivateRoute>
+                    <SettingsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/notifications"
+                element={
+                  <PrivateRoute>
+                    <NotificationsPage />
+                  </PrivateRoute>
+                }
               />
             </Routes>
           </Container>

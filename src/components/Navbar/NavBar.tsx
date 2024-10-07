@@ -10,7 +10,9 @@ import { useTheme } from 'styled-components'
 import {
   IconDeviceDesktopAnalytics,
   IconHome,
+  IconLogin,
   IconLogout,
+  IconMailFilled,
   IconMenuDeep,
   IconMusicSearch,
   IconMusicStar,
@@ -36,7 +38,8 @@ import {
   Options,
   UserWrapper,
   UserIcon,
-  OptionsDropdown
+  OptionsDropdown,
+  DropdownLogoutWrapper
 } from './Navbar.styles'
 
 const Navbar: React.FC = () => {
@@ -66,6 +69,10 @@ const Navbar: React.FC = () => {
 
   const handleMouseLeave = () => {
     setIsUserHovered(false)
+  }
+
+  const goToBrowsePage = () => {
+    navigate('/browse')
   }
 
   const outsideClick = (e: MouseEvent) => {
@@ -101,17 +108,19 @@ const Navbar: React.FC = () => {
             <Logo src={MusilistLogo} alt="Musilist Logo"></Logo>
           </LogoLink>
 
-          <Menu>
-            {navLinks.map((link, index) => {
-              return (
-                <MenuItem key={index}>
-                  <NavLink to={link.path}>
-                    {link.label}
-                  </NavLink>
-                </MenuItem>
-              )
-            })}
-          </Menu>
+          {user &&
+            <Menu>
+              {navLinks.map((link, index) => {
+                return (
+                  <MenuItem key={index}>
+                    <NavLink to={link.path}>
+                      {link.label}
+                    </NavLink>
+                  </MenuItem>
+                )
+              })}
+            </Menu>
+          }
 
           <Options>
             <IconMusicSearch
@@ -123,6 +132,7 @@ const Navbar: React.FC = () => {
               }}
               onMouseEnter={() => setIsSearchHovered(true)}
               onMouseLeave={() => setIsSearchHovered(false)}
+              onClick={goToBrowsePage}
             />
 
             {user
@@ -148,19 +158,26 @@ const Navbar: React.FC = () => {
 
                 {isUserHovered &&
                   <OptionsDropdown>
-                    <DropdownItem to={'/'}>
+                    <DropdownItem to={'/settings'}>
                       <IconSettings />
                       <DropdownLabel>
                         Settings
                       </DropdownLabel>
                     </DropdownItem>
 
-                    <DropdownItem to={'/'} onClick={handleLogout}>
+                    <DropdownItem to={'/notifications'}>
+                      <IconMailFilled />
+                      <DropdownLabel>
+                        Notifications
+                      </DropdownLabel>
+                    </DropdownItem>
+
+                    <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
                       <IconLogout />
                       <DropdownLabel>
                         Logout
                       </DropdownLabel>
-                    </DropdownItem>
+                    </DropdownLogoutWrapper>
                   </OptionsDropdown>
                 }
               </UserWrapper>
@@ -211,7 +228,7 @@ const Navbar: React.FC = () => {
             </DropdownLabel>
           </DropdownItem>
 
-          <DropdownItem to={'/'}>
+          <DropdownItem to={'/stats'}>
             <IconDeviceDesktopAnalytics />
             <DropdownLabel>
               Stats
@@ -225,19 +242,43 @@ const Navbar: React.FC = () => {
             </DropdownLabel>
           </DropdownItem>
 
-          <DropdownItem to={'/'}>
+          <DropdownItem to={'/settings'}>
             <IconSettings />
             <DropdownLabel>
               Settings
             </DropdownLabel>
           </DropdownItem>
 
-          <DropdownItem to={'/'}>
+          <DropdownItem to={'/browse'}>
             <IconMusicSearch />
             <DropdownLabel>
               Search
             </DropdownLabel>
           </DropdownItem>
+
+          <DropdownItem to={'/notifications'}>
+            <IconMailFilled />
+            <DropdownLabel>
+              Notifications
+            </DropdownLabel>
+          </DropdownItem>
+
+          {user
+            ?
+            <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
+              <IconLogout />
+              <DropdownLabel>
+                Logout
+              </DropdownLabel>
+            </DropdownLogoutWrapper>
+            :
+            <DropdownItem to={'/login'} onClick={goToLogin}>
+              <IconLogin />
+              <DropdownLabel>
+                Sign in
+              </DropdownLabel>
+            </DropdownItem>
+          }
 
         </NavbarDropdown>
       }

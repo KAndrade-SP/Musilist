@@ -67,6 +67,27 @@ export const DropdownItem = styled(Link)`
   `}
 `
 
+export const DropdownLogoutWrapper = styled.div`
+  ${({ theme: { colors } }) => `
+    color: ${colors.textWhite};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    &:hover {
+      svg {
+        color: ${colors.lightPurple}
+      }
+
+      span {
+        color: ${colors.lightPurple}
+      }
+    }
+  `}
+`
+
 export const DropdownIcon = styled.div`
   display: none;
 
@@ -177,7 +198,7 @@ export const UserIcon = styled.img`
 export const OptionsDropdown = styled.div`
   ${({ theme: { colors } }) => `
     background-color: ${colors.grayBackground};
-    width: 20vh;
+    width: 30vh;
     border-radius: 15px;
     padding: 1rem;
 
@@ -185,7 +206,8 @@ export const OptionsDropdown = styled.div`
     top: 100%;
     right: 0;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
     justify-items: center;
     overflow-y: auto;
     z-index: 100;
