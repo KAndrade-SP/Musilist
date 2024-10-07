@@ -2,7 +2,7 @@ import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
 
 import {
-    Container,
+    ContainerLogin,
     LeftImage,
     RightPanel,
     Title,
@@ -23,7 +23,7 @@ const Login = () => {
 
     return (
         <>
-            <Container>
+            <ContainerLogin>
                 <LeftImage src={MusicImage} alt="Sign in Image" />
                 <RightPanel>
                     <Title>Welcome back!</Title>
@@ -33,7 +33,7 @@ const Login = () => {
                         Sign in with Google
                     </GoogleButton>
                 </RightPanel>
-            </Container>
+            </ContainerLogin>
         </>
     )
 }

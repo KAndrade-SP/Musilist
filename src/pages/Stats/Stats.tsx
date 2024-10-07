@@ -1,8 +1,15 @@
-import React from 'react'
+
+import Banner from '../../components/Banner'
+import { Container } from '../../components/Container'
 
 const Stats = () => {
   return (
-    <div>Stats</div>
+    <>
+      <Banner />
+      <Container>
+        <h1>Stats</h1>
+      </Container>
+    </>
   )
 }
 

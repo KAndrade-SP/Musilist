@@ -1,8 +1,15 @@
-import React from 'react'
+
+import Banner from '../../components/Banner'
+import { Container } from '../../components/Container'
 
 const SongList = () => {
   return (
-    <div>SongList</div>
+    <>
+      <Banner />
+      <Container>
+        <h1>Song List</h1>
+      </Container>
+    </>
   )
 }
 

@@ -3,11 +3,17 @@ import styled from 'styled-components'
 
 export const NavbarContainer = styled.header`
   ${({ theme: { colors } }) => `
-    background-color: ${colors.grayBackground};
+    background-color: rgba(46, 41, 59, 0.7);
     color: ${colors.textWhite};
     width: 100vw;
     padding: 0.7rem 2rem;
     position: relative;
+    z-index: 100;
+    transition: background-color 0.3s ease-in-out;
+
+    &:hover {
+      background-color: ${colors.grayBackground};
+    }
   `}
 `
 

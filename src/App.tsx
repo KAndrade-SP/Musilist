@@ -69,7 +69,7 @@ function App() {
         :
         <>
           <Navbar />
-          <Container>
+          
             <Routes>
               <Route
                 path="/"
@@ -128,7 +128,7 @@ function App() {
                 }
               />
             </Routes>
-          </Container>
+          
         </>
       }
     </>

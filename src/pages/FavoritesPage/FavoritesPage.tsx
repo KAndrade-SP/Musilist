@@ -1,8 +1,15 @@
-import React from 'react'
+
+import Banner from '../../components/Banner'
+import { Container } from '../../components/Container'
 
 const FavoritesPage = () => {
   return (
-    <div>FavoritesPage</div>
+    <>
+      <Banner />
+      <Container>
+        <h1>Favorites</h1>
+      </Container>
+    </>
   )
 }
 

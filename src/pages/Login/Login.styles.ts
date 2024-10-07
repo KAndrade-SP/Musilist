@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 
-export const Container = styled.div`
+export const ContainerLogin = styled.div`
     ${({ theme: { colors } }) => `
         display: flex;
         height: 100vh;
