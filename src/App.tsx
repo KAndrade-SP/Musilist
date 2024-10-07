@@ -7,7 +7,6 @@ import { setUser } from "./redux/reducers/authSlice"
 import { GlobalStyle } from "./GlobalStyle"
 
 import Navbar from "./components/Navbar/NavBar"
-import { Container } from "./components/Container"
 import Home from "./pages/Home/Home"
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage"
 import SongList from "./pages/SongList/SongList"
@@ -23,6 +22,7 @@ function App() {
 
   const dispatch = useDispatch<AppDispatch>()
   const initializing = useSelector((state: RootState) => state.auth.initializing)
+  const { user } = useSelector((state: RootState) => state.auth)
 
   const location = useLocation()
   const isLoginPage = location.pathname === '/login'
@@ -68,12 +68,12 @@ function App() {
         </Routes>
         :
         <>
-          <Navbar />
+          <Navbar user={user} />
           
             <Routes>
               <Route
                 path="/"
-                element={<Home />}
+                element={<Home user={user} />}
               />
               <Route
                 path="/login"
@@ -91,7 +91,7 @@ function App() {
                 path="/songlist"
                 element={
                   <PrivateRoute>
-                    <SongList />
+                    <SongList user={user} />
                   </PrivateRoute>
                 }
               />
@@ -99,7 +99,7 @@ function App() {
                 path="/favorites"
                 element={
                   <PrivateRoute>
-                    <FavoritesPage />
+                    <FavoritesPage user={user} />
                   </PrivateRoute>
                 }
               />
@@ -107,7 +107,7 @@ function App() {
                 path="/stats"
                 element={
                   <PrivateRoute>
-                    <Stats />
+                    <Stats user={user} />
                   </PrivateRoute>
                 }
               />
@@ -128,7 +128,6 @@ function App() {
                 }
               />
             </Routes>
-          
         </>
       }
     </>

@@ -1,6 +1,5 @@
-import { useDispatch, useSelector } from 'react-redux'
 import { styled } from 'styled-components'
-import { AppDispatch, RootState } from '../redux/store'
+import { User } from '../types/UserTypes'
 
 const BannerWrapper = styled.div`
     position: relative;
@@ -36,19 +35,19 @@ const UserNameHeader = styled.span`
     `}
 `
 
-const Banner = () => {
-
-    const dispatch = useDispatch<AppDispatch>()
-    const { user, loading, error } = useSelector((state: RootState) => state.auth)
+const Banner = ({ user }: { user: User | null }) => {
 
     return (
-
-        <BannerWrapper>
-            <UserWrapperHeader>
-                <UserIconHeader src={user?.photoURL || ''} alt={user?.displayName + "photo" || 'User photo'}></UserIconHeader>
-                <UserNameHeader>{user?.displayName}</UserNameHeader>
-            </UserWrapperHeader>
-        </BannerWrapper>
+        <>
+            {user &&
+                <BannerWrapper>
+                    <UserWrapperHeader>
+                        <UserIconHeader src={user.photoURL || ''} alt={user.displayName + "photo" || 'User photo'}></UserIconHeader>
+                        <UserNameHeader>{user.displayName}</UserNameHeader>
+                    </UserWrapperHeader>
+                </BannerWrapper>
+            }
+        </>
     )
 }
 

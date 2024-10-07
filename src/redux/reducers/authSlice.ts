@@ -1,20 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit'
 import { auth, googleProvider } from '../../services/firebase'
 import { signInWithPopup, signOut } from 'firebase/auth'
-
-interface User {
-    uid: string
-    displayName: string | null
-    email: string | null
-    photoURL: string | null
-}
-
-interface AuthState {
-    user: User | null
-    loading: boolean
-    error: string | null
-    initializing: boolean
-}
+import { AuthState, User } from '../../types/UserTypes'
 
 const initialState: AuthState = {
     user: null,

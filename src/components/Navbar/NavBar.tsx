@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from '../../redux/store'
+import { useDispatch } from 'react-redux'
+import { AppDispatch } from '../../redux/store'
+import { User } from '../../types/UserTypes'
 import { logout } from '../../redux/reducers/authSlice'
 import MusilistLogo from '../../assets/MusilistLogo.png'
 import { navLinks } from '../../types/NavLinks'
@@ -42,7 +43,8 @@ import {
   DropdownLogoutWrapper
 } from './Navbar.styles'
 
-const Navbar: React.FC = () => {
+
+const Navbar = ({ user }: { user: User | null }) => {
 
   const [isSearchHovered, setIsSearchHovered] = useState(false)
   const [isUserHovered, setIsUserHovered] = useState(false)
@@ -53,7 +55,6 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate()
 
   const dispatch = useDispatch<AppDispatch>()
-  const { user, loading, error } = useSelector((state: RootState) => state.auth)
 
   const goToLogin = () => {
     navigate('/login')
