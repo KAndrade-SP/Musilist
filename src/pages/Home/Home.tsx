@@ -2,6 +2,10 @@ import { User } from '../../types/UserTypes'
 import Banner from '../../components/Banner'
 import { Container } from '../../components/Container'
 import styled from 'styled-components'
+import PlaylistImage from '../../assets/PlaceholderImages/Playlist.png'
+import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
+import AlbumImage from '../../assets/PlaceholderImages/Album.jpg'
+import ArtistImage from '../../assets/PlaceholderImages/Artist.jpg'
 
 const HomeSection = styled.section`
   display: flex;
@@ -121,6 +125,45 @@ const LastActivityItem = styled.div`
   flex-direction: row;
   gap: 1rem;
   align-items: center;
+  width: 35%;
+`
+
+const LastActivityText = styled.strong`
+  ${({ theme: { colors } }) => `
+    color: ${colors.lightPurple};
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  `}
+`
+
+const LastActivityData = styled.span`
+  ${({ theme: { colors } }) => `
+    color: ${colors.textWhite};
+    cursor: pointer;
+    font-weight: 300;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  `}
+`
+
+const LastActivityTime = styled.span`
+  font-weight: 300;
+`
+
+const LastActivityImage = styled.img`
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 const GenrePlayArea = styled.div`
@@ -212,12 +255,18 @@ const PlaylistBox = styled.div`
   gap: 1rem;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
 `
 
 const Playlist = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 10px;
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 const FavoritesArea = styled.div`
@@ -273,6 +322,7 @@ const TopGrid = styled.div`
 `
 
 const TopItem = styled.div`
+  cursor: pointer;
   position: relative;
 `
 
@@ -281,6 +331,12 @@ const TopImage = styled.img`
   height: 100%;
   object-fit: cover;
   display: block;
+  filter: brightness(0.5);
+  transition: opacity 0.2s ease-in-out;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `
 
 const TopDescription = styled.div`
@@ -348,49 +404,49 @@ const Home = ({ user }: { user: User | null }) => {
             <LastActivityDivisor>
 
               <LastActivityItem>
-                <img src="https://via.placeholder.com/50x50" alt="" />
-                <span>Song name</span>
+                <LastActivityImage src={MusicImage} alt="" />
+                <span>Plans to listen <LastActivityText>Song name</LastActivityText></span>
               </LastActivityItem>
 
-              <span>Artist name</span>
+              <LastActivityData>Artist name</LastActivityData>
 
-              <span>1 day ago</span>
+              <LastActivityTime>1 day ago</LastActivityTime>
             </LastActivityDivisor>
 
             <LastActivityDivisor>
 
               <LastActivityItem>
-                <img src="https://via.placeholder.com/50x50" alt="" />
-                <span>Song name</span>
+                <LastActivityImage src={MusicImage} alt="" />
+                <span>Completed <LastActivityText>Song name</LastActivityText></span>
               </LastActivityItem>
 
-              <span>Artist name</span>
+              <LastActivityData>Artist name</LastActivityData>
 
-              <span>1 day ago</span>
+              <LastActivityTime>1 day ago</LastActivityTime>
             </LastActivityDivisor>
 
             <LastActivityDivisor>
 
               <LastActivityItem>
-                <img src="https://via.placeholder.com/50x50" alt="" />
-                <span>Song name</span>
+                <LastActivityImage src={MusicImage} alt="" />
+                <span>Dropped <LastActivityText>Song name</LastActivityText></span>
               </LastActivityItem>
 
-              <span>Artist name</span>
+              <LastActivityData>Artist name</LastActivityData>
 
-              <span>1 day ago</span>
+              <LastActivityTime>1 day ago</LastActivityTime>
             </LastActivityDivisor>
 
             <LastActivityDivisor>
 
               <LastActivityItem>
-                <img src="https://via.placeholder.com/50x50" alt="" />
-                <span>Song name</span>
+                <LastActivityImage src={MusicImage} alt="" />
+                <span>Listened <LastActivityText>Song name</LastActivityText></span>
               </LastActivityItem>
 
-              <span>Artist name</span>
+              <LastActivityData>Artist name</LastActivityData>
 
-              <span>1 day ago</span>
+              <LastActivityTime>1 day ago</LastActivityTime>
             </LastActivityDivisor>
           </LastActivityArea>
 
@@ -424,15 +480,15 @@ const Home = ({ user }: { user: User | null }) => {
 
             <PlaylistArea>
               <PlaylistBox>
-                <Playlist src="https://via.placeholder.com/1000x1000" />
+                <Playlist src={PlaylistImage} />
                 Playlist name
               </PlaylistBox>
               <PlaylistBox>
-                <Playlist src="https://via.placeholder.com/1000x1000" />
+                <Playlist src={PlaylistImage} />
                 Playlist name
               </PlaylistBox>
               <PlaylistBox>
-                <Playlist src="https://via.placeholder.com/1000x1000" />
+                <Playlist src={PlaylistImage} />
                 Playlist name
               </PlaylistBox>
             </PlaylistArea>
@@ -445,43 +501,43 @@ const Home = ({ user }: { user: User | null }) => {
 
           <FavoritesArea>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={ArtistImage} />
               Favorite Artist
             </FavoritesBox>
           </FavoritesArea>
@@ -493,43 +549,43 @@ const Home = ({ user }: { user: User | null }) => {
 
           <FavoritesArea>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
             <FavoritesBox>
-              <Favorite src="https://via.placeholder.com/1000x1000" />
+              <Favorite src={MusicImage} />
               Favorite Track
             </FavoritesBox>
           </FavoritesArea>
@@ -541,7 +597,7 @@ const Home = ({ user }: { user: User | null }) => {
 
           <TopGrid>
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -549,7 +605,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -557,7 +613,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -565,7 +621,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -573,7 +629,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -581,7 +637,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -589,7 +645,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -597,7 +653,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -605,7 +661,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -613,7 +669,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={ArtistImage} />
               <TopDescription>
                 <strong>Artist name</strong>
                 <span>99 plays</span>
@@ -628,7 +684,7 @@ const Home = ({ user }: { user: User | null }) => {
 
           <TopGrid>
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -637,7 +693,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -646,7 +702,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -655,7 +711,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -664,7 +720,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -673,7 +729,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -682,7 +738,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -691,7 +747,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -700,7 +756,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
@@ -709,7 +765,7 @@ const Home = ({ user }: { user: User | null }) => {
             </TopItem>
 
             <TopItem>
-              <TopImage src="https://via.placeholder.com/1000x1000" />
+              <TopImage src={AlbumImage} />
               <TopDescription>
                 <strong>Album name</strong>
                 <span>Artist name</span>
