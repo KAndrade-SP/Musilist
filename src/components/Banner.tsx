@@ -10,8 +10,15 @@ const BannerWrapper = styled.div`
     background-position: center;
     display: flex;
     align-items: flex-end;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+`
+
+const BannerContainer = styled.div`
+    display: flex;
+    width: 1440px;
+    justify-self: start;
+    padding: 2rem 2rem 1rem;
 `
 
 const UserWrapperHeader = styled.div`
@@ -23,13 +30,13 @@ const UserWrapperHeader = styled.div`
 `
 
 const UserIconHeader = styled.img`
-    width: 80px;
+    width: 120px;
     border-radius: 100%;
 `
 
 const UserNameHeader = styled.span`
     ${({ theme: { colors, fontSizes } }) => `
-        font-size: ${fontSizes.bigFontSize};
+        font-size: ${fontSizes.biggestFontSize};
         color: ${colors.textWhite};
         font-weight: bold;
     `}
@@ -41,10 +48,12 @@ const Banner = ({ user }: { user: User | null }) => {
         <>
             {user &&
                 <BannerWrapper>
-                    <UserWrapperHeader>
-                        <UserIconHeader src={user.photoURL || ''} alt={user.displayName + "photo" || 'User photo'}></UserIconHeader>
-                        <UserNameHeader>{user.displayName}</UserNameHeader>
-                    </UserWrapperHeader>
+                    <BannerContainer>
+                        <UserWrapperHeader>
+                            <UserIconHeader src={user.photoURL || ''} alt={user.displayName + "photo" || 'User photo'}></UserIconHeader>
+                            <UserNameHeader>{user.displayName}</UserNameHeader>
+                        </UserWrapperHeader>
+                    </BannerContainer>
                 </BannerWrapper>
             }
         </>

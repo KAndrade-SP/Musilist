@@ -9,7 +9,7 @@ export const NavbarContainer = styled.header`
     padding: 0.7rem 2rem;
     position: relative;
     z-index: 100;
-    transition: background-color 0.3s ease-in-out;
+    transition: background-color 0.4s ease-in-out;
 
     &:hover {
       background-color: ${colors.grayBackground};
@@ -45,6 +45,18 @@ export const NavbarDropdown = styled.div`
     justify-items: center;
     overflow-y: auto;
     z-index: 100;
+
+    @media (max-width: ${breakpoints.mini}) {
+      width: 20vh;
+    }
+
+    @media (max-height: 667px) and (max-width: 375px) {
+      width: 40vh;
+    }
+
+    @media (max-height: 844px) and (max-width: 390px) {
+      width: 30vh;
+    }
 
     @media (max-width: ${breakpoints.md}) {
       display: grid;
@@ -207,7 +219,6 @@ export const OptionsDropdown = styled.div`
     width: 30vh;
     border-radius: 15px;
     padding: 1rem;
-
     position: absolute;
     top: 100%;
     right: 0;
@@ -217,5 +228,16 @@ export const OptionsDropdown = styled.div`
     justify-items: center;
     overflow-y: auto;
     z-index: 100;
+
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    visibility: hidden;
+
+    &.visible {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
   `}
 `

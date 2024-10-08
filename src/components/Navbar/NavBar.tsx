@@ -157,30 +157,29 @@ const Navbar = ({ user }: { user: User | null }) => {
                   />
                 }
 
-                {isUserHovered &&
-                  <OptionsDropdown>
-                    <DropdownItem to={'/settings'}>
-                      <IconSettings />
-                      <DropdownLabel>
-                        Settings
-                      </DropdownLabel>
-                    </DropdownItem>
+                <OptionsDropdown className={isUserHovered ? 'visible' : ''}>
+                  <DropdownItem to={'/settings'}>
+                    <IconSettings />
+                    <DropdownLabel>
+                      Settings
+                    </DropdownLabel>
+                  </DropdownItem>
 
-                    <DropdownItem to={'/notifications'}>
-                      <IconMailFilled />
-                      <DropdownLabel>
-                        Notifications
-                      </DropdownLabel>
-                    </DropdownItem>
+                  <DropdownItem to={'/notifications'}>
+                    <IconMailFilled />
+                    <DropdownLabel>
+                      Notifications
+                    </DropdownLabel>
+                  </DropdownItem>
 
-                    <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
-                      <IconLogout />
-                      <DropdownLabel>
-                        Logout
-                      </DropdownLabel>
-                    </DropdownLogoutWrapper>
-                  </OptionsDropdown>
-                }
+                  <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
+                    <IconLogout />
+                    <DropdownLabel>
+                      Logout
+                    </DropdownLabel>
+                  </DropdownLogoutWrapper>
+                </OptionsDropdown>
+
               </UserWrapper>
               :
               <LoginButton onClick={goToLogin}>Sign in</LoginButton>
