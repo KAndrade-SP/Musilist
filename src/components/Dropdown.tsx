@@ -4,8 +4,10 @@ import { IconChevronDown, IconChevronUp, IconXboxXFilled } from '@tabler/icons-r
 
 interface DropdownProps {
     options: string[]
-    defaultLabel?: string
-    onSelect?: (option: string) => void
+    defaultLabel: string
+    selected: string | null
+    onSelect: (option: string) => void
+    onClear: () => void
 }
 
 const DropdownContainer = styled.div`
@@ -13,7 +15,7 @@ const DropdownContainer = styled.div`
   width: 200px;
 `
 
-const DropdownHeader = styled.div<{ isOpen: boolean }>`
+const DropdownHeader = styled.div`
     ${({ theme: { colors, fontSizes } }) => `
         padding: 8px 15px;
         background-color: ${colors.darkPurple};
@@ -25,10 +27,13 @@ const DropdownHeader = styled.div<{ isOpen: boolean }>`
         align-items: center;
         transition: box-shadow 0.3s ease;
     `}
-    box-shadow: ${({ isOpen }) => isOpen ? '0 4px 6px rgba(0, 0, 0, 0.1)' : 'none'};
+    &.open {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 `
 
-const DropdownList = styled.ul<{ isOpen: boolean }>`
+const DropdownList = styled.ul`
     ${({ theme: { colors, fontSizes } }) => `
         position: absolute;
         top: 110%;
@@ -42,7 +47,12 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
         padding: 10px 0;
         margin: 0;
         z-index: 1000;
-        transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s ease;
+    
+        opacity: 0;
+        transform: translateY(-10px);
+        visibility: hidden;
+        pointer-events: none;
+        transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease;
 
         &::before {
             content: '';
@@ -54,10 +64,12 @@ const DropdownList = styled.ul<{ isOpen: boolean }>`
             border-color: transparent transparent ${colors.textWhite}; transparent;
         }
     `}
-    opacity: ${({ isOpen }) => (isOpen ? '1' : '0')};
-    transform: ${({ isOpen }) => (isOpen ? 'translateY(0)' : 'translateY(-10px)')};
-    visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-    pointer-events: ${({ isOpen }) => (isOpen ? 'auto' : 'none')};
+    &.open {
+        opacity: 1;
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+    }
 `
 
 const DropdownItem = styled.li`
@@ -86,32 +98,24 @@ const IconButton = styled.button`
     `}
 `
 
-const Dropdown: React.FC<DropdownProps> = ({
-    options,
-    defaultLabel = '',
+const Dropdown = ({ 
+    options, 
+    defaultLabel,
+    selected, 
     onSelect,
-}) => {
+    onClear,
+}: DropdownProps) => {
 
     const [isOpen, setIsOpen] = useState(false)
-    const [selected, setSelected] = useState<string | null>(null)
     const dropdownRef = useRef<HTMLDivElement>(null)
 
-    const toggleDropdown = () => setIsOpen(!isOpen)
-
-    const handleSelect = (option: string) => {
-        setSelected(option)
-        setIsOpen(false)
-        if (onSelect) {
-            onSelect(option)
-        }
+    const toggleDropdown = () => {
+        setIsOpen(prev => !prev)
     }
 
-    const handleClear = (e: React.MouseEvent) => {
-        e.stopPropagation()
-        setSelected(null)
-        if (onSelect) {
-            onSelect(defaultLabel)
-        }
+    const handleSelect = (option: string) => {
+        onSelect(option)
+        setIsOpen(false)
     }
 
     useEffect(() => {
@@ -132,10 +136,10 @@ const Dropdown: React.FC<DropdownProps> = ({
 
     return (
         <DropdownContainer ref={dropdownRef}>
-            <DropdownHeader onClick={toggleDropdown} isOpen={isOpen}>
+            <DropdownHeader onClick={toggleDropdown} className={isOpen ? "open" : ""}>
                 <span>{selected || defaultLabel}</span>
                 {selected ? (
-                    <IconButton onClick={handleClear} aria-label="Clear selection">
+                    <IconButton onClick={onClear} aria-label="Clear selection">
                         <IconXboxXFilled size={20} />
                     </IconButton>
                 ) : isOpen ? (
@@ -144,7 +148,7 @@ const Dropdown: React.FC<DropdownProps> = ({
                     <IconChevronDown size={20} />
                 )}
             </DropdownHeader>
-            <DropdownList isOpen={isOpen}>
+            <DropdownList className={isOpen ? "open" : ""}>
                 {options.map((option, index) => (
                     <DropdownItem
                         key={index}
