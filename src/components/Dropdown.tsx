@@ -12,7 +12,7 @@ interface DropdownProps {
 
 const DropdownContainer = styled.div`
   position: relative;
-  width: 200px;
+  width: 100%;
 `
 
 const DropdownHeader = styled.div`
