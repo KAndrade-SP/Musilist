@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { User } from '../../types/UserTypes'
-import Banner from '../../components/Banner'
+import Banner from '../../components/Banner/Banner'
 import { Container } from '../../components/Container'
-import Dropdown from '../../components/Dropdown'
+import Dropdown from '../../components/Dropdown/Dropdown'
 import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
 import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react'
-import FilterInput from '../../components/FilterInput'
+import FilterInput from '../../components/FilterInput/FilterInput'
 import { useTheme } from 'styled-components'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import {
@@ -28,7 +28,7 @@ import {
   ListTitleDivisor,
   MessageIcon,
   SongListSection,
-} from './styles'
+} from './SongList.styles'
 
 const SongList = ({ user }: { user: User | null }) => {
   const theme = useTheme()

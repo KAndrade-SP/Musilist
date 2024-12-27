@@ -1,8 +1,7 @@
 import { styled } from 'styled-components'
-import { User } from '../types/UserTypes'
-import BannerImage from '../assets/PlaceholderImages/Banner.jpg'
+import BannerImage from '../../assets/PlaceholderImages/Banner.jpg'
 
-const BannerWrapper = styled.div`
+export const BannerWrapper = styled.div`
   position: relative;
   height: 330px;
   margin-top: -90px;
@@ -32,14 +31,14 @@ const BannerWrapper = styled.div`
   }
 `
 
-const BannerContainer = styled.div`
+export const BannerContainer = styled.div`
   display: flex;
   width: 1440px;
   justify-self: start;
   padding: 2rem 2rem 1rem;
 `
 
-const UserWrapperHeader = styled.div`
+export const UserWrapperHeader = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
@@ -47,7 +46,7 @@ const UserWrapperHeader = styled.div`
   justify-content: center;
 `
 
-const UserIconHeader = styled.img`
+export const UserIconHeader = styled.img`
   ${({ theme: { breakpoints } }) => `
         width: 120px;
         border-radius: 100%;
@@ -62,7 +61,7 @@ const UserIconHeader = styled.img`
     `}
 `
 
-const UserNameHeader = styled.span`
+export const UserNameHeader = styled.span`
   ${({ theme: { colors, fontSizes, breakpoints } }) => `
         font-size: ${fontSizes.biggestFontSize};
         color: ${colors.textWhite};
@@ -73,25 +72,3 @@ const UserNameHeader = styled.span`
         }
     `}
 `
-
-const Banner = ({ user }: { user: User | null }) => {
-  return (
-    <>
-      {user && (
-        <BannerWrapper>
-          <BannerContainer>
-            <UserWrapperHeader>
-              <UserIconHeader
-                src={user.photoURL || ''}
-                alt={user.displayName + 'photo' || 'User photo'}
-              ></UserIconHeader>
-              <UserNameHeader>{user.displayName}</UserNameHeader>
-            </UserWrapperHeader>
-          </BannerContainer>
-        </BannerWrapper>
-      )}
-    </>
-  )
-}
-
-export default Banner

@@ -1,5 +1,5 @@
 import { User } from '../../types/UserTypes'
-import Banner from '../../components/Banner'
+import Banner from '../../components/Banner/Banner'
 import { Container } from '../../components/Container'
 import PlaylistImage from '../../assets/PlaceholderImages/Playlist.png'
 import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
@@ -36,7 +36,7 @@ import {
   TopGrid,
   TopImage,
   TopItem,
-} from './styles'
+} from './Home.styles'
 
 const Home = ({ user }: { user: User | null }) => {
   return (

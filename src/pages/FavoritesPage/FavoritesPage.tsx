@@ -1,4 +1,4 @@
-import Banner from '../../components/Banner'
+import Banner from '../../components/Banner/Banner'
 import { Container } from '../../components/Container'
 import { User } from '../../types/UserTypes'
 
