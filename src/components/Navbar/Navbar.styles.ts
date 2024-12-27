@@ -125,7 +125,7 @@ export const Logo = styled.img`
   height: auto;
   max-width: none;
   transition: transform 0.3s ease-in-out;
-  
+
   &:hover {
     transform: scale(1.1);
   }
@@ -183,7 +183,7 @@ export const LoginButton = styled.button`
       background-image: linear-gradient(135deg, #5A0EA0, #7020C0);
     }
   `}
-`;
+`
 
 export const Options = styled.div`
   display: flex;
@@ -197,7 +197,7 @@ export const Options = styled.div`
 `
 
 export const UserWrapper = styled.div`
-  position: relative; 
+  position: relative;
   cursor: pointer;
   display: flex;
   align-items: center;

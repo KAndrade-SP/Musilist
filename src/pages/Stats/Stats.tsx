@@ -1,9 +1,8 @@
-
 import Banner from '../../components/Banner'
 import { Container } from '../../components/Container'
 import { User } from '../../types/UserTypes'
 
-const Stats= ({ user }: { user: User | null }) => {
+const Stats = ({ user }: { user: User | null }) => {
   return (
     <>
       <Banner user={user} />

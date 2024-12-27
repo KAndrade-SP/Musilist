@@ -15,7 +15,6 @@ jest.mock('firebase/auth')
 const mockDispatch = jest.fn()
 
 const renderNavbar = (preloadedState = {}) => {
-
   const store = configureStore({
     reducer: {
       auth: authReducer,
@@ -42,7 +41,6 @@ describe('Navbar on larger screens', () => {
   })
 
   it('should correctly render navbar components', () => {
-
     renderNavbar()
 
     const header = screen.getByRole('banner')
@@ -93,7 +91,6 @@ describe('Navbar on larger screens', () => {
   })
 
   it('should dispatch logout action when user clicks on "Logout"', async () => {
-
     const preloadedState = {
       auth: {
         user: {
@@ -113,7 +110,7 @@ describe('Navbar on larger screens', () => {
 
     fireEvent.click(logoutOption)
 
-    await new Promise((resolve) => setTimeout(resolve, 0))
+    await new Promise(resolve => setTimeout(resolve, 0))
 
     expect(mockDispatch).toHaveBeenCalled()
 
@@ -121,10 +118,10 @@ describe('Navbar on larger screens', () => {
     expect(state).not.toBeUndefined()
 
     expect(state).toEqual({
-      user: null,  
+      user: null,
       loading: false,
-      error: null,   
-      initializing: true
+      error: null,
+      initializing: true,
     })
   })
 

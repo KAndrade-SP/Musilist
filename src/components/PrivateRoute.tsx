@@ -13,7 +13,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   if (initializing) {
     return <div>Loading...</div>
   }
-  
+
   if (!user) {
     return <Navigate to="/login" replace />
   }

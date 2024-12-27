@@ -1,25 +1,24 @@
-import { useEffect } from "react"
-import { Route, Routes, useLocation } from "react-router-dom"
-import { auth } from "./services/firebase"
-import { useDispatch, useSelector } from "react-redux"
-import { AppDispatch, RootState } from "./redux/store"
-import { setUser } from "./redux/reducers/authSlice"
-import { GlobalStyle } from "./GlobalStyle"
+import { useEffect } from 'react'
+import { Route, Routes, useLocation } from 'react-router-dom'
+import { auth } from './services/firebase'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from './redux/store'
+import { setUser } from './redux/reducers/authSlice'
+import { GlobalStyle } from './GlobalStyle'
 
-import Navbar from "./components/Navbar/NavBar"
-import Home from "./pages/Home/Home"
-import FavoritesPage from "./pages/FavoritesPage/FavoritesPage"
-import SongList from "./pages/SongList/SongList"
-import Login from "./pages/Login/Login"
-import PublicRoute from "./components/PublicRoute"
-import Stats from "./pages/Stats/Stats"
-import SettingsPage from "./pages/SettingsPage/SettingsPage"
-import PrivateRoute from "./components/PrivateRoute"
-import SearchPage from "./pages/SearchPage/SearchPage"
-import NotificationsPage from "./pages/NotificationsPage/NotificationsPage"
+import Navbar from './components/Navbar/NavBar'
+import Home from './pages/Home/Home'
+import FavoritesPage from './pages/FavoritesPage/FavoritesPage'
+import SongList from './pages/SongList/SongList'
+import Login from './pages/Login/Login'
+import PublicRoute from './components/PublicRoute'
+import Stats from './pages/Stats/Stats'
+import SettingsPage from './pages/SettingsPage/SettingsPage'
+import PrivateRoute from './components/PrivateRoute'
+import SearchPage from './pages/SearchPage/SearchPage'
+import NotificationsPage from './pages/NotificationsPage/NotificationsPage'
 
 function App() {
-
   const dispatch = useDispatch<AppDispatch>()
   const initializing = useSelector((state: RootState) => state.auth.initializing)
   const { user } = useSelector((state: RootState) => state.auth)
@@ -28,7 +27,7 @@ function App() {
   const isLoginPage = location.pathname === '/login'
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
       if (user) {
         dispatch(
           setUser({
@@ -54,8 +53,7 @@ function App() {
     <>
       <GlobalStyle />
 
-      {isLoginPage
-        ?
+      {isLoginPage ? (
         <Routes>
           <Route
             path="/login"
@@ -66,70 +64,64 @@ function App() {
             }
           />
         </Routes>
-        :
+      ) : (
         <>
           <Navbar user={user} />
-          
-            <Routes>
-              <Route
-                path="/"
-                element={<Home user={user} />}
-              />
-              <Route
-                path="/login"
-                element={
-                  <PublicRoute>
-                    <Login />
-                  </PublicRoute>
-                }
-              />
-              <Route
-                path="/browse"
-                element={<SearchPage />}
-              />
-              <Route
-                path="/songlist"
-                element={
-                  <PrivateRoute>
-                    <SongList user={user} />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/favorites"
-                element={
-                  <PrivateRoute>
-                    <FavoritesPage user={user} />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/stats"
-                element={
-                  <PrivateRoute>
-                    <Stats user={user} />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/settings"
-                element={
-                  <PrivateRoute>
-                    <SettingsPage />
-                  </PrivateRoute>
-                }
-              />
-              <Route
-                path="/notifications"
-                element={
-                  <PrivateRoute>
-                    <NotificationsPage />
-                  </PrivateRoute>
-                }
-              />
-            </Routes>
+
+          <Routes>
+            <Route path="/" element={<Home user={user} />} />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            <Route path="/browse" element={<SearchPage />} />
+            <Route
+              path="/songlist"
+              element={
+                <PrivateRoute>
+                  <SongList user={user} />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/favorites"
+              element={
+                <PrivateRoute>
+                  <FavoritesPage user={user} />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/stats"
+              element={
+                <PrivateRoute>
+                  <Stats user={user} />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <PrivateRoute>
+                  <SettingsPage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/notifications"
+              element={
+                <PrivateRoute>
+                  <NotificationsPage />
+                </PrivateRoute>
+              }
+            />
+          </Routes>
         </>
-      }
+      )}
     </>
   )
 }
