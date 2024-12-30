@@ -107,7 +107,7 @@ function App() {
               path="/settings"
               element={
                 <PrivateRoute>
-                  <SettingsPage />
+                  <SettingsPage user={user} />
                 </PrivateRoute>
               }
             />

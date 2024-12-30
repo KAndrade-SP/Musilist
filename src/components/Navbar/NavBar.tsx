@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
@@ -42,16 +42,14 @@ import {
   OptionsDropdown,
   DropdownLogoutWrapper,
 } from './Navbar.styles'
+import { useToggleWithOutsideClick } from '../../hooks/useToggle'
 
 const Navbar = ({ user }: { user: User | null }) => {
   const [isSearchHovered, setIsSearchHovered] = useState(false)
   const [isUserHovered, setIsUserHovered] = useState(false)
+  const { toggle, ref, handleClick } = useToggleWithOutsideClick()
   const theme = useTheme()
-  const ref = useRef<HTMLDivElement>(null)
-  const [toggle, setToggle] = useState(false)
-
   const navigate = useNavigate()
-
   const dispatch = useDispatch<AppDispatch>()
 
   const goToLogin = () => {
@@ -73,30 +71,6 @@ const Navbar = ({ user }: { user: User | null }) => {
   const goToBrowsePage = () => {
     navigate('/browse')
   }
-
-  const outsideClick = (e: MouseEvent) => {
-    const element = ref.current
-
-    if (toggle && element && !element.contains(e.target as Node)) {
-      setToggle(false)
-    }
-  }
-
-  const handleClick = () => {
-    setToggle(!toggle)
-  }
-
-  useEffect(() => {
-    if (toggle) {
-      document.addEventListener('mousedown', outsideClick)
-    } else {
-      document.removeEventListener('mousedown', outsideClick)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', outsideClick)
-    }
-  }, [toggle])
 
   return (
     <>
