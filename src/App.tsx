@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
-import { auth } from './services/firebase'
+import { auth, db } from './services/firebase'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from './redux/store'
 import { setUser } from './redux/reducers/authSlice'
@@ -21,22 +22,43 @@ import NotificationsPage from './pages/NotificationsPage/NotificationsPage'
 function App() {
   const dispatch = useDispatch<AppDispatch>()
   const initializing = useSelector((state: RootState) => state.auth.initializing)
+  const profileLoading = useSelector((state: RootState) => state.user.loading)
   const { user } = useSelector((state: RootState) => state.auth)
 
   const location = useLocation()
   const isLoginPage = location.pathname === '/login'
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(user => {
+    const unsubscribe = auth.onAuthStateChanged(async user => {
       if (user) {
-        dispatch(
-          setUser({
-            uid: user.uid,
-            displayName: user.displayName,
-            email: user.email,
-            photoURL: user.photoURL,
-          })
-        )
+        try {
+          const userRef = doc(db, 'users', user.uid)
+          const userSnap = await getDoc(userRef)
+
+          if (userSnap.exists()) {
+            dispatch(
+              setUser({
+                uid: user.uid,
+                displayName: userSnap.data().displayName || null,
+                email: userSnap.data().email || null,
+                photoURL: userSnap.data().photoURL || null,
+              })
+            )
+          } else {
+            const newUser = {
+              uid: user.uid,
+              displayName: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL,
+              createdAt: new Date().toISOString(),
+            }
+
+            await setDoc(userRef, newUser)
+            dispatch(setUser(newUser))
+          }
+        } catch (error) {
+          console.error('Error fetching or creating user profile:', error)
+        }
       } else {
         dispatch(setUser(null))
       }
@@ -45,7 +67,7 @@ function App() {
     return () => unsubscribe()
   }, [dispatch])
 
-  if (initializing) {
+  if (initializing || profileLoading) {
     return <div>Loading...</div>
   }
 
