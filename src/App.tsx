@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from './redux/store'
 import { setUser } from './redux/reducers/authSlice'
 import { GlobalStyle } from './GlobalStyle'
-import { uploadImageToImgur } from './helpers/imgurUpload'
 
 import Navbar from './components/Navbar/NavBar'
 import Home from './pages/Home/Home'
@@ -42,28 +41,19 @@ function App() {
                 uid: user.uid,
                 displayName: userSnap.data().displayName || null,
                 email: userSnap.data().email || null,
-                photoURL: userSnap.data().photoURL || null,
+                photoURL: 'https://imgur.com/P7uOmJX.jpg',
+                coverPhotoURL: null,
               })
             )
           } else {
-            let photoURL = null
-
-            if (user.photoURL) {
-              try {
-                photoURL = await uploadImageToImgur(user.photoURL)
-              } catch (error) {
-                console.error('Failed to upload image:', error)
-              }
-            }
-
             const newUser = {
               uid: user.uid,
               displayName: user.displayName,
               email: user.email,
-              photoURL,
+              photoURL: 'https://imgur.com/P7uOmJX.jpg',
+              coverPhotoURL: null,
               createdAt: new Date().toISOString(),
             }
-
             await setDoc(userRef, newUser)
             dispatch(setUser(newUser))
           }

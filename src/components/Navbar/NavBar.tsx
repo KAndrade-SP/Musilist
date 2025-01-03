@@ -19,7 +19,6 @@ import {
   IconMusicStar,
   IconPlaylist,
   IconSettings,
-  IconUserCircle,
   IconX,
 } from '@tabler/icons-react'
 
@@ -38,7 +37,7 @@ import {
   LoginButton,
   Options,
   UserWrapper,
-  UserIcon,
+  UserPhoto,
   OptionsDropdown,
   DropdownLogoutWrapper,
 } from './Navbar.styles'
@@ -80,67 +79,69 @@ const Navbar = ({ user }: { user: User | null }) => {
             <Logo src={MusilistLogo} alt="Musilist Logo"></Logo>
           </LogoLink>
 
-          {user && (
-            <Menu>
-              {navLinks.map((link, index) => {
-                return (
-                  <MenuItem key={index}>
-                    <NavLink to={link.path}>{link.label}</NavLink>
-                  </MenuItem>
-                )
-              })}
-            </Menu>
-          )}
+          {user ? (
+            <>
+              <Menu>
+                {navLinks.map((link, index) => {
+                  return (
+                    <MenuItem key={index}>
+                      <NavLink to={link.path}>{link.label}</NavLink>
+                    </MenuItem>
+                  )
+                })}
+              </Menu>
 
-          <Options>
-            <IconMusicSearch
-              aria-label="search"
-              size={32}
-              style={{
-                color: isSearchHovered ? theme.colors.lightPurple : theme.colors.textWhite,
-                cursor: 'pointer',
-              }}
-              onMouseEnter={() => setIsSearchHovered(true)}
-              onMouseLeave={() => setIsSearchHovered(false)}
-              onClick={goToBrowsePage}
-            />
+              <Options>
+                <IconMusicSearch
+                  aria-label="search"
+                  size={32}
+                  style={{
+                    color: isSearchHovered ? theme.colors.lightPurple : theme.colors.textWhite,
+                    cursor: 'pointer',
+                  }}
+                  onMouseEnter={() => setIsSearchHovered(true)}
+                  onMouseLeave={() => setIsSearchHovered(false)}
+                  onClick={goToBrowsePage}
+                />
 
-            {user ? (
-              <UserWrapper aria-label="user options" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                {user?.photoURL ? (
-                  <UserIcon src={user.photoURL || ''} alt={user.displayName + 'photo' || 'User photo'} />
-                ) : (
-                  <IconUserCircle
-                    aria-label="user icon"
-                    size={32}
-                    style={{
-                      color: isUserHovered ? theme.colors.lightPurple : theme.colors.textWhite,
-                      cursor: 'pointer',
-                    }}
-                  />
-                )}
+                <UserWrapper aria-label="user options" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+                  <UserPhoto src={user.photoURL} alt={user.displayName + ' photo'} />
 
-                <OptionsDropdown className={isUserHovered ? 'visible' : ''}>
-                  <DropdownItem to={'/settings'}>
-                    <IconSettings />
-                    <DropdownLabel>Settings</DropdownLabel>
-                  </DropdownItem>
+                  <OptionsDropdown className={isUserHovered ? 'visible' : ''}>
+                    <DropdownItem to={'/settings'}>
+                      <IconSettings />
+                      <DropdownLabel>Settings</DropdownLabel>
+                    </DropdownItem>
 
-                  <DropdownItem to={'/notifications'}>
-                    <IconMailFilled />
-                    <DropdownLabel>Notifications</DropdownLabel>
-                  </DropdownItem>
+                    <DropdownItem to={'/notifications'}>
+                      <IconMailFilled />
+                      <DropdownLabel>Notifications</DropdownLabel>
+                    </DropdownItem>
 
-                  <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
-                    <IconLogout />
-                    <DropdownLabel>Logout</DropdownLabel>
-                  </DropdownLogoutWrapper>
-                </OptionsDropdown>
-              </UserWrapper>
-            ) : (
+                    <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
+                      <IconLogout />
+                      <DropdownLabel>Logout</DropdownLabel>
+                    </DropdownLogoutWrapper>
+                  </OptionsDropdown>
+                </UserWrapper>
+              </Options>
+            </>
+          ) : (
+            <Options>
+              <IconMusicSearch
+                aria-label="search"
+                size={32}
+                style={{
+                  color: isSearchHovered ? theme.colors.lightPurple : theme.colors.textWhite,
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={() => setIsSearchHovered(true)}
+                onMouseLeave={() => setIsSearchHovered(false)}
+                onClick={goToBrowsePage}
+              />
               <LoginButton onClick={goToLogin}>Sign in</LoginButton>
-            )}
-          </Options>
+            </Options>
+          )}
 
           <DropdownIcon role="button" aria-label="toggle menu icons" onClick={handleClick}>
             {!toggle ? (
@@ -171,41 +172,43 @@ const Navbar = ({ user }: { user: User | null }) => {
             <DropdownLabel>Home</DropdownLabel>
           </DropdownItem>
 
-          <DropdownItem to={'/songlist'}>
-            <IconPlaylist />
-            <DropdownLabel>Song List</DropdownLabel>
-          </DropdownItem>
-
-          <DropdownItem to={'/stats'}>
-            <IconDeviceDesktopAnalytics />
-            <DropdownLabel>Stats</DropdownLabel>
-          </DropdownItem>
-
-          <DropdownItem to={'/favorites'}>
-            <IconMusicStar />
-            <DropdownLabel>Favorites</DropdownLabel>
-          </DropdownItem>
-
-          <DropdownItem to={'/settings'}>
-            <IconSettings />
-            <DropdownLabel>Settings</DropdownLabel>
-          </DropdownItem>
-
           <DropdownItem to={'/browse'}>
             <IconMusicSearch />
             <DropdownLabel>Search</DropdownLabel>
           </DropdownItem>
 
-          <DropdownItem to={'/notifications'}>
-            <IconMailFilled />
-            <DropdownLabel>Notifications</DropdownLabel>
-          </DropdownItem>
-
           {user ? (
-            <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
-              <IconLogout />
-              <DropdownLabel>Logout</DropdownLabel>
-            </DropdownLogoutWrapper>
+            <>
+              <DropdownItem to={'/songlist'}>
+                <IconPlaylist />
+                <DropdownLabel>Song List</DropdownLabel>
+              </DropdownItem>
+
+              <DropdownItem to={'/stats'}>
+                <IconDeviceDesktopAnalytics />
+                <DropdownLabel>Stats</DropdownLabel>
+              </DropdownItem>
+
+              <DropdownItem to={'/favorites'}>
+                <IconMusicStar />
+                <DropdownLabel>Favorites</DropdownLabel>
+              </DropdownItem>
+
+              <DropdownItem to={'/settings'}>
+                <IconSettings />
+                <DropdownLabel>Settings</DropdownLabel>
+              </DropdownItem>
+
+              <DropdownItem to={'/notifications'}>
+                <IconMailFilled />
+                <DropdownLabel>Notifications</DropdownLabel>
+              </DropdownItem>
+
+              <DropdownLogoutWrapper role="button" aria-label="toggle logout" onClick={handleLogout}>
+                <IconLogout />
+                <DropdownLabel>Logout</DropdownLabel>
+              </DropdownLogoutWrapper>
+            </>
           ) : (
             <DropdownItem to={'/login'} onClick={goToLogin}>
               <IconLogin />

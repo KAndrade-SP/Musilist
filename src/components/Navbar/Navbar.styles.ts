@@ -204,7 +204,7 @@ export const UserWrapper = styled.div`
   justify-content: center;
 `
 
-export const UserIcon = styled.img`
+export const UserPhoto = styled.img`
   width: 36px;
   border-radius: 100%;
 

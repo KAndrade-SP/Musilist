@@ -3,6 +3,7 @@ import { db } from '../../services/firebase'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { User } from '../../types/UserTypes'
 import { RootState } from '../store'
+import { uploadAndUpdateUserProfile } from '../../helpers/imgurUpload'
 
 const initialState = {
   profile: null as User | null,
@@ -42,14 +43,9 @@ export const saveUserProfile = createAsyncThunk(
 
 export const updateUserProfile = createAsyncThunk(
   'userProfile/updateUserProfile',
-  async (updatedData: Partial<User>, { getState, rejectWithValue }) => {
+  async (updatedData: Partial<User> & { profileImageUrl?: string; coverImageUrl?: string }, { rejectWithValue }) => {
     try {
-      const state = getState() as RootState
-      const uid = state.auth.user?.uid
-      if (!uid) throw new Error('User not authenticated')
-
-      const userRef = doc(db, 'users', uid)
-      await setDoc(userRef, updatedData, { merge: true })
+      await uploadAndUpdateUserProfile(updatedData)
       return updatedData
     } catch (error: any) {
       return rejectWithValue(error.message)

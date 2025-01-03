@@ -2,7 +2,8 @@ export interface User {
   uid: string
   displayName: string | null
   email: string | null
-  photoURL: string | null
+  photoURL: string
+  coverPhotoURL: string | null
 }
 
 export interface AuthState {
