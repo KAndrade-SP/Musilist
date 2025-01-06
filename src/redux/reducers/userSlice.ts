@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { db } from '../../services/firebase'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { User } from '../../types/UserTypes'
-import { RootState } from '../store'
 import { uploadAndUpdateUserProfile } from '../../helpers/imgurUpload'
 
 const initialState = {

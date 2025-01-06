@@ -1,15 +1,30 @@
+import { useEffect, useState } from 'react'
 import { User } from '../../types/UserTypes'
 import { BannerContainer, BannerWrapper, UserIconHeader, UserNameHeader, UserWrapperHeader } from './Banner.styles'
+import UserPhotoIcon from '../../assets/UserPhotoIcon.png'
 
 const Banner = ({ user }: { user: User | null }) => {
-  console.log(user?.photoURL)
+  const [currentPhoto, setCurrentPhoto] = useState(UserPhotoIcon)
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
+
+    if (user?.photoURL) {
+      timeout = setTimeout(() => {
+        setCurrentPhoto(user.photoURL || UserPhotoIcon)
+      }, 2000)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [user?.photoURL])
+
   return (
     <>
       {user && (
         <BannerWrapper>
           <BannerContainer>
             <UserWrapperHeader>
-              <UserIconHeader src={user.photoURL} alt={user.displayName + ' photo'}></UserIconHeader>
+              <UserIconHeader src={currentPhoto} alt={user.displayName + ' photo'} />
               <UserNameHeader>{user.displayName}</UserNameHeader>
             </UserWrapperHeader>
           </BannerContainer>

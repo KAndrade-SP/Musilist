@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { AppDispatch } from '../../redux/store'
 import { User } from '../../types/UserTypes'
 import { logout } from '../../redux/reducers/authSlice'
-import MusilistLogo from '../../assets/MusilistLogo.png'
 import { navLinks } from '../../types/NavLinks'
+import MusilistLogo from '../../assets/MusilistLogo.png'
+import UserPhotoIcon from '../../assets/UserPhotoIcon.png'
 
 import { useTheme } from 'styled-components'
 import {
@@ -46,10 +47,23 @@ import { useToggleWithOutsideClick } from '../../hooks/useToggle'
 const Navbar = ({ user }: { user: User | null }) => {
   const [isSearchHovered, setIsSearchHovered] = useState(false)
   const [isUserHovered, setIsUserHovered] = useState(false)
+  const [currentPhoto, setCurrentPhoto] = useState(UserPhotoIcon)
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
   const theme = useTheme()
   const navigate = useNavigate()
   const dispatch = useDispatch<AppDispatch>()
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout
+
+    if (user?.photoURL) {
+      timeout = setTimeout(() => {
+        setCurrentPhoto(user.photoURL || UserPhotoIcon)
+      }, 2000)
+    }
+
+    return () => clearTimeout(timeout)
+  }, [user?.photoURL])
 
   const goToLogin = () => {
     navigate('/login')
@@ -105,7 +119,7 @@ const Navbar = ({ user }: { user: User | null }) => {
                 />
 
                 <UserWrapper aria-label="user options" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                  <UserPhoto src={user.photoURL} alt={user.displayName + ' photo'} />
+                  <UserPhoto src={currentPhoto} alt={user.displayName + ' photo'} />
 
                   <OptionsDropdown className={isUserHovered ? 'visible' : ''}>
                     <DropdownItem to={'/settings'}>
