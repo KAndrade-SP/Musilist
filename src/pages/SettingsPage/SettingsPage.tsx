@@ -1,11 +1,24 @@
 import { User } from '../../types/UserTypes'
-import { Container } from '../../components/Container'
 import { useToggleWithOutsideClick } from '../../hooks/useToggle'
 import { useState } from 'react'
-import { Divider, SettingsContainer, SettingsContent, Tab, TabContent, TabItem } from './Settings.styles'
+import {
+  Divider,
+  SettingsSectionTitle,
+  SettingsContainer,
+  SettingsContent,
+  Tab,
+  TabContent,
+  TabItem,
+  SettingsDropdownIcon,
+  SettingsDropdown,
+  SettingsDropdownItem,
+} from './Settings.styles'
 import { tabs } from '../../types/SettingsLinks'
+import { IconAdjustmentsAlt, IconX } from '@tabler/icons-react'
+import { useTheme } from 'styled-components'
 
 const SettingsPage = ({ user }: { user: User | null }) => {
+  const theme = useTheme()
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
   const [activeTab, setActiveTab] = useState('Profile')
 
@@ -15,7 +28,7 @@ const SettingsPage = ({ user }: { user: User | null }) => {
 
   return (
     <SettingsContainer>
-      <Container>
+      <SettingsSectionTitle>
         <h2>Settings</h2>
         <Tab>
           {tabs.map(tab => (
@@ -24,7 +37,36 @@ const SettingsPage = ({ user }: { user: User | null }) => {
             </TabItem>
           ))}
         </Tab>
-      </Container>
+        <SettingsDropdownIcon role="button" aria-label="toggle settings dropdown icons" onClick={handleClick}>
+          {!toggle ? (
+            <IconAdjustmentsAlt
+              size={30}
+              style={{
+                color: theme.colors.textWhite,
+                cursor: 'pointer',
+              }}
+            />
+          ) : (
+            <IconX
+              size={30}
+              style={{
+                color: theme.colors.textWhite,
+                cursor: 'pointer',
+              }}
+            />
+          )}
+        </SettingsDropdownIcon>
+      </SettingsSectionTitle>
+
+      {toggle && (
+        <SettingsDropdown ref={ref} role="menu" aria-label="settings dropdown" onClick={handleClick}>
+          {tabs.map(tab => (
+            <SettingsDropdownItem className={tab === activeTab ? 'active' : ''} onClick={() => handleTabClick(tab)}>
+              {tab}
+            </SettingsDropdownItem>
+          ))}
+        </SettingsDropdown>
+      )}
 
       <Divider />
 

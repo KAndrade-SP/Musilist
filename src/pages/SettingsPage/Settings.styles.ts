@@ -12,11 +12,28 @@ export const SettingsContent = styled.div`
   padding: 0 2rem;
 `
 
+export const SettingsSectionTitle = styled.div`
+  max-width: 1440px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+`
+
 export const Tab = styled.nav`
   display: flex;
   flex-direction: row;
   gap: 2rem;
   width: 100%;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    display: none;
+  }
 `
 
 export const TabItem = styled.button`
@@ -47,4 +64,36 @@ export const Divider = styled.div`
 
 export const TabContent = styled.div`
   width: 100%;
+`
+
+export const SettingsDropdownIcon = styled.div`
+  display: none;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    display: flex;
+  }
+`
+
+export const SettingsDropdown = styled.div`
+  ${({ theme: { colors, breakpoints } }) => `
+    width: 100%;
+    background-color: ${colors.darkBackground};
+    padding: 0 0 1rem;
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+
+    @media (max-width: ${breakpoints.sm}) {
+      display: flex;
+    }
+  `}
+`
+
+export const SettingsDropdownItem = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: ${({ className, theme }) => (className ? theme.colors.darkPurple : theme.colors.darkBackground)};
+  padding: 0.5rem 2rem;
+  color: ${({ className, theme }) => (className ? theme.colors.lightPurple : theme.colors.textWhite)};
 `
