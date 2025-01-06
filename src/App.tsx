@@ -41,7 +41,7 @@ function App() {
                 uid: user.uid,
                 displayName: userSnap.data().displayName || null,
                 email: userSnap.data().email || null,
-                photoURL: 'https://imgur.com/P7uOmJX.jpg',
+                photoURL: 'https://imgur.com/kjSD6bg.jpg',
                 coverPhotoURL: null,
               })
             )
@@ -50,7 +50,7 @@ function App() {
               uid: user.uid,
               displayName: user.displayName,
               email: user.email,
-              photoURL: 'https://imgur.com/P7uOmJX.jpg',
+              photoURL: 'https://imgur.com/kjSD6bg.jpg',
               coverPhotoURL: null,
               createdAt: new Date().toISOString(),
             }
