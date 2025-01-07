@@ -41,7 +41,7 @@ function App() {
                 uid: user.uid,
                 displayName: userSnap.data().displayName || null,
                 email: userSnap.data().email || null,
-                photoURL: 'https://imgur.com/kjSD6bg.jpg',
+                photoURL: userSnap.data().photoURL || 'https://imgur.com/kjSD6bg.jpg',
                 coverPhotoURL: null,
               })
             )

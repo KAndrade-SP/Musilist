@@ -16,6 +16,7 @@ import {
 import { tabs } from '../../types/SettingsLinks'
 import { IconAdjustmentsAlt, IconX } from '@tabler/icons-react'
 import { useTheme } from 'styled-components'
+import UploadImage from '../../components/UploadImage/UploadImage'
 
 const SettingsPage = ({ user }: { user: User | null }) => {
   const theme = useTheme()
@@ -73,6 +74,12 @@ const SettingsPage = ({ user }: { user: User | null }) => {
       <SettingsContent>
         <TabContent>
           <h3>{activeTab}</h3>
+          {activeTab === 'Profile' && (
+            <>
+              <UploadImage type="profile" />
+              <UploadImage type="banner" />
+            </>
+          )}
         </TabContent>
       </SettingsContent>
     </SettingsContainer>

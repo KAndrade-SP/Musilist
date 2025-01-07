@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { db } from '../../services/firebase'
-import { doc, getDoc, setDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { User } from '../../types/UserTypes'
-import { uploadAndUpdateUserProfile } from '../../helpers/imgurUpload'
+import { RootState } from '../store'
 
 const initialState = {
   profile: null as User | null,
@@ -40,17 +40,26 @@ export const saveUserProfile = createAsyncThunk(
   }
 )
 
-export const updateUserProfile = createAsyncThunk(
-  'userProfile/updateUserProfile',
-  async (updatedData: Partial<User> & { profileImageUrl?: string; coverImageUrl?: string }, { rejectWithValue }) => {
-    try {
-      await uploadAndUpdateUserProfile(updatedData)
-      return updatedData
-    } catch (error: any) {
-      return rejectWithValue(error.message)
+export const updateUserProfile = createAsyncThunk<
+  Partial<User>,
+  Partial<User> & { photoURL?: string; coverPhotoURL?: string },
+  { rejectValue: string }
+>('userProfile/updateUserProfile', async (updatedData, { rejectWithValue, getState }) => {
+  try {
+    const { user } = (getState() as RootState).auth
+
+    if (!user) {
+      return rejectWithValue('User not found in state')
     }
+
+    const userRef = doc(db, 'users', user.uid)
+    await updateDoc(userRef, updatedData)
+
+    return updatedData
+  } catch (error: any) {
+    return rejectWithValue(error.response?.data?.message || error.message)
   }
-)
+})
 
 const userSlice = createSlice({
   name: 'userProfile',

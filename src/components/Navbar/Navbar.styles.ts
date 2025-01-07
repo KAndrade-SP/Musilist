@@ -206,7 +206,10 @@ export const UserWrapper = styled.div`
 
 export const UserPhoto = styled.img`
   width: 36px;
-  border-radius: 100%;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
 
   &:hover {
     opacity: 0.8;

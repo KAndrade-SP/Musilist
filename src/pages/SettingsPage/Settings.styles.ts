@@ -64,6 +64,9 @@ export const Divider = styled.div`
 
 export const TabContent = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
 `
 
 export const SettingsDropdownIcon = styled.div`

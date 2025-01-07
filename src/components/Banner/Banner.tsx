@@ -12,7 +12,7 @@ const Banner = ({ user }: { user: User | null }) => {
     if (user?.photoURL) {
       timeout = setTimeout(() => {
         setCurrentPhoto(user.photoURL || UserPhotoIcon)
-      }, 2000)
+      }, 500)
     }
 
     return () => clearTimeout(timeout)

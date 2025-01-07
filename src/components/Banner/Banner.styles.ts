@@ -48,17 +48,21 @@ export const UserWrapperHeader = styled.div`
 
 export const UserIconHeader = styled.img`
   ${({ theme: { breakpoints } }) => `
-        width: 120px;
-        border-radius: 100%;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
 
-        @media (max-width: ${breakpoints.sm}) {
-            width: 60px;
-        }
+      @media (max-width: ${breakpoints.sm}) {
+          width: 60px;
+          height: 60px;
+      }
 
-        @media (min-width: ${breakpoints.sm}) and (max-width: ${breakpoints.xmd}) {
-            width: 90px;
-        }
-    `}
+      @media (min-width: ${breakpoints.sm}) and (max-width: ${breakpoints.xmd}) {
+          width: 90px;
+          height: 90px;
+      }
+  `}
 `
 
 export const UserNameHeader = styled.span`

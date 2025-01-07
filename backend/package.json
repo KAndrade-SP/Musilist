@@ -20,9 +20,11 @@
     "typescript": "^5.6.3"
   },
   "dependencies": {
+    "@types/multer": "^1.4.12",
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1"
+    "express": "^4.21.1",
+    "multer": "^1.4.5-lts.1"
   }
 }
