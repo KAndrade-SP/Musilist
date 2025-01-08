@@ -12,7 +12,7 @@ const Banner = ({ user }: { user: User | null }) => {
     if (user?.photoURL) {
       timeout = setTimeout(() => {
         setCurrentPhoto(user.photoURL || UserPhotoIcon)
-      }, 500)
+      }, 1000)
     }
 
     return () => clearTimeout(timeout)
@@ -21,7 +21,7 @@ const Banner = ({ user }: { user: User | null }) => {
   return (
     <>
       {user && (
-        <BannerWrapper>
+        <BannerWrapper $coverPhotoURL={user?.coverPhotoURL || undefined}>
           <BannerContainer>
             <UserWrapperHeader>
               <UserIconHeader src={currentPhoto} alt={user.displayName + ' photo'} />

@@ -1,5 +1,4 @@
 import { User } from '../../types/UserTypes'
-import Banner from '../../components/Banner/Banner'
 import { Container } from '../../components/Container'
 import PlaylistImage from '../../assets/PlaceholderImages/Playlist.png'
 import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
@@ -41,7 +40,6 @@ import {
 const Home = ({ user }: { user: User | null }) => {
   return (
     <>
-      <Banner user={user} />
       <Container>
         <ActivityArea>
           <ActivityItem aria-label="Total Songs">

@@ -8,6 +8,7 @@ import { setUser } from './redux/reducers/authSlice'
 import { GlobalStyle } from './GlobalStyle'
 
 import Navbar from './components/Navbar/NavBar'
+import Banner from './components/Banner/Banner'
 import Home from './pages/Home/Home'
 import FavoritesPage from './pages/FavoritesPage/FavoritesPage'
 import SongList from './pages/SongList/SongList'
@@ -27,6 +28,7 @@ function App() {
 
   const location = useLocation()
   const isLoginPage = location.pathname === '/login'
+  const isSettingsPage = location.pathname === '/settings'
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async user => {
@@ -42,7 +44,7 @@ function App() {
                 displayName: userSnap.data().displayName || null,
                 email: userSnap.data().email || null,
                 photoURL: userSnap.data().photoURL || 'https://imgur.com/kjSD6bg.jpg',
-                coverPhotoURL: null,
+                coverPhotoURL: userSnap.data().coverPhotoURL || null,
               })
             )
           } else {
@@ -69,6 +71,7 @@ function App() {
   }, [dispatch])
 
   if (initializing || profileLoading) {
+    console.log('profile', profileLoading)
     return <div>Loading...</div>
   }
 
@@ -90,6 +93,7 @@ function App() {
       ) : (
         <>
           <Navbar user={user} />
+          {!isSettingsPage && <Banner user={user} />}
 
           <Routes>
             <Route path="/" element={<Home user={user} />} />

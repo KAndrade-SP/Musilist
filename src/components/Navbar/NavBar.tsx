@@ -59,7 +59,7 @@ const Navbar = ({ user }: { user: User | null }) => {
     if (user?.photoURL) {
       timeout = setTimeout(() => {
         setCurrentPhoto(user.photoURL || UserPhotoIcon)
-      }, 500)
+      }, 1000)
     }
 
     return () => clearTimeout(timeout)

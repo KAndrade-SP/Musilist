@@ -1,11 +1,11 @@
 import { styled } from 'styled-components'
 import BannerImage from '../../assets/PlaceholderImages/Banner.jpg'
 
-export const BannerWrapper = styled.div`
+export const BannerWrapper = styled.div<{ $coverPhotoURL?: string }>`
   position: relative;
   height: 330px;
   margin-top: -90px;
-  background-image: url(${BannerImage});
+  background-image: ${({ $coverPhotoURL }) => `url(${$coverPhotoURL || BannerImage})`};
   background-size: cover;
   background-position: center;
   background-attachment: fixed;

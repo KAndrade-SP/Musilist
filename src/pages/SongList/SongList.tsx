@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { User } from '../../types/UserTypes'
-import Banner from '../../components/Banner/Banner'
 import { Container } from '../../components/Container'
 import Dropdown from '../../components/Dropdown/Dropdown'
 import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
@@ -88,7 +87,6 @@ const SongList = ({ user }: { user: User | null }) => {
 
   return (
     <>
-      <Banner user={user} />
       <Container>
         <SongListSection>
           <Filters>

@@ -5,7 +5,6 @@ import { User } from '../../types/UserTypes'
 const FavoritesPage = ({ user }: { user: User | null }) => {
   return (
     <>
-      <Banner user={user} />
       <Container>
         <h1>Favorites</h1>
       </Container>

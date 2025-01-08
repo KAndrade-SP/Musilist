@@ -3,6 +3,7 @@ import { db } from '../../services/firebase'
 import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
 import { User } from '../../types/UserTypes'
 import { RootState } from '../store'
+import { setUser } from './authSlice'
 
 const initialState = {
   profile: null as User | null,
@@ -44,7 +45,7 @@ export const updateUserProfile = createAsyncThunk<
   Partial<User>,
   Partial<User> & { photoURL?: string; coverPhotoURL?: string },
   { rejectValue: string }
->('userProfile/updateUserProfile', async (updatedData, { rejectWithValue, getState }) => {
+>('userProfile/updateUserProfile', async (updatedData, { rejectWithValue, getState, dispatch }) => {
   try {
     const { user } = (getState() as RootState).auth
 
@@ -54,6 +55,8 @@ export const updateUserProfile = createAsyncThunk<
 
     const userRef = doc(db, 'users', user.uid)
     await updateDoc(userRef, updatedData)
+
+    dispatch(setUser({ ...user, ...updatedData }))
 
     return updatedData
   } catch (error: any) {
