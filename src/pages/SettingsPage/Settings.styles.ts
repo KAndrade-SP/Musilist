@@ -105,10 +105,33 @@ export const UploadContent = styled.div`
   ${({ theme: { breakpoints } }) => `
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1rem;
 
     @media (min-width: ${breakpoints.sm}) {
       flex-direction: row;
+    }
+  `}
+`
+
+export const UploadTitle = styled.h4`
+  ${({ theme: { fontSizes } }) => `
+    color: rgba(234, 234, 240, 0.7);
+    font-size: ${fontSizes.normalFontSize};
+    display: flex;
+    margin-bottom: -1.5rem;
+  `}
+`
+
+export const UploadLabel = styled.label`
+  ${({ theme: { fontSizes, breakpoints } }) => `
+    color: rgba(234, 234, 240, 0.7);
+    font-size: ${fontSizes.normalFontSize};
+    font-weight: 300;
+    display: flex;
+    margin-bottom: -1rem;
+
+    @media (max-width: ${breakpoints.md}) {
+      font-size: ${fontSizes.smallFontSize};
     }
   `}
 `

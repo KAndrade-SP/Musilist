@@ -15,6 +15,8 @@ import {
   UploadContent,
   PhotoPreview,
   BannerPreview,
+  UploadLabel,
+  UploadTitle,
 } from './Settings.styles'
 import { tabs } from '../../types/SettingsLinks'
 import { IconAdjustmentsAlt, IconX } from '@tabler/icons-react'
@@ -80,13 +82,17 @@ const SettingsPage = ({ user }: { user: User | null }) => {
 
       <SettingsContent>
         <TabContent>
-          <h3>{activeTab}</h3>
           {activeTab === 'Profile' && (
             <>
+              <UploadTitle>Avatar</UploadTitle>
+              <UploadLabel>Allowed Formats: JPEG, PNG. Max size: 3mb.</UploadLabel>
               <UploadContent>
                 <UploadImage type="profile" />
                 <PhotoPreview src={user?.photoURL} />
               </UploadContent>
+
+              <UploadTitle>Banner</UploadTitle>
+              <UploadLabel>Allowed Formats: JPEG, PNG. Max size: 3mb.</UploadLabel>
               <UploadContent>
                 <UploadImage type="banner" />
                 {user?.coverPhotoURL && <BannerPreview src={user?.coverPhotoURL} />}
