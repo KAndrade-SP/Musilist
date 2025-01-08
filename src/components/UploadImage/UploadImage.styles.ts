@@ -6,7 +6,7 @@ export const UploadContainer = styled.label`
   align-items: center;
   justify-content: center;
   padding: 0 1rem;
-  max-width: 300px;
+  max-width: 200px;
   height: 200px;
   border: 2px dashed ${({ theme }) => theme.colors.lightPurple};
   background-color: ${({ theme }) => theme.colors.grayBackground};
@@ -20,6 +20,7 @@ export const UploadContainer = styled.label`
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    width: 150px;
     height: 150px;
   }
 `

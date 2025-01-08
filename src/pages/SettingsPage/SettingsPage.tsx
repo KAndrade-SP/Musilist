@@ -12,6 +12,9 @@ import {
   SettingsDropdownIcon,
   SettingsDropdown,
   SettingsDropdownItem,
+  UploadContent,
+  PhotoPreview,
+  BannerPreview,
 } from './Settings.styles'
 import { tabs } from '../../types/SettingsLinks'
 import { IconAdjustmentsAlt, IconX } from '@tabler/icons-react'
@@ -62,7 +65,11 @@ const SettingsPage = ({ user }: { user: User | null }) => {
       {toggle && (
         <SettingsDropdown ref={ref} role="menu" aria-label="settings dropdown" onClick={handleClick}>
           {tabs.map(tab => (
-            <SettingsDropdownItem className={tab === activeTab ? 'active' : ''} onClick={() => handleTabClick(tab)}>
+            <SettingsDropdownItem
+              key={tab}
+              className={tab === activeTab ? 'active' : ''}
+              onClick={() => handleTabClick(tab)}
+            >
               {tab}
             </SettingsDropdownItem>
           ))}
@@ -76,8 +83,14 @@ const SettingsPage = ({ user }: { user: User | null }) => {
           <h3>{activeTab}</h3>
           {activeTab === 'Profile' && (
             <>
-              <UploadImage type="profile" />
-              <UploadImage type="banner" />
+              <UploadContent>
+                <UploadImage type="profile" />
+                <PhotoPreview src={user?.photoURL} />
+              </UploadContent>
+              <UploadContent>
+                <UploadImage type="banner" />
+                {user?.coverPhotoURL && <BannerPreview src={user?.coverPhotoURL} />}
+              </UploadContent>
             </>
           )}
         </TabContent>

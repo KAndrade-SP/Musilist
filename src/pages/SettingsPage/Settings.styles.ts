@@ -9,7 +9,7 @@ export const SettingsContent = styled.div`
   max-width: 1440px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 2rem 2rem;
 `
 
 export const SettingsSectionTitle = styled.div`
@@ -99,4 +99,46 @@ export const SettingsDropdownItem = styled.div`
   background-color: ${({ className, theme }) => (className ? theme.colors.darkPurple : theme.colors.darkBackground)};
   padding: 0.5rem 2rem;
   color: ${({ className, theme }) => (className ? theme.colors.lightPurple : theme.colors.textWhite)};
+`
+
+export const UploadContent = styled.div`
+  ${({ theme: { breakpoints } }) => `
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (min-width: ${breakpoints.sm}) {
+      flex-direction: row;
+    }
+  `}
+`
+
+export const PhotoPreview = styled.img`
+  ${({ theme: { breakpoints } }) => `
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+
+    @media (max-width: ${breakpoints.sm}) {
+      width: 150px;
+      height: 150px;
+    }
+  `}
+`
+
+export const BannerPreview = styled.img`
+  ${({ theme: { breakpoints } }) => `
+    width: 500px;
+    height: 200px;
+    object-fit: cover;
+
+    @media (max-width: ${breakpoints.sm}) {
+      width: 300px;
+      height: 150px;
+    }
+
+    @media (min-width: ${breakpoints.sm}) and (max-width: ${breakpoints.lg}) {
+      width: 350px;
+    }
+  `}
 `

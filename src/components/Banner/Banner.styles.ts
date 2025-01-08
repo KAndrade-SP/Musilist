@@ -8,7 +8,6 @@ export const BannerWrapper = styled.div<{ $coverPhotoURL?: string }>`
   background-image: ${({ $coverPhotoURL }) => `url(${$coverPhotoURL || BannerImage})`};
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
   display: flex;
   align-items: flex-end;
   justify-content: center;
