@@ -27,9 +27,19 @@ const SettingsPage = ({ user }: { user: User | null }) => {
   const theme = useTheme()
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
   const [activeTab, setActiveTab] = useState('Profile')
+  const [photoError, setPhotoError] = useState<string | null>(null)
+  const [bannerError, setBannerError] = useState<string | null>(null)
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab)
+  }
+
+  const handlePhotoError = (message: string | null) => {
+    setPhotoError(message)
+  }
+
+  const handleBannerError = (message: string | null) => {
+    setBannerError(message)
   }
 
   return (
@@ -85,16 +95,28 @@ const SettingsPage = ({ user }: { user: User | null }) => {
           {activeTab === 'Profile' && (
             <>
               <UploadTitle>Avatar</UploadTitle>
-              <UploadLabel>Allowed Formats: JPEG, PNG. Max size: 3mb.</UploadLabel>
+              <UploadLabel>
+                {photoError ? (
+                  <span style={{ color: theme.colors.magentaRed }}>{photoError}</span>
+                ) : (
+                  'Allowed Formats: JPEG, PNG. Max size: 8MB.'
+                )}
+              </UploadLabel>
               <UploadContent>
-                <UploadImage type="profile" />
+                <UploadImage type="profile" onError={handlePhotoError} />
                 <PhotoPreview src={user?.photoURL} />
               </UploadContent>
 
               <UploadTitle>Banner</UploadTitle>
-              <UploadLabel>Allowed Formats: JPEG, PNG. Max size: 3mb.</UploadLabel>
+              <UploadLabel>
+                {bannerError ? (
+                  <span style={{ color: theme.colors.magentaRed }}>{bannerError}</span>
+                ) : (
+                  'Allowed Formats: JPEG, PNG. Max size: 8MB.'
+                )}
+              </UploadLabel>
               <UploadContent>
-                <UploadImage type="banner" />
+                <UploadImage type="banner" onError={handleBannerError} />
                 {user?.coverPhotoURL && <BannerPreview src={user?.coverPhotoURL} />}
               </UploadContent>
             </>

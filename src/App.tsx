@@ -23,7 +23,6 @@ import NotificationsPage from './pages/NotificationsPage/NotificationsPage'
 function App() {
   const dispatch = useDispatch<AppDispatch>()
   const initializing = useSelector((state: RootState) => state.auth.initializing)
-  const profileLoading = useSelector((state: RootState) => state.user.loading)
   const { user } = useSelector((state: RootState) => state.auth)
 
   const location = useLocation()
@@ -70,8 +69,7 @@ function App() {
     return () => unsubscribe()
   }, [dispatch])
 
-  if (initializing || profileLoading) {
-    console.log('profile', profileLoading)
+  if (initializing) {
     return <div>Loading...</div>
   }
 

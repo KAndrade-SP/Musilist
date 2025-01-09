@@ -10,6 +10,7 @@ declare module 'styled-components' {
       grayBackground: string
       darkBackground: string
       textWhite: string
+      magentaRed: string
     }
     fontSizes: {
       biggestFontSize: string

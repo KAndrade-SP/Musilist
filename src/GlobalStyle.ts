@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 
 export const GlobalStyle = createGlobalStyle`
     #root {
@@ -44,4 +44,21 @@ export const GlobalStyle = createGlobalStyle`
         max-width: 100%;
         height: auto;
     }
+`
+
+export const StyledToastContainer = styled.div`
+  .Toastify__toast--success {
+    background-color: ${({ theme }) => theme.colors.darkPurple};
+    color: ${({ theme }) => theme.colors.textWhite};
+  }
+
+  .Toastify__toast-icon {
+    svg {
+      fill: ${({ theme }) => theme.colors.lightPurple};
+    }
+  }
+
+  .Toastify__progress-bar {
+    background-color: ${({ theme }) => theme.colors.lightPurple};
+  }
 `
