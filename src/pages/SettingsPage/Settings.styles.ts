@@ -99,6 +99,11 @@ export const SettingsDropdownItem = styled.div`
   background-color: ${({ className, theme }) => (className ? theme.colors.darkPurple : theme.colors.darkBackground)};
   padding: 0.5rem 2rem;
   color: ${({ className, theme }) => (className ? theme.colors.lightPurple : theme.colors.textWhite)};
+  font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    font-size: ${({ theme }) => theme.fontSizes.smallFontSize};
+  }
 `
 
 export const UploadContent = styled.div`
