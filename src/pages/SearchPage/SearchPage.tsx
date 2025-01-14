@@ -1,7 +1,5 @@
 import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react'
-import { Container } from '../../components/Container'
 import FilterInput from '../../components/FilterInput/FilterInput'
-import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
 import { useToggleWithOutsideClick } from '../../hooks/useToggle'
 import { filters } from '../../types/SearchFilters'
 import {
@@ -18,36 +16,62 @@ import {
   TrackImageCell,
   SearchContent,
   TrackTitleDivisor,
-  TrackScoreSpan,
+  TrackArtist,
   TrackDataDivisor,
+  TrackIdCellMobile,
   TrackIdCell,
 } from './SearchPage.styles'
 import { useTheme } from 'styled-components'
 import { useState } from 'react'
+import SearchItem from '../../components/SearchItem/SearchItem'
 
 const SearchPage = () => {
   const theme = useTheme()
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
   const [activeFilter, setActiveFilter] = useState('Albums')
+  const [results, setResults] = useState<any[]>([])
 
-  const musicData = [
-    { id: 1, image: MusicImage, title: 'Symbol I: △', score: 10, progress: '1', type: 'Music', comments: true },
-    { id: 2, image: MusicImage, title: 'Symbol II: 🜁', score: 10, progress: '1', type: 'Music', comments: true },
-    { id: 3, image: MusicImage, title: 'Symbol III: ▽', score: 10, progress: '1', type: 'Music', comments: true },
-    { id: 4, image: MusicImage, title: 'Elements', score: 10, progress: '12/12', type: 'Album', comments: true },
-  ]
+  const handleSearchComplete = (data: any) => {
+    setResults(data)
+    console.log(results)
+  }
 
   const handleFilterClick = (filter: string) => {
     setActiveFilter(filter)
+  }
+
+  const mapFilterToType = (filter: string): 'albums' | 'artists' | 'tracks' => {
+    switch (filter) {
+      case 'Albums':
+        return 'albums'
+      case 'Artists':
+        return 'artists'
+      case 'Tracks':
+        return 'tracks'
+      default:
+        return 'albums'
+    }
+  }
+
+  const getImageUrl = (images: { url: string }[] | undefined): string => {
+    return images && images.length > 0 ? images[0].url : 'placeholder_image_url'
   }
 
   return (
     <>
       <SearchContainer>
         <SearchSection>
-          <FilterInput />
+          <FilterInput searchType={mapFilterToType(activeFilter)} onSearchComplete={handleSearchComplete} />
           {filters.map(filter => {
-            return <SearchTag key={filter}>{filter}</SearchTag>
+            return (
+              <SearchTag
+                key={filter}
+                className={filter === activeFilter ? 'active' : ''}
+                onClick={() => handleFilterClick(filter)}
+              >
+                {filter}
+              </SearchTag>
+            )
           })}
 
           <SearchDropdownIcon role="button" aria-label="toggle settings dropdown icons" onClick={handleClick}>
@@ -86,37 +110,47 @@ const SearchPage = () => {
         )}
 
         <SearchContent>
-          <TracksBox>
-            <TracksHeader>
-              <TrackCell>#</TrackCell>
-              <TrackCell>Title</TrackCell>
-              <TrackCell>Album</TrackCell>
-              <TrackCell>Duration</TrackCell>
-            </TracksHeader>
+          {results.length === 0 ? (
+            <p>No results found. Try searching for something!</p>
+          ) : activeFilter === 'Tracks' ? (
+            <>
+              <TracksBox>
+                <TracksHeader>
+                  <TrackCell>#</TrackCell>
+                  <TrackCell>Title</TrackCell>
+                  <TrackCell>Album</TrackCell>
+                  <TrackCell>Duration</TrackCell>
+                </TracksHeader>
 
-            {musicData.map((music, index) => (
-              <TrackEntry key={index}>
-                <TrackCell>{music.id}</TrackCell>
+                {results.map((music, index) => (
+                  <TrackEntry key={music.id}>
+                    <TrackIdCell>{index + 1}</TrackIdCell>
 
-                <TrackImageCell>
-                  <TrackIdCell>{music.id}</TrackIdCell>
-                  <img src={music.image} alt="Song Cover" />
-                  <TrackTitleDivisor>
-                    <strong>{music.title}</strong>
-                    <TrackScoreSpan>Artist</TrackScoreSpan>
-                  </TrackTitleDivisor>
-                </TrackImageCell>
+                    <TrackImageCell>
+                      <TrackIdCellMobile>{index + 1}</TrackIdCellMobile>
+                      <img src={music.image} alt={music.name || 'No name available'} />
+                      <TrackTitleDivisor>
+                        <strong>{music.name}</strong>
+                        <TrackArtist>{music.artist}</TrackArtist>
+                      </TrackTitleDivisor>
+                    </TrackImageCell>
 
-                <TrackCell>Album</TrackCell>
-                <TrackCell>00:00</TrackCell>
+                    <TrackCell>{music.album}</TrackCell>
+                    <TrackCell>00:00</TrackCell>
 
-                <TrackDataDivisor>
-                  <span>Album</span>
-                  <span>00:00</span>
-                </TrackDataDivisor>
-              </TrackEntry>
-            ))}
-          </TracksBox>
+                    <TrackDataDivisor>
+                      <SearchItem title={music.album} />
+                      <span>00:00</span>
+                    </TrackDataDivisor>
+                  </TrackEntry>
+                ))}
+              </TracksBox>
+            </>
+          ) : activeFilter === 'Albums' ? (
+            <h2>Albums</h2>
+          ) : (
+            <h2>Artists</h2>
+          )}
         </SearchContent>
       </SearchContainer>
     </>

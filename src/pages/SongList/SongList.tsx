@@ -33,6 +33,12 @@ const SongList = ({ user }: { user: User | null }) => {
   const theme = useTheme()
   const [toggle, setToggle] = useState(false)
   const isLargeScreen = useBreakpoint(parseInt(theme.breakpoints.xmd))
+  const [results, setResults] = useState<any[]>([])
+
+  const handleSearchComplete = (data: any) => {
+    setResults(data)
+    console.log(results)
+  }
 
   const musicData = [
     { image: MusicImage, title: 'Symbol I: △', score: 10, progress: '1', type: 'Music', comments: true },
@@ -91,7 +97,7 @@ const SongList = ({ user }: { user: User | null }) => {
         <SongListSection>
           <Filters>
             <FilterSearch>
-              <FilterInput />
+              <FilterInput onSearchComplete={handleSearchComplete} />
 
               <DropdownFilter role="button" aria-label="toggle filters" onClick={handleClick}>
                 {!toggle ? (

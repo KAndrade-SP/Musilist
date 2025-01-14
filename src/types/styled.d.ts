@@ -7,6 +7,7 @@ declare module 'styled-components' {
       purpleSecondary: string
       lightPurple: string
       darkPurple: string
+      darkPurpleOp: string
       grayBackground: string
       darkBackground: string
       textWhite: string

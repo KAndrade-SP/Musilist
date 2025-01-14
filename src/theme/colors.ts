@@ -3,6 +3,7 @@ export const colors = {
   purpleSecondary: '#5A0EA0',
   lightPurple: '#E2C2FF',
   darkPurple: '#50366B',
+  darkPurpleOp: 'rgba(80, 54, 107, 0.5)',
   grayBackground: '#2E293B',
   darkBackground: '#271436',
   textWhite: '#EAEAF0',

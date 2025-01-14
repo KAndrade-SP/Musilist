@@ -19,7 +19,6 @@ export const SearchTag = styled.div`
   ${({ theme: { colors, fontSizes, breakpoints } }) => `
     color: ${colors.textWhite};
     font-size: ${fontSizes.normalFontSize};
-    background-color: ${colors.darkPurple};
     text-align: center;
     display: flex;
     align-items: center;
@@ -29,13 +28,15 @@ export const SearchTag = styled.div`
     cursor: pointer;
 
     &:hover {
-      background-color: rgba(80, 54, 107, 0.5)
+      background-color: ${colors.darkPurpleOp};
     }
 
     @media (max-width: ${breakpoints.md}) {
         display: none;
     }
   `}
+
+  background-color: ${({ className, theme }) => (className ? theme.colors.darkPurpleOp : theme.colors.darkPurple)};
 `
 
 export const SearchDropdownIcon = styled.div`
@@ -87,7 +88,7 @@ export const SearchContent = styled.div`
 export const TracksBox = styled.div`
   ${({ theme: { colors, breakpoints, fontSizes } }) => `
     display: grid;
-    grid-template-columns: 50px 200px 1fr 100px;
+    grid-template-columns: 50px 1fr 1fr 100px;
     border-radius: 8px;
     gap: 1rem;
     width: 100%;
@@ -99,7 +100,7 @@ export const TracksBox = styled.div`
       font-size: ${fontSizes.smallFontSize};
     }
 
-    @media (max-width: ${breakpoints.sm}) {
+    @media (max-width: ${breakpoints.md}) {
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
@@ -114,7 +115,7 @@ export const TracksHeader = styled.div`
     color: ${colors.textWhite};
     font-weight: bold;
 
-    @media (max-width: ${breakpoints.sm}) {
+    @media (max-width: ${breakpoints.md}) {
       display: none;
     }
   `}
@@ -127,7 +128,7 @@ export const TrackCell = styled.span`
     align-items: center;
     text-align: center;
 
-    @media (max-width: ${breakpoints.sm}) {
+    @media (max-width: ${breakpoints.md}) {
       display: none;
     }
   `}
@@ -135,16 +136,29 @@ export const TrackCell = styled.span`
 
 export const TrackIdCell = styled.div`
   ${({ theme: { breakpoints } }) => `
-  display: none;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-
-  @media (max-width: ${breakpoints.sm}) {
     display: flex;
-    width: 5px;
-  }
-`}
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    @media (max-width: ${breakpoints.md}) {
+      display: none;
+    }
+  `}
+`
+
+export const TrackIdCellMobile = styled.div`
+  ${({ theme: { breakpoints } }) => `
+    display: none;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    @media (max-width: ${breakpoints.md}) {
+      display: flex;
+      width: 5px;
+    }
+  `}
 `
 
 export const TrackEntry = styled.div`
@@ -157,7 +171,7 @@ export const TrackEntry = styled.div`
       border-bottom: none;
     }
 
-    @media (max-width: ${breakpoints.sm}) {
+    @media (max-width: ${breakpoints.md}) {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -186,7 +200,7 @@ export const TrackImageCell = styled.div`
       text-overflow: ellipsis;
     }
 
-    @media (max-width: ${breakpoints.sm}) {
+    @media (max-width: ${breakpoints.md}) {
       img {
         width: 40px;
         height: 40px;
@@ -214,9 +228,17 @@ export const TrackTitleDivisor = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
 `
 
-export const TrackScoreSpan = styled.span`
+export const TrackArtist = styled.span`
   ${({ theme: { fontSizes } }) => `
     display: block;
     font-size: ${fontSizes.smallFontSize};
@@ -231,7 +253,12 @@ export const TrackDataDivisor = styled.div`
   align-items: center;
   justify-content: center;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+  @media (max-width: ${({ theme }) => theme.breakpoints.xsm}) {
+    display: none;
+  }
+
+  @media (min-width: ${({ theme }) => theme.breakpoints.xsm}) and (max-width: ${({ theme }) => theme.breakpoints.md}) {
     display: flex;
+    width: 100px;
   }
 `
