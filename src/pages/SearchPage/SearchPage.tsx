@@ -20,6 +20,10 @@ import {
   TrackDataDivisor,
   TrackIdCellMobile,
   TrackIdCell,
+  GridContainer,
+  AlbumCard,
+  AlbumImage,
+  AlbumInfo,
 } from './SearchPage.styles'
 import { useTheme } from 'styled-components'
 import { useState } from 'react'
@@ -147,7 +151,17 @@ const SearchPage = () => {
               </TracksBox>
             </>
           ) : activeFilter === 'Albums' ? (
-            <h2>Albums</h2>
+            <GridContainer>
+              {results.map(album => (
+                <AlbumCard key={album.id}>
+                  <AlbumImage src={album.image} alt={album.name} />
+                  <AlbumInfo>
+                    <h3>{album.name}</h3>
+                    <p>{album.artist}</p>
+                  </AlbumInfo>
+                </AlbumCard>
+              ))}
+            </GridContainer>
           ) : (
             <h2>Artists</h2>
           )}

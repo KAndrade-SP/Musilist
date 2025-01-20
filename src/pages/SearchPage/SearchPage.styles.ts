@@ -262,3 +262,54 @@ export const TrackDataDivisor = styled.div`
     width: 100px;
   }
 `
+
+export const GridContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  width: 100%;
+  box-sizing: border-box;
+`
+
+export const AlbumCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+  }
+`
+
+export const AlbumImage = styled.img`
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+`
+
+export const AlbumInfo = styled.div`
+  padding: 10px 0;
+
+  h3 {
+    font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
+    color: ${({ theme }) => theme.colors.textWhite};
+    margin: 0;
+  }
+
+  p {
+    font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
+    color: ${({ theme }) => theme.colors.textWhite};
+    margin: 5px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`
