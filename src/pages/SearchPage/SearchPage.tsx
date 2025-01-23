@@ -24,6 +24,9 @@ import {
   AlbumCard,
   AlbumImage,
   AlbumInfo,
+  ArtistCard,
+  ArtistImage,
+  ArtistInfo,
 } from './SearchPage.styles'
 import { useTheme } from 'styled-components'
 import { useState } from 'react'
@@ -163,7 +166,16 @@ const SearchPage = () => {
               ))}
             </GridContainer>
           ) : (
-            <h2>Artists</h2>
+            <GridContainer>
+              {results.map(artist => (
+                <ArtistCard key={artist.id}>
+                  <ArtistImage src={artist.image} alt={artist.name} />
+                  <ArtistInfo>
+                    <h3>{artist.name}</h3>
+                  </ArtistInfo>
+                </ArtistCard>
+              ))}
+            </GridContainer>
           )}
         </SearchContent>
       </SearchContainer>

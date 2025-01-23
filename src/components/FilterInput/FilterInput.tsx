@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Input, SearchIcon, SearchInputContainer } from './FilterInput.styles'
 import { useSpotifySearch } from '../../hooks/useSpotifySearch'
 
@@ -17,7 +17,13 @@ const FilterInput: React.FC<FilterInputProps> = ({ onSearchComplete, searchType 
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (query.trim()) {
+      handleSearch()
+    }
+  }, [searchType])
+
+  useEffect(() => {
     if (data) {
       onSearchComplete(data)
     }
@@ -28,7 +34,7 @@ const FilterInput: React.FC<FilterInputProps> = ({ onSearchComplete, searchType 
       <SearchIcon size={20} />
       <Input
         type="text"
-        placeholder="Search for tracks, artists or albums"
+        placeholder={`Search for ${searchType}`}
         value={query}
         onChange={e => setQuery(e.target.value)}
         onKeyDown={e => e.key === 'Enter' && handleSearch()}

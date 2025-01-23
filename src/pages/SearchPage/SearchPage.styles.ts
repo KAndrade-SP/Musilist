@@ -276,10 +276,7 @@ export const AlbumCard = styled.div`
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
-
-  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
 
   &:hover {
@@ -296,6 +293,47 @@ export const AlbumImage = styled.img`
 `
 
 export const AlbumInfo = styled.div`
+  padding: 10px 0;
+
+  h3 {
+    font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
+    color: ${({ theme }) => theme.colors.textWhite};
+    margin: 0;
+  }
+
+  p {
+    font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
+    color: ${({ theme }) => theme.colors.textWhite};
+    margin: 5px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+`
+
+export const ArtistCard = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+  }
+`
+
+export const ArtistImage = styled.img`
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  object-fit: cover;
+`
+
+export const ArtistInfo = styled.div`
   padding: 10px 0;
 
   h3 {
