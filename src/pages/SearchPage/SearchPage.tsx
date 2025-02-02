@@ -60,8 +60,10 @@ const SearchPage = () => {
     }
   }
 
-  const getImageUrl = (images: { url: string }[] | undefined): string => {
-    return images && images.length > 0 ? images[0].url : 'placeholder_image_url'
+  const formatDuration = (ms: number): string => {
+    const minutes = Math.floor(ms / 60000)
+    const seconds = Math.floor((ms % 60000) / 1000)
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
   return (
@@ -143,11 +145,11 @@ const SearchPage = () => {
                     </TrackImageCell>
 
                     <TrackCell>{music.album}</TrackCell>
-                    <TrackCell>00:00</TrackCell>
+                    <TrackCell>{formatDuration(music.duration)}</TrackCell>
 
                     <TrackDataDivisor>
                       <SearchItem title={music.album} />
-                      <span>00:00</span>
+                      <span>{formatDuration(music.duration)}</span>
                     </TrackDataDivisor>
                   </TrackEntry>
                 ))}
