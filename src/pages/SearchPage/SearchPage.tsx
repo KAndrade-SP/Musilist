@@ -31,12 +31,19 @@ import {
 import { useTheme } from 'styled-components'
 import { useState } from 'react'
 import SearchItem from '../../components/SearchItem/SearchItem'
+import { useNavigate } from 'react-router-dom'
 
 const SearchPage = () => {
   const theme = useTheme()
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
   const [activeFilter, setActiveFilter] = useState('Albums')
   const [results, setResults] = useState<any[]>([])
+
+  const navigate = useNavigate()
+
+  const handleItemClick = (item: any, type: 'artists' | 'albums' | 'tracks') => {
+    navigate(`/${type}/${item.id}`, { state: item })
+  }
 
   const handleSearchComplete = (data: any) => {
     setResults(data)
@@ -132,7 +139,7 @@ const SearchPage = () => {
                 </TracksHeader>
 
                 {results.map((music, index) => (
-                  <TrackEntry key={music.id}>
+                  <TrackEntry key={music.id} onClick={() => handleItemClick(music, 'tracks')}>
                     <TrackIdCell>{index + 1}</TrackIdCell>
 
                     <TrackImageCell>

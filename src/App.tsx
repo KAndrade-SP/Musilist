@@ -19,6 +19,7 @@ import SettingsPage from './pages/SettingsPage/SettingsPage'
 import PrivateRoute from './components/PrivateRoute'
 import SearchPage from './pages/SearchPage/SearchPage'
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage'
+import MediaDetails from './components/MediaDetails/MediaDetails'
 
 function App() {
   const dispatch = useDispatch<AppDispatch>()
@@ -109,6 +110,14 @@ function App() {
               element={
                 <PrivateRoute>
                   <SongList user={user} />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/:type/:id"
+              element={
+                <PrivateRoute>
+                  <MediaDetails />
                 </PrivateRoute>
               }
             />
