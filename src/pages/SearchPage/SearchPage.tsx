@@ -32,6 +32,7 @@ import { useTheme } from 'styled-components'
 import { useState } from 'react'
 import SearchItem from '../../components/SearchItem/SearchItem'
 import { useNavigate } from 'react-router-dom'
+import { formatDuration } from '../../helpers/FormatDuration'
 
 const SearchPage = () => {
   const theme = useTheme()
@@ -65,12 +66,6 @@ const SearchPage = () => {
       default:
         return 'albums'
     }
-  }
-
-  const formatDuration = (ms: number): string => {
-    const minutes = Math.floor(ms / 60000)
-    const seconds = Math.floor((ms % 60000) / 1000)
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`
   }
 
   return (

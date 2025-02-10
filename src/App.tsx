@@ -29,6 +29,8 @@ function App() {
   const location = useLocation()
   const isLoginPage = location.pathname === '/login'
   const isSettingsPage = location.pathname === '/settings'
+  const isBrowsePage = location.pathname === '/browse'
+  const isDetailPage = /^\/(artists|tracks|albums)\//.test(location.pathname)
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async user => {
@@ -92,7 +94,7 @@ function App() {
       ) : (
         <>
           <Navbar user={user} />
-          {!isSettingsPage && <Banner user={user} />}
+          {!isSettingsPage && !isBrowsePage && !isDetailPage && <Banner user={user} />}
 
           <Routes>
             <Route path="/" element={<Home user={user} />} />

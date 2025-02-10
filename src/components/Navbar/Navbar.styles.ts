@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 export const NavbarContainer = styled.header`
   ${({ theme: { colors } }) => `
-    background-color: rgba(46, 41, 59, 0.7);
+    background-color: ${colors.grayBackgroundOp};
     color: ${colors.textWhite};
     width: 100vw;
     padding: 0.7rem 2rem;

@@ -1,6 +1,16 @@
 import React from 'react'
 import { useLocation, useParams } from 'react-router-dom'
-import { DetailContainer, MediaImage, MediaInfo, MediaTitle } from './MediaDetails.styles'
+import {
+  DetailContainer,
+  DetailContainerBackground,
+  DetailContent,
+  MediaDescriptionContainer,
+  MediaImage,
+  MediaInfo,
+  MediaInfoContainer,
+  MediaTitle,
+} from './MediaDetails.styles'
+import { formatDuration } from '../../helpers/FormatDuration'
 
 const MediaDetails: React.FC = () => {
   const { type } = useParams<{ type: 'artists' | 'tracks' | 'albums' }>()
@@ -11,31 +21,40 @@ const MediaDetails: React.FC = () => {
 
   return (
     <DetailContainer>
-      {item.image && <MediaImage src={item.image} alt={item.name} />}
-      <MediaTitle>{item.name}</MediaTitle>
+      <DetailContainerBackground>
+        <DetailContent>
+          <MediaInfoContainer>
+            {item.image && <MediaImage src={item.image} alt={item.name} />}
 
-      {type === 'artists' && (
-        <>
-          <MediaInfo>Popularity: 000</MediaInfo>
-          <MediaInfo>Followers: 000</MediaInfo>
-        </>
-      )}
+            <MediaDescriptionContainer>
+              <MediaTitle>{item.name}</MediaTitle>
 
-      {type === 'tracks' && (
-        <>
-          <MediaInfo>Artist: {item.name}</MediaInfo>
-          <MediaInfo>Album: </MediaInfo>
-          <MediaInfo>Duration: </MediaInfo>
-        </>
-      )}
+              {type === 'artists' && (
+                <>
+                  <MediaInfo>Popularity: 000</MediaInfo>
+                  <MediaInfo>Followers: 000</MediaInfo>
+                </>
+              )}
 
-      {type === 'albums' && (
-        <>
-          <MediaInfo>Artist: </MediaInfo>
-          <MediaInfo>Total songs: </MediaInfo>
-          <MediaInfo>Type: </MediaInfo>
-        </>
-      )}
+              {type === 'tracks' && (
+                <>
+                  <MediaInfo>Artist: {item.name}</MediaInfo>
+                  <MediaInfo>Album: {item.album}</MediaInfo>
+                  <MediaInfo>Duration: {formatDuration(item.duration)}</MediaInfo>
+                </>
+              )}
+
+              {type === 'albums' && (
+                <>
+                  <MediaInfo>Artist: </MediaInfo>
+                  <MediaInfo>Total songs: </MediaInfo>
+                  <MediaInfo>Type: </MediaInfo>
+                </>
+              )}
+            </MediaDescriptionContainer>
+          </MediaInfoContainer>
+        </DetailContent>
+      </DetailContainerBackground>
     </DetailContainer>
   )
 }
