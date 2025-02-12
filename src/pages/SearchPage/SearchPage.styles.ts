@@ -165,7 +165,9 @@ export const TrackEntry = styled.div`
   ${({ theme: { colors, breakpoints } }) => `
     display: contents;
     color: ${colors.textWhite};
+    background-color: ${colors.textWhite};
     padding: 0.5rem 0;
+    cursor: pointer;
     
     &:last-child {
       border-bottom: none;
@@ -177,6 +179,10 @@ export const TrackEntry = styled.div`
       justify-content: space-between;
       border-radius: 5px;
       padding: 1rem 0;
+    }
+
+    &:hover {
+      color: ${colors.lightPurple};
     }
   `}
 `
@@ -220,6 +226,11 @@ export const TrackImageCell = styled.div`
       span {
         width: 100px;
       }
+    }
+
+    &:hover {
+      transform: scale(1.01);
+      transition: transform 0.3s ease;
     }
   `}
 `

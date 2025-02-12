@@ -97,7 +97,7 @@ const SongList = ({ user }: { user: User | null }) => {
         <SongListSection>
           <Filters>
             <FilterSearch>
-              <FilterInput onSearchComplete={handleSearchComplete} />
+              <FilterInput searchType={'tracks'} onSearchComplete={handleSearchComplete} />
 
               <DropdownFilter role="button" aria-label="toggle filters" onClick={handleClick}>
                 {!toggle ? (

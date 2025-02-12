@@ -20,6 +20,7 @@ export const MediaInfoContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 2rem;
+  align-items: center;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: column;
@@ -43,15 +44,22 @@ export const MediaImage = styled.img`
   width: 250px;
   height: 250px;
   border-radius: 10px;
-  margin-bottom: 20px;
 `
 
 export const MediaTitle = styled.h1`
-  margin: 10px 0;
   font-size: ${({ theme }) => theme.fontSizes.biggestFontSize};
 `
 
 export const MediaInfo = styled.p`
-  margin: 5px 0;
   font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
+`
+
+export const MediaButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+  align-self: flex-start;
+  margin-left: auto;
+  padding-top: 2rem;
 `
