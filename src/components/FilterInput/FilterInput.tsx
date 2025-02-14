@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { Input, SearchIcon, SearchInputContainer } from './FilterInput.styles'
 import { useSpotifySearch } from '../../hooks/useSpotifySearch'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { setQuery } from '../../redux/reducers/searchSlice'
+import { mapFilterToType } from '../../helpers/MapFilterToType'
 
-type FilterInputProps = {
-  onSearchComplete: (data: any) => void
-  searchType: 'artists' | 'tracks' | 'albums'
-}
+const FilterInput: React.FC = () => {
+  const dispatch = useDispatch()
+  const { search } = useSpotifySearch()
 
-const FilterInput: React.FC<FilterInputProps> = ({ onSearchComplete, searchType }) => {
-  const [query, setQuery] = useState('')
-  const { data, search } = useSpotifySearch()
+  const query = useSelector((state: RootState) => state.search.query)
+  const activeFilter = useSelector((state: RootState) => state.search.activeFilter)
 
   const handleSearch = () => {
     if (query.trim()) {
-      search(query, searchType)
+      const mappedType = mapFilterToType(activeFilter)
+      search(query, mappedType)
     }
   }
 
@@ -21,22 +24,16 @@ const FilterInput: React.FC<FilterInputProps> = ({ onSearchComplete, searchType 
     if (query.trim()) {
       handleSearch()
     }
-  }, [searchType])
-
-  useEffect(() => {
-    if (data) {
-      onSearchComplete(data)
-    }
-  }, [data, onSearchComplete])
+  }, [activeFilter])
 
   return (
     <SearchInputContainer>
       <SearchIcon size={20} />
       <Input
         type="text"
-        placeholder={`Search for ${searchType}`}
+        placeholder={`Search for ${activeFilter}`}
         value={query}
-        onChange={e => setQuery(e.target.value)}
+        onChange={e => dispatch(setQuery(e.target.value))}
         onKeyDown={e => e.key === 'Enter' && handleSearch()}
       />
     </SearchInputContainer>

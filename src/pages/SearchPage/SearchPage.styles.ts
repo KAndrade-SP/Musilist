@@ -165,7 +165,6 @@ export const TrackEntry = styled.div`
   ${({ theme: { colors, breakpoints } }) => `
     display: contents;
     color: ${colors.textWhite};
-    background-color: ${colors.textWhite};
     padding: 0.5rem 0;
     cursor: pointer;
     

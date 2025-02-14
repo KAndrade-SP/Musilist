@@ -12,11 +12,9 @@ import {
   MediaTitle,
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
-import { IconHeart } from '@tabler/icons-react'
-import { useTheme } from 'styled-components'
+import LikeButton from '../LikeButton'
 
 const MediaDetails: React.FC = () => {
-  const theme = useTheme()
   const { type } = useParams<{ type: 'artists' | 'tracks' | 'albums' }>()
   const location = useLocation()
   const item = location.state
@@ -59,13 +57,7 @@ const MediaDetails: React.FC = () => {
 
             <MediaButtons>
               <p>dropdown</p>
-              <IconHeart
-                size={30}
-                style={{
-                  color: theme.colors.textWhite,
-                  cursor: 'pointer',
-                }}
-              />
+              <LikeButton />
             </MediaButtons>
           </MediaInfoContainer>
         </DetailContent>

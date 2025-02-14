@@ -24,7 +24,6 @@ export const MediaInfoContainer = styled.div`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     flex-direction: column;
-    gap: 0;
     align-items: center;
   }
 `
@@ -62,4 +61,11 @@ export const MediaButtons = styled.div`
   align-self: flex-start;
   margin-left: auto;
   padding-top: 2rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    flex-direction: column;
+    align-self: center;
+    margin-left: 0;
+    padding-top: 0;
+  }
 `

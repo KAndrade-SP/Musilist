@@ -29,50 +29,47 @@ import {
   ArtistInfo,
 } from './SearchPage.styles'
 import { useTheme } from 'styled-components'
-import { useState } from 'react'
 import SearchItem from '../../components/SearchItem/SearchItem'
 import { useNavigate } from 'react-router-dom'
 import { formatDuration } from '../../helpers/FormatDuration'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { setActiveFilter } from '../../redux/reducers/searchSlice'
+import { useSpotifySearch } from '../../hooks/useSpotifySearch'
+import { mapFilterToType } from '../../helpers/MapFilterToType'
 
 const SearchPage = () => {
   const theme = useTheme()
-  const { toggle, ref, handleClick } = useToggleWithOutsideClick()
-  const [activeFilter, setActiveFilter] = useState('Albums')
-  const [results, setResults] = useState<any[]>([])
-
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { search } = useSpotifySearch()
+  const { toggle, ref, handleClick } = useToggleWithOutsideClick()
 
-  const handleItemClick = (item: any, type: 'artists' | 'albums' | 'tracks') => {
+  const results = useSelector((state: RootState) => state.search.results)
+  const query = useSelector((state: RootState) => state.search.query)
+  const activeFilter = useSelector((state: RootState) => state.search.activeFilter)
+
+  const handleFilterClick = (filter: string) => {
+    console.log('filter', filter)
+    const mappedFilter = mapFilterToType(filter)
+    dispatch(setActiveFilter(mappedFilter))
+
+    if (query.trim()) {
+      search(query, mappedFilter)
+    }
+  }
+
+  const handleItemClick = (item: any, type: 'albums' | 'artists' | 'tracks') => {
     navigate(`/${type}/${item.id}`, { state: item })
   }
 
-  const handleSearchComplete = (data: any) => {
-    setResults(data)
-    console.log(results)
-  }
-
-  const handleFilterClick = (filter: string) => {
-    setActiveFilter(filter)
-  }
-
-  const mapFilterToType = (filter: string): 'albums' | 'artists' | 'tracks' => {
-    switch (filter) {
-      case 'Albums':
-        return 'albums'
-      case 'Artists':
-        return 'artists'
-      case 'Tracks':
-        return 'tracks'
-      default:
-        return 'albums'
-    }
-  }
+  console.log('activeFilter', activeFilter)
 
   return (
     <>
       <SearchContainer>
         <SearchSection>
-          <FilterInput searchType={mapFilterToType(activeFilter)} onSearchComplete={handleSearchComplete} />
+          <FilterInput />
           {filters.map(filter => {
             return (
               <SearchTag
