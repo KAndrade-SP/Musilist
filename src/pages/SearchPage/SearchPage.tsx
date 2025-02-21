@@ -157,7 +157,7 @@ const SearchPage = () => {
           ) : activeFilter === 'Albums' ? (
             <GridContainer>
               {results.map(album => (
-                <AlbumCard key={album.id}>
+                <AlbumCard key={album.id} onClick={() => handleItemClick(album, 'albums')}>
                   <AlbumImage src={album.image} alt={album.name} />
                   <AlbumInfo>
                     <h3>{album.name}</h3>
@@ -169,7 +169,7 @@ const SearchPage = () => {
           ) : (
             <GridContainer>
               {results.map(artist => (
-                <ArtistCard key={artist.id}>
+                <ArtistCard key={artist.id} onClick={() => handleItemClick(artist, 'artists')}>
                   <ArtistImage src={artist.image} alt={artist.name} />
                   <ArtistInfo>
                     <h3>{artist.name}</h3>

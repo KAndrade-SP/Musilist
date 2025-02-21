@@ -33,8 +33,7 @@ const MediaDetails: React.FC = () => {
 
               {type === 'artists' && (
                 <>
-                  <MediaInfo>Popularity: 000</MediaInfo>
-                  <MediaInfo>Followers: 000</MediaInfo>
+                  <MediaInfo>Name: {item.name}</MediaInfo>
                 </>
               )}
 
@@ -48,9 +47,9 @@ const MediaDetails: React.FC = () => {
 
               {type === 'albums' && (
                 <>
-                  <MediaInfo>Artist: </MediaInfo>
-                  <MediaInfo>Total songs: </MediaInfo>
-                  <MediaInfo>Type: </MediaInfo>
+                  <MediaInfo>Artist: {item.artist}</MediaInfo>
+                  <MediaInfo>Total songs: {item.totalTracks}</MediaInfo>
+                  <MediaInfo>Type: {item.albumType}</MediaInfo>
                 </>
               )}
             </MediaDescriptionContainer>
