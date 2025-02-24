@@ -47,6 +47,7 @@ function App() {
                 email: userSnap.data().email || null,
                 photoURL: userSnap.data().photoURL || 'https://imgur.com/kjSD6bg.jpg',
                 coverPhotoURL: userSnap.data().coverPhotoURL || null,
+                favorites: userSnap.data().favorites || { albums: [], artists: [], tracks: [] },
               })
             )
           } else {
@@ -57,6 +58,7 @@ function App() {
               photoURL: 'https://imgur.com/kjSD6bg.jpg',
               coverPhotoURL: null,
               createdAt: new Date().toISOString(),
+              favorites: { albums: [], artists: [], tracks: [] },
             }
             await setDoc(userRef, newUser)
             dispatch(setUser(newUser))
@@ -119,7 +121,7 @@ function App() {
               path="/:type/:id"
               element={
                 <PrivateRoute>
-                  <MediaDetails />
+                  <MediaDetails user={user} />
                 </PrivateRoute>
               }
             />

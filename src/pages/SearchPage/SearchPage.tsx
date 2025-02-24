@@ -50,7 +50,6 @@ const SearchPage = () => {
   const activeFilter = useSelector((state: RootState) => state.search.activeFilter)
 
   const handleFilterClick = (filter: string) => {
-    console.log('filter', filter)
     const mappedFilter = mapFilterToType(filter)
     dispatch(setActiveFilter(mappedFilter))
 
@@ -62,8 +61,6 @@ const SearchPage = () => {
   const handleItemClick = (item: any, type: 'albums' | 'artists' | 'tracks') => {
     navigate(`/${type}/${item.id}`, { state: item })
   }
-
-  console.log('activeFilter', activeFilter)
 
   return (
     <>

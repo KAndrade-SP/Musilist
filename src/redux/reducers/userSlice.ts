@@ -64,6 +64,80 @@ export const updateUserProfile = createAsyncThunk<
   }
 })
 
+export const addToFavorites = createAsyncThunk(
+  'userProfile/addToFavorites',
+  async (
+    { uid, type, id }: { uid: string; type: 'albums' | 'artists' | 'tracks'; id: string },
+    { dispatch, getState }
+  ) => {
+    try {
+      const userRef = doc(db, 'users', uid)
+      const userSnap = await getDoc(userRef)
+      const { user } = (getState() as RootState).auth
+
+      if (!userSnap.exists()) {
+        throw new Error('User not found')
+      }
+
+      const userData = userSnap.data() as User
+      const updatedFavorites = {
+        ...userData.favorites,
+        [type]: [...(userData.favorites?.[type] || []), id],
+      }
+
+      await updateDoc(userRef, { favorites: updatedFavorites })
+
+      if (user) {
+        dispatch(
+          setUser({
+            ...user,
+            favorites: {
+              albums: updatedFavorites.albums ?? [],
+              artists: updatedFavorites.artists ?? [],
+              tracks: updatedFavorites.tracks ?? [],
+            },
+          })
+        )
+      }
+
+      return { favorites: updatedFavorites }
+    } catch (error) {
+      console.error('Error adding to favorites:', error)
+      throw error
+    }
+  }
+)
+
+export const removeFromFavorites = createAsyncThunk(
+  'userProfile/removeFromFavorites',
+  async (
+    { uid, type, id }: { uid: string; type: 'albums' | 'artists' | 'tracks'; id: string },
+    { dispatch, getState }
+  ) => {
+    const userRef = doc(db, 'users', uid)
+    const userSnap = await getDoc(userRef)
+    const { user } = (getState() as RootState).auth
+
+    if (!userSnap.exists()) {
+      throw new Error('User not found')
+    }
+
+    const userData = userSnap.data()
+    const updatedFavorites = {
+      ...userData.favorites,
+      [type]: userData.favorites?.[type]?.filter((favId: string) => favId !== id) || [],
+    }
+
+    await updateDoc(userRef, { favorites: updatedFavorites })
+
+    if (user) {
+      dispatch(setUser({ ...user, favorites: updatedFavorites }))
+    }
+
+    return { favorites: updatedFavorites }
+  }
+)
+
 const userSlice = createSlice({
   name: 'userProfile',
   initialState,
@@ -107,6 +181,28 @@ const userSlice = createSlice({
       .addCase(updateUserProfile.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload as string
+      })
+      .addCase(addToFavorites.fulfilled, (state, action) => {
+        if (state.profile) {
+          const { type, id } = action.meta.arg
+
+          if (!state.profile.favorites) {
+            state.profile.favorites = { albums: [], artists: [], tracks: [] }
+          }
+
+          if (!state.profile.favorites[type].includes(id)) {
+            state.profile.favorites[type].push(id)
+          }
+        }
+      })
+      .addCase(removeFromFavorites.fulfilled, (state, action) => {
+        if (state.profile) {
+          const { type, id } = action.meta.arg
+
+          if (!state.profile.favorites) return
+
+          state.profile.favorites[type] = state.profile.favorites[type].filter(favId => favId !== id)
+        }
       })
   },
 })

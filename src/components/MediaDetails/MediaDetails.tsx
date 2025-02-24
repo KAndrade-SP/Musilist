@@ -1,4 +1,3 @@
-import React from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import {
   DetailContainer,
@@ -13,8 +12,9 @@ import {
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
 import LikeButton from '../LikeButton'
+import { User } from '../../types/UserTypes'
 
-const MediaDetails: React.FC = () => {
+const MediaDetails = ({ user }: { user: User | null }) => {
   const { type } = useParams<{ type: 'artists' | 'tracks' | 'albums' }>()
   const location = useLocation()
   const item = location.state
@@ -34,6 +34,7 @@ const MediaDetails: React.FC = () => {
               {type === 'artists' && (
                 <>
                   <MediaInfo>Name: {item.name}</MediaInfo>
+                  <LikeButton itemId={item.id} type="artists" />
                 </>
               )}
 
@@ -42,6 +43,7 @@ const MediaDetails: React.FC = () => {
                   <MediaInfo>Artist: {item.name}</MediaInfo>
                   <MediaInfo>Album: {item.album}</MediaInfo>
                   <MediaInfo>Duration: {formatDuration(item.duration)}</MediaInfo>
+                  <LikeButton itemId={item.id} type="tracks" />
                 </>
               )}
 
@@ -50,13 +52,13 @@ const MediaDetails: React.FC = () => {
                   <MediaInfo>Artist: {item.artist}</MediaInfo>
                   <MediaInfo>Total songs: {item.totalTracks}</MediaInfo>
                   <MediaInfo>Type: {item.albumType}</MediaInfo>
+                  <LikeButton itemId={item.id} type="albums" />
                 </>
               )}
             </MediaDescriptionContainer>
 
             <MediaButtons>
               <p>dropdown</p>
-              <LikeButton />
             </MediaButtons>
           </MediaInfoContainer>
         </DetailContent>

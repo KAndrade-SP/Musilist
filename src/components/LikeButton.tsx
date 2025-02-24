@@ -1,17 +1,38 @@
-import { useState } from 'react'
 import { IconHeart } from '@tabler/icons-react'
 import { useTheme } from 'styled-components'
+import { addToFavorites, removeFromFavorites } from '../redux/reducers/userSlice'
+import { useAppDispatch } from '../hooks/useAppDispatch'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
 
-const LikeButton = () => {
+interface LikeButtonProps {
+  itemId: string
+  type: 'albums' | 'artists' | 'tracks'
+}
+
+const LikeButton: React.FC<LikeButtonProps> = ({ itemId, type }) => {
   const theme = useTheme()
-  const [liked, setLiked] = useState(false)
+  const dispatch = useAppDispatch()
+  const { user } = useSelector((state: RootState) => state.auth)
+
+  const isLiked = user?.favorites?.[type]?.includes(itemId) ?? false
+
+  const handleLikeToggle = () => {
+    if (!user) return
+
+    if (isLiked) {
+      dispatch(removeFromFavorites({ uid: user.uid, type, id: itemId })).unwrap()
+    } else {
+      dispatch(addToFavorites({ uid: user.uid, type, id: itemId })).unwrap()
+    }
+  }
 
   return (
     <IconHeart
-      onClick={() => setLiked(!liked)}
+      onClick={handleLikeToggle}
       size={24}
-      color={liked ? 'red' : theme.colors.textWhite}
-      fill={liked ? 'red' : 'none'}
+      color={isLiked ? 'red' : theme.colors.textWhite}
+      fill={isLiked ? 'red' : 'none'}
       style={{ cursor: 'pointer' }}
     />
   )

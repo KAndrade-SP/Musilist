@@ -4,6 +4,11 @@ export interface User {
   email: string | null
   photoURL: string
   coverPhotoURL: string | null
+  favorites?: {
+    albums: string[]
+    artists: string[]
+    tracks: string[]
+  }
 }
 
 export interface AuthState {
