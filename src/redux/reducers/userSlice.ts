@@ -67,7 +67,13 @@ export const updateUserProfile = createAsyncThunk<
 export const addToFavorites = createAsyncThunk(
   'userProfile/addToFavorites',
   async (
-    { uid, type, id }: { uid: string; type: 'albums' | 'artists' | 'tracks'; id: string },
+    {
+      uid,
+      type,
+      id,
+      name,
+      image,
+    }: { uid: string; type: 'albums' | 'artists' | 'tracks'; id: string; name: string; image: string },
     { dispatch, getState }
   ) => {
     try {
@@ -82,7 +88,7 @@ export const addToFavorites = createAsyncThunk(
       const userData = userSnap.data() as User
       const updatedFavorites = {
         ...userData.favorites,
-        [type]: [...(userData.favorites?.[type] || []), id],
+        [type]: [...(userData.favorites?.[type] || []), { id, name, image }],
       }
 
       await updateDoc(userRef, { favorites: updatedFavorites })
@@ -125,7 +131,7 @@ export const removeFromFavorites = createAsyncThunk(
     const userData = userSnap.data()
     const updatedFavorites = {
       ...userData.favorites,
-      [type]: userData.favorites?.[type]?.filter((favId: string) => favId !== id) || [],
+      [type]: userData.favorites?.[type]?.filter((fav: { id: string }) => fav.id !== id) || [],
     }
 
     await updateDoc(userRef, { favorites: updatedFavorites })
@@ -184,14 +190,14 @@ const userSlice = createSlice({
       })
       .addCase(addToFavorites.fulfilled, (state, action) => {
         if (state.profile) {
-          const { type, id } = action.meta.arg
+          const { type, id, name, image } = action.meta.arg
 
           if (!state.profile.favorites) {
             state.profile.favorites = { albums: [], artists: [], tracks: [] }
           }
 
-          if (!state.profile.favorites[type].includes(id)) {
-            state.profile.favorites[type].push(id)
+          if (!state.profile.favorites[type].some(fav => fav.id === id)) {
+            state.profile.favorites[type].push({ id, name, image })
           }
         }
       })
@@ -201,7 +207,7 @@ const userSlice = createSlice({
 
           if (!state.profile.favorites) return
 
-          state.profile.favorites[type] = state.profile.favorites[type].filter(favId => favId !== id)
+          state.profile.favorites[type] = state.profile.favorites[type].filter(fav => fav.id !== id)
         }
       })
   },

@@ -1,3 +1,9 @@
+export interface FavoriteItem {
+  id: string
+  name: string
+  image: string
+}
+
 export interface User {
   uid: string
   displayName: string | null
@@ -5,9 +11,9 @@ export interface User {
   photoURL: string
   coverPhotoURL: string | null
   favorites?: {
-    albums: string[]
-    artists: string[]
-    tracks: string[]
+    albums: FavoriteItem[]
+    artists: FavoriteItem[]
+    tracks: FavoriteItem[]
   }
 }
 

@@ -34,7 +34,7 @@ const MediaDetails = ({ user }: { user: User | null }) => {
               {type === 'artists' && (
                 <>
                   <MediaInfo>Name: {item.name}</MediaInfo>
-                  <LikeButton itemId={item.id} type="artists" />
+                  <LikeButton item={item} type="artists" />
                 </>
               )}
 
@@ -43,7 +43,7 @@ const MediaDetails = ({ user }: { user: User | null }) => {
                   <MediaInfo>Artist: {item.name}</MediaInfo>
                   <MediaInfo>Album: {item.album}</MediaInfo>
                   <MediaInfo>Duration: {formatDuration(item.duration)}</MediaInfo>
-                  <LikeButton itemId={item.id} type="tracks" />
+                  <LikeButton item={item} type="tracks" />
                 </>
               )}
 
@@ -52,7 +52,7 @@ const MediaDetails = ({ user }: { user: User | null }) => {
                   <MediaInfo>Artist: {item.artist}</MediaInfo>
                   <MediaInfo>Total songs: {item.totalTracks}</MediaInfo>
                   <MediaInfo>Type: {item.albumType}</MediaInfo>
-                  <LikeButton itemId={item.id} type="albums" />
+                  <LikeButton item={item} type="albums" />
                 </>
               )}
             </MediaDescriptionContainer>
