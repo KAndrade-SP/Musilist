@@ -30,19 +30,19 @@ import {
 } from './SearchPage.styles'
 import { useTheme } from 'styled-components'
 import SearchItem from '../../components/SearchItem/SearchItem'
-import { useNavigate } from 'react-router-dom'
 import { formatDuration } from '../../helpers/FormatDuration'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setActiveFilter } from '../../redux/reducers/searchSlice'
 import { useSpotifySearch } from '../../hooks/useSpotifySearch'
 import { mapFilterToType } from '../../helpers/MapFilterToType'
+import { useMediaNavigation } from '../../hooks/useMediaNavigation'
 
 const SearchPage = () => {
   const theme = useTheme()
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { search } = useSpotifySearch()
+  const { handleMediaDetails } = useMediaNavigation()
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
 
   const results = useSelector((state: RootState) => state.search.results)
@@ -56,10 +56,6 @@ const SearchPage = () => {
     if (query.trim()) {
       search(query, mappedFilter)
     }
-  }
-
-  const handleItemClick = (item: any, type: 'albums' | 'artists' | 'tracks') => {
-    navigate(`/${type}/${item.id}`, { state: item })
   }
 
   return (
@@ -128,7 +124,7 @@ const SearchPage = () => {
                 </TracksHeader>
 
                 {results.map((music, index) => (
-                  <TrackEntry key={music.id} onClick={() => handleItemClick(music, 'tracks')}>
+                  <TrackEntry key={music.id} onClick={() => handleMediaDetails(music, 'tracks')}>
                     <TrackIdCell>{index + 1}</TrackIdCell>
 
                     <TrackImageCell>
@@ -154,7 +150,7 @@ const SearchPage = () => {
           ) : activeFilter === 'Albums' ? (
             <GridContainer>
               {results.map(album => (
-                <AlbumCard key={album.id} onClick={() => handleItemClick(album, 'albums')}>
+                <AlbumCard key={album.id} onClick={() => handleMediaDetails(album, 'albums')}>
                   <AlbumImage src={album.image} alt={album.name} />
                   <AlbumInfo>
                     <h3>{album.name}</h3>
@@ -166,7 +162,7 @@ const SearchPage = () => {
           ) : (
             <GridContainer>
               {results.map(artist => (
-                <ArtistCard key={artist.id} onClick={() => handleItemClick(artist, 'artists')}>
+                <ArtistCard key={artist.id} onClick={() => handleMediaDetails(artist, 'artists')}>
                   <ArtistImage src={artist.image} alt={artist.name} />
                   <ArtistInfo>
                     <h3>{artist.name}</h3>

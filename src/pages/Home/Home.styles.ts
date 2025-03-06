@@ -296,7 +296,7 @@ export const FavoritesArea = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
+    gap: 2rem;
 
     @media (max-width: ${breakpoints.md}) {
       flex-wrap: wrap;
@@ -313,17 +313,23 @@ export const FavoritesArea = styled.div`
 `
 
 export const FavoritesBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  justify-content: center;
+  position: relative;
+  display: inline-block;
+  width: 100px;
+  height: 100px;
+
+  &:hover span {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+  }
 `
 
 export const Favorite = styled.img`
   width: 100px;
   height: 100px;
   border-radius: 50px;
+  cursor: pointer;
 `
 
 export const TopGrid = styled.div`

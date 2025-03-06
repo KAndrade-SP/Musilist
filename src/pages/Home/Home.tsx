@@ -36,8 +36,12 @@ import {
   TopImage,
   TopItem,
 } from './Home.styles'
+import { Tooltip } from '../FavoritesPage/FavoritesPage.styles'
+import { useMediaNavigation } from '../../hooks/useMediaNavigation'
 
 const Home = ({ user }: { user: User | null }) => {
+  const { handleMediaDetails } = useMediaNavigation()
+
   return (
     <>
       <Container>
@@ -173,46 +177,12 @@ const Home = ({ user }: { user: User | null }) => {
           <h2>Favorite Artists</h2>
 
           <FavoritesArea>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={ArtistImage} />
-              Favorite Artist
-            </FavoritesBox>
+            {user?.favorites?.artists.slice(0, 10).map(artist => (
+              <FavoritesBox key={artist.id} onClick={() => handleMediaDetails(artist, 'artists')}>
+                <Favorite src={artist.image} alt={artist.name} />
+                <Tooltip>{artist.name}</Tooltip>
+              </FavoritesBox>
+            ))}
           </FavoritesArea>
         </HomeSection>
 
@@ -220,46 +190,12 @@ const Home = ({ user }: { user: User | null }) => {
           <h2>Favorite Tracks</h2>
 
           <FavoritesArea>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
-            <FavoritesBox>
-              <Favorite src={MusicImage} />
-              Favorite Track
-            </FavoritesBox>
+            {user?.favorites?.tracks.slice(0, 10).map(track => (
+              <FavoritesBox key={track.id} onClick={() => handleMediaDetails(track, 'tracks')}>
+                <Favorite src={track.image} alt={track.name} />
+                <Tooltip>{track.name}</Tooltip>
+              </FavoritesBox>
+            ))}
           </FavoritesArea>
         </HomeSection>
 

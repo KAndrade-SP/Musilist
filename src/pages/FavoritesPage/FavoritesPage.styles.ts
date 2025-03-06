@@ -31,23 +31,37 @@ export const GridFavs = styled.div`
 `
 
 export const ItemFav = styled.div`
+  position: relative;
+  display: inline-block;
   width: 100px;
   height: 100px;
-  border-radius: 50px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s ease-in-out;
 
-  &:hover {
-    transform: scale(1.05);
+  &:hover span {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
   }
+`
+
+export const Tooltip = styled.span`
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: ${({ theme }) => theme.colors.grayBackground};
+  color: ${({ theme }) => theme.colors.textWhite};
+  padding: 6px 10px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: ${({ theme }) => theme.fontSizes.smallFontSize};
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 `
 
 export const ImageFavs = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  border-radius: 50%;
+  cursor: pointer;
 `
