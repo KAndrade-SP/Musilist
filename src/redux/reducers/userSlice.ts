@@ -43,7 +43,7 @@ export const saveUserProfile = createAsyncThunk(
 
 export const updateUserProfile = createAsyncThunk<
   Partial<User>,
-  Partial<User> & { photoURL?: string; coverPhotoURL?: string },
+  Partial<User> & { photoURL?: string; coverPhotoURL?: string | null },
   { rejectValue: string }
 >('userProfile/updateUserProfile', async (updatedData, { rejectWithValue, getState, dispatch }) => {
   try {
@@ -144,6 +144,39 @@ export const removeFromFavorites = createAsyncThunk(
   }
 )
 
+export const updateFavoritesOrder = createAsyncThunk(
+  'userProfile/updateFavoritesOrder',
+  async (
+    { uid, type, newOrder }: { uid: string; type: 'albums' | 'artists' | 'tracks'; newOrder: any[] },
+    { dispatch, getState }
+  ) => {
+    try {
+      const userRef = doc(db, 'users', uid)
+      await updateDoc(userRef, { [`favorites.${type}`]: newOrder })
+
+      const { user } = (getState() as RootState).auth
+      if (user) {
+        dispatch(
+          setUser({
+            ...user,
+            favorites: {
+              albums: user.favorites?.albums ?? [],
+              artists: user.favorites?.artists ?? [],
+              tracks: user.favorites?.tracks ?? [],
+              [type]: newOrder,
+            },
+          })
+        )
+      }
+
+      return { type, newOrder }
+    } catch (error) {
+      console.error('Error updating favorites order:', error)
+      throw error
+    }
+  }
+)
+
 const userSlice = createSlice({
   name: 'userProfile',
   initialState,
@@ -208,6 +241,15 @@ const userSlice = createSlice({
           if (!state.profile.favorites) return
 
           state.profile.favorites[type] = state.profile.favorites[type].filter(fav => fav.id !== id)
+        }
+      })
+      .addCase(updateFavoritesOrder.fulfilled, (state, action) => {
+        if (state.profile) {
+          if (!state.profile.favorites) {
+            state.profile.favorites = { albums: [], artists: [], tracks: [] }
+          }
+          const { type, newOrder } = action.payload
+          state.profile.favorites[type] = newOrder
         }
       })
   },
