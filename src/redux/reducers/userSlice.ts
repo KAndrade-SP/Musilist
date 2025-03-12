@@ -86,9 +86,14 @@ export const addToFavorites = createAsyncThunk(
       }
 
       const userData = userSnap.data() as User
+
+      if (!id || !name) {
+        throw new Error('Invalid item data')
+      }
+
       const updatedFavorites = {
         ...userData.favorites,
-        [type]: [...(userData.favorites?.[type] || []), { id, name, image }],
+        [type]: [...(userData.favorites?.[type] || []), { id, name, image: image || '' }],
       }
 
       await updateDoc(userRef, { favorites: updatedFavorites })

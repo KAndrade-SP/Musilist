@@ -43,3 +43,15 @@ export const searchArtists = async (query: string) => {
 export const searchAlbums = async (query: string) => {
   return await makeSpotifyRequest(`/search?type=album&q=${encodeURIComponent(query)}`)
 }
+
+export const fetchTrackById = async (id: string) => {
+  return await makeSpotifyRequest(`/tracks/${id}`)
+}
+
+export const fetchArtistById = async (id: string) => {
+  return await makeSpotifyRequest(`/artists/${id}`)
+}
+
+export const fetchAlbumById = async (id: string) => {
+  return await makeSpotifyRequest(`/albums/${id}`)
+}

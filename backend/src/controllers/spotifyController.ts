@@ -1,5 +1,12 @@
 import { Request, Response, NextFunction } from 'express'
-import { searchTracks, searchArtists, searchAlbums } from '../services/spotifyService'
+import {
+  searchTracks,
+  searchArtists,
+  searchAlbums,
+  fetchTrackById,
+  fetchArtistById,
+  fetchAlbumById,
+} from '../services/spotifyService'
 import { getSpotifyLoginUrl, handleSpotifyCallback } from '../services/authService'
 import { CustomError } from '../utils/CustomError'
 
@@ -94,6 +101,72 @@ export const getAlbums = async (req: Request, res: Response, next: NextFunction)
   try {
     const albums = await searchAlbums(q)
     res.json(albums)
+  } catch (error) {
+    if (error instanceof CustomError) {
+      next(error)
+    } else if (error instanceof Error) {
+      next(new CustomError(error.message, 500))
+    } else {
+      next(new CustomError('An unexpected error occurred.', 500))
+    }
+  }
+}
+
+export const getTrackById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+
+  if (!id) {
+    next(new CustomError('Track ID is required.', 400))
+    return
+  }
+
+  try {
+    const track = await fetchTrackById(id)
+    res.json(track)
+  } catch (error) {
+    if (error instanceof CustomError) {
+      next(error)
+    } else if (error instanceof Error) {
+      next(new CustomError(error.message, 500))
+    } else {
+      next(new CustomError('An unexpected error occurred.', 500))
+    }
+  }
+}
+
+export const getArtistById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+
+  if (!id) {
+    next(new CustomError('Artist ID is required.', 400))
+    return
+  }
+
+  try {
+    const artist = await fetchArtistById(id)
+    res.json(artist)
+  } catch (error) {
+    if (error instanceof CustomError) {
+      next(error)
+    } else if (error instanceof Error) {
+      next(new CustomError(error.message, 500))
+    } else {
+      next(new CustomError('An unexpected error occurred.', 500))
+    }
+  }
+}
+
+export const getAlbumById = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  const { id } = req.params
+
+  if (!id) {
+    next(new CustomError('Album ID is required.', 400))
+    return
+  }
+
+  try {
+    const album = await fetchAlbumById(id)
+    res.json(album)
   } catch (error) {
     if (error instanceof CustomError) {
       next(error)

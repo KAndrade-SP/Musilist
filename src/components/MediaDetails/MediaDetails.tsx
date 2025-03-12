@@ -1,4 +1,4 @@
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import {
   DetailContainer,
   DetailContainerBackground,
@@ -12,21 +12,38 @@ import {
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
 import LikeButton from '../LikeButton'
-import { User } from '../../types/UserTypes'
+import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 
-const MediaDetails = ({ user }: { user: User | null }) => {
-  const { type } = useParams<{ type: 'artists' | 'tracks' | 'albums' }>()
-  const location = useLocation()
-  const item = location.state
+const MediaDetails = () => {
+  const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
+  const { data: item, loading, error } = useSpotifyDetails(id!, type!)
 
+  if (loading) return <DetailContainer>Loading...</DetailContainer>
+  if (error) return <DetailContainer>Error: {error}</DetailContainer>
   if (!item) return <DetailContainer>Empty</DetailContainer>
+
+  const getItemData = (item: any, type: 'artists' | 'tracks' | 'albums') => {
+    if (!item) return null
+
+    return {
+      id: item.id,
+      name: item.name,
+      image: item.images?.[0]?.url || item.album?.images?.[0]?.url || '',
+    }
+  }
+
+  if (!type) return <DetailContainer>Invalid type</DetailContainer>
+
+  const formattedItem = getItemData(item, type)
+
+  if (!formattedItem) return <DetailContainer>Empty</DetailContainer>
 
   return (
     <DetailContainer>
       <DetailContainerBackground>
         <DetailContent>
           <MediaInfoContainer>
-            {item.image && <MediaImage src={item.image} alt={item.name} />}
+            {item.images && <MediaImage src={item.images[0]?.url} alt={item.name} />}
 
             <MediaDescriptionContainer>
               <MediaTitle>{item.name}</MediaTitle>
@@ -34,25 +51,25 @@ const MediaDetails = ({ user }: { user: User | null }) => {
               {type === 'artists' && (
                 <>
                   <MediaInfo>Name: {item.name}</MediaInfo>
-                  <LikeButton item={item} type="artists" />
+                  <LikeButton item={formattedItem} type="artists" />
                 </>
               )}
 
               {type === 'tracks' && (
                 <>
-                  <MediaInfo>Artist: {item.name}</MediaInfo>
-                  <MediaInfo>Album: {item.album}</MediaInfo>
-                  <MediaInfo>Duration: {formatDuration(item.duration)}</MediaInfo>
-                  <LikeButton item={item} type="tracks" />
+                  <MediaInfo>Artist: {item.artists[0]?.name}</MediaInfo>
+                  <MediaInfo>Album: {item.album?.name}</MediaInfo>
+                  <MediaInfo>Duration: {formatDuration(item.duration_ms)}</MediaInfo>
+                  <LikeButton item={formattedItem} type="tracks" />
                 </>
               )}
 
               {type === 'albums' && (
                 <>
-                  <MediaInfo>Artist: {item.artist}</MediaInfo>
-                  <MediaInfo>Total songs: {item.totalTracks}</MediaInfo>
-                  <MediaInfo>Type: {item.albumType}</MediaInfo>
-                  <LikeButton item={item} type="albums" />
+                  <MediaInfo>Artist: {item.artists[0]?.name}</MediaInfo>
+                  <MediaInfo>Total songs: {item.total_tracks}</MediaInfo>
+                  <MediaInfo>Type: {item.album_type}</MediaInfo>
+                  <LikeButton item={formattedItem} type="albums" />
                 </>
               )}
             </MediaDescriptionContainer>

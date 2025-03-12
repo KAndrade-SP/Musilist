@@ -178,7 +178,7 @@ const Home = ({ user }: { user: User | null }) => {
 
           <FavoritesArea>
             {user?.favorites?.artists.slice(0, 10).map(artist => (
-              <FavoritesBox key={artist.id} onClick={() => handleMediaDetails(artist, 'artists')}>
+              <FavoritesBox key={artist.id} onClick={() => handleMediaDetails(artist.id, 'artists')}>
                 <Favorite src={artist.image} alt={artist.name} />
                 <Tooltip>{artist.name}</Tooltip>
               </FavoritesBox>
@@ -191,7 +191,7 @@ const Home = ({ user }: { user: User | null }) => {
 
           <FavoritesArea>
             {user?.favorites?.tracks.slice(0, 10).map(track => (
-              <FavoritesBox key={track.id} onClick={() => handleMediaDetails(track, 'tracks')}>
+              <FavoritesBox key={track.id} onClick={() => handleMediaDetails(track.id, 'tracks')}>
                 <Favorite src={track.image} alt={track.name} />
                 <Tooltip>{track.name}</Tooltip>
               </FavoritesBox>

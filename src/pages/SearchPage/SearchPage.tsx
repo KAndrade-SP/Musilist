@@ -124,7 +124,7 @@ const SearchPage = () => {
                 </TracksHeader>
 
                 {results.map((music, index) => (
-                  <TrackEntry key={music.id} onClick={() => handleMediaDetails(music, 'tracks')}>
+                  <TrackEntry key={music.id} onClick={() => handleMediaDetails(music.id, 'tracks')}>
                     <TrackIdCell>{index + 1}</TrackIdCell>
 
                     <TrackImageCell>
@@ -150,7 +150,7 @@ const SearchPage = () => {
           ) : activeFilter === 'Albums' ? (
             <GridContainer>
               {results.map(album => (
-                <AlbumCard key={album.id} onClick={() => handleMediaDetails(album, 'albums')}>
+                <AlbumCard key={album.id} onClick={() => handleMediaDetails(album.id, 'albums')}>
                   <AlbumImage src={album.image} alt={album.name} />
                   <AlbumInfo>
                     <h3>{album.name}</h3>
@@ -162,7 +162,7 @@ const SearchPage = () => {
           ) : (
             <GridContainer>
               {results.map(artist => (
-                <ArtistCard key={artist.id} onClick={() => handleMediaDetails(artist, 'artists')}>
+                <ArtistCard key={artist.id} onClick={() => handleMediaDetails(artist.id, 'artists')}>
                   <ArtistImage src={artist.image} alt={artist.name} />
                   <ArtistInfo>
                     <h3>{artist.name}</h3>

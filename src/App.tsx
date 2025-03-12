@@ -121,7 +121,7 @@ function App() {
               path="/:type/:id"
               element={
                 <PrivateRoute>
-                  <MediaDetails user={user} />
+                  <MediaDetails />
                 </PrivateRoute>
               }
             />

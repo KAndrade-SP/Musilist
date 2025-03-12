@@ -58,7 +58,7 @@ const FavoritesPage = ({ user }: { user: User | null }) => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          onClick={() => handleMediaDetails(album, 'albums')}
+                          onClick={() => handleMediaDetails(album.id, 'albums')}
                         >
                           <ImageFavs src={album.image} alt={album.name} />
                           <Tooltip>{album.name}</Tooltip>
@@ -90,7 +90,7 @@ const FavoritesPage = ({ user }: { user: User | null }) => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          onClick={() => handleMediaDetails(artist, 'artists')}
+                          onClick={() => handleMediaDetails(artist.id, 'artists')}
                         >
                           <ImageFavs src={artist.image} alt={artist.name} />
                           <Tooltip>{artist.name}</Tooltip>
@@ -122,7 +122,7 @@ const FavoritesPage = ({ user }: { user: User | null }) => {
                           ref={provided.innerRef}
                           {...provided.draggableProps}
                           {...provided.dragHandleProps}
-                          onClick={() => handleMediaDetails(track, 'tracks')}
+                          onClick={() => handleMediaDetails(track.id, 'tracks')}
                         >
                           <ImageFavs src={track.image} alt={track.name} />
                           <Tooltip>{track.name}</Tooltip>
