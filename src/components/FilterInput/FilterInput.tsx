@@ -34,7 +34,11 @@ const FilterInput: React.FC = () => {
         placeholder={`Search for ${activeFilter}`}
         value={query}
         onChange={e => dispatch(setQuery(e.target.value))}
-        onKeyDown={e => e.key === 'Enter' && handleSearch()}
+        onKeyDown={e => {
+          if (e.key === 'Enter') {
+            handleSearch()
+          }
+        }}
       />
     </SearchInputContainer>
   )

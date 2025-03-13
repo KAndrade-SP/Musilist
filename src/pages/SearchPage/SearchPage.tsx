@@ -34,28 +34,21 @@ import { formatDuration } from '../../helpers/FormatDuration'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setActiveFilter } from '../../redux/reducers/searchSlice'
-import { useSpotifySearch } from '../../hooks/useSpotifySearch'
 import { mapFilterToType } from '../../helpers/MapFilterToType'
 import { useMediaNavigation } from '../../hooks/useMediaNavigation'
 
 const SearchPage = () => {
   const theme = useTheme()
   const dispatch = useDispatch()
-  const { search } = useSpotifySearch()
   const { handleMediaDetails } = useMediaNavigation()
   const { toggle, ref, handleClick } = useToggleWithOutsideClick()
 
   const results = useSelector((state: RootState) => state.search.results)
-  const query = useSelector((state: RootState) => state.search.query)
   const activeFilter = useSelector((state: RootState) => state.search.activeFilter)
 
   const handleFilterClick = (filter: string) => {
     const mappedFilter = mapFilterToType(filter)
     dispatch(setActiveFilter(mappedFilter))
-
-    if (query.trim()) {
-      search(query, mappedFilter)
-    }
   }
 
   return (

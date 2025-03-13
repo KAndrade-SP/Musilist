@@ -35,7 +35,7 @@ const MediaDetails = () => {
   if (!type) return <DetailContainer>Invalid type</DetailContainer>
 
   const formattedItem = getItemData(item, type)
-
+  console.log(item)
   if (!formattedItem) return <DetailContainer>Empty</DetailContainer>
 
   return (

@@ -11,8 +11,6 @@ export const useSpotifySearch = () => {
   const search = async (newQuery: string, newType: 'Albums' | 'Artists' | 'Tracks') => {
     const searchType = newType.toLowerCase() as 'albums' | 'artists' | 'tracks'
 
-    if (newQuery.trim() === query && searchType === type.toLowerCase()) return
-
     dispatch(startSearch())
 
     try {
