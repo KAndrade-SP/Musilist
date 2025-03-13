@@ -35,7 +35,6 @@ const MediaDetails = () => {
   if (!type) return <DetailContainer>Invalid type</DetailContainer>
 
   const formattedItem = getItemData(item, type)
-  console.log(item)
   if (!formattedItem) return <DetailContainer>Empty</DetailContainer>
 
   return (
@@ -43,7 +42,7 @@ const MediaDetails = () => {
       <DetailContainerBackground>
         <DetailContent>
           <MediaInfoContainer>
-            {item.images && <MediaImage src={item.images[0]?.url} alt={item.name} />}
+            <MediaImage src={formattedItem.image} alt={item.name} />
 
             <MediaDescriptionContainer>
               <MediaTitle>{item.name}</MediaTitle>

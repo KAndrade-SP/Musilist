@@ -45,7 +45,6 @@ const SearchPage = () => {
 
   const results = useSelector((state: RootState) => state.search.results)
   const activeFilter = useSelector((state: RootState) => state.search.activeFilter)
-
   const handleFilterClick = (filter: string) => {
     const mappedFilter = mapFilterToType(filter)
     dispatch(setActiveFilter(mappedFilter))
