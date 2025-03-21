@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { db } from '../../services/firebase'
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
-import { User } from '../../types/UserTypes'
+import { collection, deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import { ListItem, User } from '../../types/UserTypes'
 import { RootState } from '../store'
 import { setUser } from './authSlice'
 
@@ -182,6 +182,95 @@ export const updateFavoritesOrder = createAsyncThunk(
   }
 )
 
+export const addToList = createAsyncThunk(
+  'userProfile/addToList',
+  async (
+    { uid, listType, item }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; item: ListItem },
+    { dispatch, getState }
+  ) => {
+    try {
+      const userRef = doc(db, 'users', uid)
+      const listRef = collection(userRef, 'lists', listType, 'items')
+      const itemRef = doc(listRef, item.id)
+
+      await setDoc(itemRef, item)
+
+      const userSnap = await getDoc(userRef)
+      const userData = userSnap.exists() ? userSnap.data() : null
+
+      if (!userData) throw new Error('User not found')
+
+      const updatedLists = {
+        ...userData.lists,
+        [listType]: [...(userData.lists?.[listType] || []), item],
+      }
+
+      await updateDoc(userRef, { lists: updatedLists })
+
+      dispatch(
+        setUser({
+          uid: userData.uid,
+          displayName: userData.displayName,
+          email: userData.email,
+          photoURL: userData.photoURL,
+          coverPhotoURL: userData.coverPhotoURL,
+          favorites: userData.favorites || { albums: [], artists: [], tracks: [] },
+          lists: updatedLists,
+        })
+      )
+
+      return { listType, item }
+    } catch (error) {
+      console.error('Error adding to list:', error)
+      throw error
+    }
+  }
+)
+
+export const removeFromList = createAsyncThunk(
+  'userProfile/removeFromList',
+  async (
+    { uid, listType, itemId }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; itemId: string },
+    { dispatch, getState }
+  ) => {
+    try {
+      const userRef = doc(db, 'users', uid)
+      const itemRef = doc(db, 'users', uid, 'lists', listType, 'items', itemId)
+
+      await deleteDoc(itemRef)
+
+      const userSnap = await getDoc(userRef)
+      const userData = userSnap.exists() ? userSnap.data() : null
+
+      if (!userData) throw new Error('User not found')
+
+      const updatedLists = {
+        ...userData.lists,
+        [listType]: userData.lists?.[listType]?.filter((item: ListItem) => item.id !== itemId) || [],
+      }
+
+      await updateDoc(userRef, { lists: updatedLists })
+
+      dispatch(
+        setUser({
+          uid: userData.uid,
+          displayName: userData.displayName,
+          email: userData.email,
+          photoURL: userData.photoURL,
+          coverPhotoURL: userData.coverPhotoURL,
+          favorites: userData.favorites || { albums: [], artists: [], tracks: [] },
+          lists: updatedLists,
+        })
+      )
+
+      return { listType, itemId }
+    } catch (error) {
+      console.error('Error removing from list:', error)
+      throw error
+    }
+  }
+)
+
 const userSlice = createSlice({
   name: 'userProfile',
   initialState,
@@ -255,6 +344,26 @@ const userSlice = createSlice({
           }
           const { type, newOrder } = action.payload
           state.profile.favorites[type] = newOrder
+        }
+      })
+      .addCase(addToList.fulfilled, (state, action) => {
+        if (state.profile) {
+          const { listType, item } = action.payload
+
+          if (!state.profile.lists) {
+            state.profile.lists = { planning: [], completed: [], dropped: [] }
+          }
+
+          state.profile.lists[listType].push(item)
+        }
+      })
+      .addCase(removeFromList.fulfilled, (state, action) => {
+        if (state.profile) {
+          const { listType, itemId } = action.payload
+
+          if (!state.profile.lists) return
+
+          state.profile.lists[listType] = state.profile.lists[listType].filter(item => item.id !== itemId)
         }
       })
   },

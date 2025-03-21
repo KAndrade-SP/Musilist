@@ -48,6 +48,7 @@ function App() {
                 photoURL: userSnap.data().photoURL || 'https://imgur.com/kjSD6bg.jpg',
                 coverPhotoURL: userSnap.data().coverPhotoURL || null,
                 favorites: userSnap.data().favorites || { albums: [], artists: [], tracks: [] },
+                lists: userSnap.data().lists || { planning: [], completed: [], dropped: [] },
               })
             )
           } else {
@@ -59,6 +60,7 @@ function App() {
               coverPhotoURL: null,
               createdAt: new Date().toISOString(),
               favorites: { albums: [], artists: [], tracks: [] },
+              lists: { planning: [], completed: [], dropped: [] },
             }
             await setDoc(userRef, newUser)
             dispatch(setUser(newUser))

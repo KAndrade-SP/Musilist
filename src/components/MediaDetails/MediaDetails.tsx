@@ -13,6 +13,7 @@ import {
 import { formatDuration } from '../../helpers/FormatDuration'
 import LikeButton from '../LikeButton'
 import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
+import ListDropdown from '../ListDropdown'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -74,7 +75,7 @@ const MediaDetails = () => {
             </MediaDescriptionContainer>
 
             <MediaButtons>
-              <p>dropdown</p>
+              <ListDropdown item={item} />
             </MediaButtons>
           </MediaInfoContainer>
         </DetailContent>
