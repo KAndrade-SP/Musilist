@@ -186,23 +186,53 @@ export const addToList = createAsyncThunk(
   'userProfile/addToList',
   async (
     { uid, listType, item }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; item: ListItem },
-    { dispatch, getState }
+    { dispatch }
   ) => {
     try {
       const userRef = doc(db, 'users', uid)
       const listRef = collection(userRef, 'lists', listType, 'items')
       const itemRef = doc(listRef, item.id)
 
-      await setDoc(itemRef, item)
+      const hasImages = (obj: any): obj is { images: { url: string }[] } => 'images' in obj
+      const hasAlbumImages = (obj: any): obj is { album: { images: { url: string }[] } } => 'album' in obj
+
+      const filteredItem: ListItem = {
+        id: item.id,
+        name: item.name,
+        image:
+          item.image ||
+          (hasImages(item) ? item.images[0]?.url : '') ||
+          (hasAlbumImages(item) ? item.album.images[0]?.url : ''),
+        score: item.score ?? null,
+        review: item.review ?? null,
+        type: item.type,
+      }
 
       const userSnap = await getDoc(userRef)
       const userData = userSnap.exists() ? userSnap.data() : null
 
       if (!userData) throw new Error('User not found')
 
+      let previousList: 'planning' | 'completed' | 'dropped' | null = null
+      for (const key of ['planning', 'completed', 'dropped'] as const) {
+        if (key !== listType && userData.lists?.[key]?.some((i: ListItem) => i.id === item.id)) {
+          previousList = key
+          break
+        }
+      }
+
+      if (previousList) {
+        const prevListRef = doc(db, 'users', uid, 'lists', previousList, 'items', item.id)
+        await deleteDoc(prevListRef)
+
+        userData.lists[previousList] = userData.lists[previousList].filter((i: ListItem) => i.id !== item.id)
+      }
+
+      await setDoc(itemRef, filteredItem)
+
       const updatedLists = {
         ...userData.lists,
-        [listType]: [...(userData.lists?.[listType] || []), item],
+        [listType]: [...(userData.lists?.[listType] || []), filteredItem],
       }
 
       await updateDoc(userRef, { lists: updatedLists })
@@ -231,7 +261,7 @@ export const removeFromList = createAsyncThunk(
   'userProfile/removeFromList',
   async (
     { uid, listType, itemId }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; itemId: string },
-    { dispatch, getState }
+    { dispatch }
   ) => {
     try {
       const userRef = doc(db, 'users', uid)
