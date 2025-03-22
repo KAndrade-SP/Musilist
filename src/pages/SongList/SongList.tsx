@@ -2,9 +2,7 @@ import { useState } from 'react'
 import { User } from '../../types/UserTypes'
 import { Container } from '../../components/Container'
 import Dropdown from '../../components/Dropdown/Dropdown'
-import MusicImage from '../../assets/PlaceholderImages/Music.jpg'
 import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react'
-import FilterInput from '../../components/FilterInput/FilterInput'
 import { useTheme } from 'styled-components'
 import { useBreakpoint } from '../../hooks/useBreakpoint'
 import {
@@ -33,19 +31,6 @@ const SongList = ({ user }: { user: User | null }) => {
   const theme = useTheme()
   const [toggle, setToggle] = useState(false)
   const isLargeScreen = useBreakpoint(parseInt(theme.breakpoints.xmd))
-  const [results, setResults] = useState<any[]>([])
-
-  const handleSearchComplete = (data: any) => {
-    setResults(data)
-    console.log(results)
-  }
-
-  const musicData = [
-    { image: MusicImage, title: 'Symbol I: △', score: 10, progress: '1', type: 'Music', comments: true },
-    { image: MusicImage, title: 'Symbol II: 🜁', score: 10, progress: '1', type: 'Music', comments: true },
-    { image: MusicImage, title: 'Symbol III: ▽', score: 10, progress: '1', type: 'Music', comments: true },
-    { image: MusicImage, title: 'Elements', score: 10, progress: '12/12', type: 'Album', comments: true },
-  ]
 
   const [selectedFormat, setSelectedFormat] = useState<string | null>(null)
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
@@ -97,8 +82,6 @@ const SongList = ({ user }: { user: User | null }) => {
         <SongListSection>
           <Filters>
             <FilterSearch>
-              <FilterInput searchType={'tracks'} onSearchComplete={handleSearchComplete} />
-
               <DropdownFilter role="button" aria-label="toggle filters" onClick={handleClick}>
                 {!toggle ? (
                   <IconAdjustmentsHorizontal
@@ -177,41 +160,120 @@ const SongList = ({ user }: { user: User | null }) => {
           </Filters>
 
           <Filters>
-            <ListTitle>Completed</ListTitle>
-            <ListBox>
-              <ListHeader>
-                <ListCell>Title</ListCell>
-                <ListCell>Score</ListCell>
-                <ListCell>Progress</ListCell>
-                <ListCell>Type</ListCell>
-              </ListHeader>
+            {user?.lists && (
+              <>
+                {user.lists.completed.length > 0 && (
+                  <>
+                    <ListTitle>Completed</ListTitle>
+                    <ListBox>
+                      <ListHeader>
+                        <ListCell>Title</ListCell>
+                        <ListCell>Score</ListCell>
+                        <ListCell>Type</ListCell>
+                      </ListHeader>
 
-              {musicData.map((music, index) => (
-                <ListEntry key={index}>
-                  <ListImageCell>
-                    <img src={music.image} alt="Song Cover" />
-                    <ListTitleDivisor>
-                      <strong>{music.title}</strong>
-                      <ListScoreSpan>
-                        <strong>Score: </strong>
-                        {music.score}
-                      </ListScoreSpan>
-                    </ListTitleDivisor>
+                      {user.lists.completed.map((item, index) => (
+                        <ListEntry key={index}>
+                          <ListImageCell>
+                            <img src={item.image} alt={item.name} />
+                            <ListTitleDivisor>
+                              <strong>{item.name}</strong>
+                              <ListScoreSpan>
+                                <strong>Score: </strong>
+                                {item.score ? item.score : '- / 0'}
+                              </ListScoreSpan>
+                            </ListTitleDivisor>
 
-                    {music.comments && <MessageIcon size={20} />}
-                  </ListImageCell>
+                            {item.review && <MessageIcon size={20} />}
+                          </ListImageCell>
 
-                  <ListCell>{music.score}</ListCell>
-                  <ListCell>{music.progress}</ListCell>
-                  <ListCell>{music.type}</ListCell>
+                          <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
+                          <ListCell>{item.type}</ListCell>
 
-                  <ListDataDivisor>
-                    <span>{music.progress}</span>
-                    <span>{music.type}</span>
-                  </ListDataDivisor>
-                </ListEntry>
-              ))}
-            </ListBox>
+                          <ListDataDivisor>
+                            <span>{item.type}</span>
+                          </ListDataDivisor>
+                        </ListEntry>
+                      ))}
+                    </ListBox>
+                  </>
+                )}
+
+                {user.lists.dropped.length > 0 && (
+                  <>
+                    <ListTitle>Dropped</ListTitle>
+                    <ListBox>
+                      <ListHeader>
+                        <ListCell>Title</ListCell>
+                        <ListCell>Score</ListCell>
+                        <ListCell>Type</ListCell>
+                      </ListHeader>
+
+                      {user.lists.dropped.map((item, index) => (
+                        <ListEntry key={index}>
+                          <ListImageCell>
+                            <img src={item.image} alt={item.name} />
+                            <ListTitleDivisor>
+                              <strong>{item.name}</strong>
+                              <ListScoreSpan>
+                                <strong>Score: </strong>
+                                {item.score ? item.score : '- / 0'}
+                              </ListScoreSpan>
+                            </ListTitleDivisor>
+
+                            {item.review && <MessageIcon size={20} />}
+                          </ListImageCell>
+
+                          <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
+                          <ListCell>{item.type}</ListCell>
+
+                          <ListDataDivisor>
+                            <span>{item.type}</span>
+                          </ListDataDivisor>
+                        </ListEntry>
+                      ))}
+                    </ListBox>
+                  </>
+                )}
+
+                {user.lists.planning.length > 0 && (
+                  <>
+                    <ListTitle>Planning</ListTitle>
+                    <ListBox>
+                      <ListHeader>
+                        <ListCell>Title</ListCell>
+                        <ListCell>Score</ListCell>
+                        <ListCell>Type</ListCell>
+                      </ListHeader>
+
+                      {user.lists.planning.map((item, index) => (
+                        <ListEntry key={index}>
+                          <ListImageCell>
+                            <img src={item.image} alt={item.name} />
+                            <ListTitleDivisor>
+                              <strong>{item.name}</strong>
+                              <ListScoreSpan>
+                                <strong>Score: </strong>
+                                {item.score ? item.score : '- / 0'}
+                              </ListScoreSpan>
+                            </ListTitleDivisor>
+
+                            {item.review && <MessageIcon size={20} />}
+                          </ListImageCell>
+
+                          <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
+                          <ListCell>{item.type}</ListCell>
+
+                          <ListDataDivisor>
+                            <span>{item.type}</span>
+                          </ListDataDivisor>
+                        </ListEntry>
+                      ))}
+                    </ListBox>
+                  </>
+                )}
+              </>
+            )}
           </Filters>
         </SongListSection>
       </Container>

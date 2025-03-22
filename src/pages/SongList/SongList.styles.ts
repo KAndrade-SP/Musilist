@@ -81,7 +81,7 @@ export const FilterListItem = styled.li`
 export const ListBox = styled.div`
   ${({ theme: { colors, breakpoints, fontSizes } }) => `
     display: grid;
-    grid-template-columns: 1fr 100px 100px 80px;
+    grid-template-columns: 1fr 100px 80px;
     border-radius: 8px;
     gap: 1rem;
     width: 100%;
