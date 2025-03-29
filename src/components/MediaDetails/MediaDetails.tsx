@@ -14,6 +14,7 @@ import { formatDuration } from '../../helpers/FormatDuration'
 import LikeButton from '../LikeButton'
 import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 import ListDropdown from '../ListDropdown'
+import { capitalize } from '../../helpers/Capitalize'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -68,7 +69,7 @@ const MediaDetails = () => {
                 <>
                   <MediaInfo>Artist: {item.artists[0]?.name}</MediaInfo>
                   <MediaInfo>Total songs: {item.total_tracks}</MediaInfo>
-                  <MediaInfo>Type: {item.album_type}</MediaInfo>
+                  <MediaInfo>Type: {capitalize(item.album_type)}</MediaInfo>
                   <LikeButton item={formattedItem} type="albums" />
                 </>
               )}

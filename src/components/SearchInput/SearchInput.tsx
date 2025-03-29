@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
-import { Input, SearchIcon, SearchInputContainer } from './FilterInput.styles'
+import { Input, SearchIcon, SearchInputContainer } from './SearchInput.styles'
 import { useSpotifySearch } from '../../hooks/useSpotifySearch'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store'
 import { setQuery } from '../../redux/reducers/searchSlice'
 import { mapFilterToType } from '../../helpers/MapFilterToType'
 
-const FilterInput: React.FC = () => {
+const SearchInput: React.FC = () => {
   const dispatch = useDispatch()
   const { search } = useSpotifySearch()
 
@@ -44,4 +44,4 @@ const FilterInput: React.FC = () => {
   )
 }
 
-export default FilterInput
+export default SearchInput

@@ -11,6 +11,8 @@ export interface ListItem {
   score: number | null
   review: string | null
   type: string
+  release_date: string | null
+  album_type?: string
 }
 
 export interface User {

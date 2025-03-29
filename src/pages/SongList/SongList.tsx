@@ -17,58 +17,52 @@ import {
   ListBox,
   ListCell,
   ListDataDivisor,
+  ListDivisor,
   ListEntry,
   ListHeader,
   ListImageCell,
   ListScoreSpan,
+  ListSection,
   ListTitle,
   ListTitleDivisor,
   MessageIcon,
   SongListSection,
 } from './SongList.styles'
+import { useMediaNavigation } from '../../hooks/useMediaNavigation'
 
 const SongList = ({ user }: { user: User | null }) => {
   const theme = useTheme()
+  const { handleMediaDetails } = useMediaNavigation()
   const [toggle, setToggle] = useState(false)
   const isLargeScreen = useBreakpoint(parseInt(theme.breakpoints.xmd))
 
-  const [selectedFormat, setSelectedFormat] = useState<string | null>(null)
-  const [selectedStatus, setSelectedStatus] = useState<string | null>(null)
-  const [selectedGenres, setSelectedGenres] = useState<string | null>(null)
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null)
-  const [selectedTitle, setSelectedTitle] = useState<string | null>(null)
+  const [typeFilter, setTypeFilter] = useState<string | null>(null)
+  const [yearFilter, setYearFilter] = useState<string | null>(null)
+  const [sortOption, setSortOption] = useState<string | null>(null)
 
-  const handleSelect = (option: string, type: string) => {
-    if (option !== type) {
-      console.log(`Option selected for ${type}:`, option)
+  const allItems = Object.values(user?.lists ?? {}).flat()
+  const typeOptions = ['Albums', 'Artists', 'Tracks']
+  const yearOptions = [...new Set(allItems.map(item => item.release_date))].sort()
+  const sortOptions = ['Title Z-A', 'Score 1-10', 'Score 10-1']
 
-      if (type === 'Format') {
-        setSelectedFormat(option)
-      } else if (type === 'Status') {
-        setSelectedStatus(option)
-      } else if (type === 'Genres') {
-        setSelectedGenres(option)
-      } else if (type === 'Country') {
-        setSelectedCountry(option)
-      } else if (type === 'Title') {
-        setSelectedTitle(option)
-      }
-    }
-  }
+  const filteredItems = allItems
+    .filter(item => typeFilter === null || item.type + 's' === typeFilter)
+    .filter(item => yearFilter === null || item.release_date === yearFilter)
+    .sort((a, b) => {
+      if (sortOption === null) return a.name.localeCompare(b.name)
+      if (sortOption === 'Title Z-A') return b.name.localeCompare(a.name)
+      if (sortOption === 'Score 1-10') return (a.score ?? 0) - (b.score ?? 0)
+      if (sortOption === 'Score 10-1') return (b.score ?? 0) - (a.score ?? 0)
+      return 0
+    })
 
   const handleClear = (type: string) => {
-    console.log(`Clear filter for ${type}`)
-
-    if (type === 'Format') {
-      setSelectedFormat(null)
-    } else if (type === 'Status') {
-      setSelectedStatus(null)
-    } else if (type === 'Genres') {
-      setSelectedGenres(null)
-    } else if (type === 'Country') {
-      setSelectedCountry(null)
-    } else if (type === 'Title') {
-      setSelectedTitle(null)
+    if (type === 'Type') {
+      setTypeFilter(null)
+    } else if (type === 'Year') {
+      setYearFilter(null)
+    } else if (type === 'Sort') {
+      setSortOption(null)
     }
   }
 
@@ -116,165 +110,88 @@ const SongList = ({ user }: { user: User | null }) => {
                 <FiltersDivisor>
                   <FilterTitle>Filters</FilterTitle>
                   <Dropdown
-                    options={['Option 1', 'Option 2', 'Option 3']}
-                    defaultLabel="Format"
-                    selected={selectedFormat}
-                    onSelect={option => handleSelect(option, 'Format')}
-                    onClear={() => handleClear('Format')}
+                    options={typeOptions}
+                    defaultLabel="Type"
+                    selected={typeFilter}
+                    onSelect={setTypeFilter}
+                    onClear={() => handleClear('Type')}
                   />
                   <Dropdown
-                    options={['Option 1', 'Option 2', 'Option 3']}
-                    defaultLabel="Status"
-                    selected={selectedStatus}
-                    onSelect={option => handleSelect(option, 'Status')}
-                    onClear={() => handleClear('Status')}
-                  />
-                  <Dropdown
-                    options={['Option 1', 'Option 2', 'Option 3']}
-                    defaultLabel="Genres"
-                    selected={selectedGenres}
-                    onSelect={option => handleSelect(option, 'Genres')}
-                    onClear={() => handleClear('Genres')}
-                  />
-                  <Dropdown
-                    options={['Option 1', 'Option 2', 'Option 3']}
-                    defaultLabel="Country"
-                    selected={selectedCountry}
-                    onSelect={option => handleSelect(option, 'Country')}
-                    onClear={() => handleClear('Country')}
+                    options={yearOptions}
+                    defaultLabel="Year"
+                    selected={yearFilter}
+                    onSelect={setYearFilter}
+                    onClear={() => handleClear('Year')}
                   />
                 </FiltersDivisor>
 
                 <FiltersDivisor>
                   <FilterTitle>Sort</FilterTitle>
                   <Dropdown
-                    options={['Option 1', 'Option 2', 'Option 3']}
-                    defaultLabel="Title"
-                    selected={selectedTitle}
-                    onSelect={option => handleSelect(option, 'Title')}
-                    onClear={() => handleClear('Title')}
+                    options={sortOptions}
+                    defaultLabel="Sort"
+                    selected={sortOption}
+                    onSelect={setSortOption}
+                    onClear={() => handleClear('Sort')}
                   />
                 </FiltersDivisor>
               </FiltersMenu>
             )}
           </Filters>
 
-          <Filters>
+          <ListSection>
             {user?.lists && (
               <>
-                {user.lists.completed.length > 0 && (
-                  <>
-                    <ListTitle>Completed</ListTitle>
-                    <ListBox>
-                      <ListHeader>
-                        <ListCell>Title</ListCell>
-                        <ListCell>Score</ListCell>
-                        <ListCell>Type</ListCell>
-                      </ListHeader>
+                {(Object.keys(user.lists) as Array<keyof typeof user.lists>).map(status => {
+                  const items = filteredItems.filter(item => user.lists?.[status]?.includes(item))
 
-                      {user.lists.completed.map((item, index) => (
-                        <ListEntry key={index}>
-                          <ListImageCell>
-                            <img src={item.image} alt={item.name} />
-                            <ListTitleDivisor>
-                              <strong>{item.name}</strong>
-                              <ListScoreSpan>
-                                <strong>Score: </strong>
-                                {item.score ? item.score : '- / 0'}
-                              </ListScoreSpan>
-                            </ListTitleDivisor>
+                  return items.length > 0 ? (
+                    <ListDivisor key={status}>
+                      <ListTitle>{status.charAt(0).toUpperCase() + status.slice(1)}</ListTitle>
+                      <ListBox>
+                        <ListHeader>
+                          <ListCell>Title</ListCell>
+                          <ListCell>Score</ListCell>
+                          <ListCell>Type</ListCell>
+                        </ListHeader>
 
-                            {item.review && <MessageIcon size={20} />}
-                          </ListImageCell>
+                        {items.map((item, index) => (
+                          <ListEntry
+                            key={index}
+                            onClick={() =>
+                              handleMediaDetails(
+                                item.id,
+                                (item.type.toLowerCase() + 's') as 'albums' | 'artists' | 'tracks'
+                              )
+                            }
+                          >
+                            <ListImageCell>
+                              <img src={item.image} alt={item.name} />
+                              <ListTitleDivisor>
+                                <strong>{item.name}</strong>
+                                <ListScoreSpan>
+                                  <strong>Score: </strong>
+                                  {item.score ? item.score : '- / 0'}
+                                </ListScoreSpan>
+                              </ListTitleDivisor>
+                              {item.review && <MessageIcon size={20} />}
+                            </ListImageCell>
 
-                          <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
-                          <ListCell>{item.type}</ListCell>
+                            <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
+                            <ListCell>{item.type === 'Album' ? item.album_type : item.type}</ListCell>
 
-                          <ListDataDivisor>
-                            <span>{item.type}</span>
-                          </ListDataDivisor>
-                        </ListEntry>
-                      ))}
-                    </ListBox>
-                  </>
-                )}
-
-                {user.lists.dropped.length > 0 && (
-                  <>
-                    <ListTitle>Dropped</ListTitle>
-                    <ListBox>
-                      <ListHeader>
-                        <ListCell>Title</ListCell>
-                        <ListCell>Score</ListCell>
-                        <ListCell>Type</ListCell>
-                      </ListHeader>
-
-                      {user.lists.dropped.map((item, index) => (
-                        <ListEntry key={index}>
-                          <ListImageCell>
-                            <img src={item.image} alt={item.name} />
-                            <ListTitleDivisor>
-                              <strong>{item.name}</strong>
-                              <ListScoreSpan>
-                                <strong>Score: </strong>
-                                {item.score ? item.score : '- / 0'}
-                              </ListScoreSpan>
-                            </ListTitleDivisor>
-
-                            {item.review && <MessageIcon size={20} />}
-                          </ListImageCell>
-
-                          <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
-                          <ListCell>{item.type}</ListCell>
-
-                          <ListDataDivisor>
-                            <span>{item.type}</span>
-                          </ListDataDivisor>
-                        </ListEntry>
-                      ))}
-                    </ListBox>
-                  </>
-                )}
-
-                {user.lists.planning.length > 0 && (
-                  <>
-                    <ListTitle>Planning</ListTitle>
-                    <ListBox>
-                      <ListHeader>
-                        <ListCell>Title</ListCell>
-                        <ListCell>Score</ListCell>
-                        <ListCell>Type</ListCell>
-                      </ListHeader>
-
-                      {user.lists.planning.map((item, index) => (
-                        <ListEntry key={index}>
-                          <ListImageCell>
-                            <img src={item.image} alt={item.name} />
-                            <ListTitleDivisor>
-                              <strong>{item.name}</strong>
-                              <ListScoreSpan>
-                                <strong>Score: </strong>
-                                {item.score ? item.score : '- / 0'}
-                              </ListScoreSpan>
-                            </ListTitleDivisor>
-
-                            {item.review && <MessageIcon size={20} />}
-                          </ListImageCell>
-
-                          <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
-                          <ListCell>{item.type}</ListCell>
-
-                          <ListDataDivisor>
-                            <span>{item.type}</span>
-                          </ListDataDivisor>
-                        </ListEntry>
-                      ))}
-                    </ListBox>
-                  </>
-                )}
+                            <ListDataDivisor>
+                              <span>{item.type === 'Album' ? item.album_type : item.type}</span>
+                            </ListDataDivisor>
+                          </ListEntry>
+                        ))}
+                      </ListBox>
+                    </ListDivisor>
+                  ) : null
+                })}
               </>
             )}
-          </Filters>
+          </ListSection>
         </SongListSection>
       </Container>
     </>

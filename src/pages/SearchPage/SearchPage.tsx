@@ -1,5 +1,5 @@
 import { IconAdjustmentsHorizontal, IconX } from '@tabler/icons-react'
-import FilterInput from '../../components/FilterInput/FilterInput'
+import SearchInput from '../../components/SearchInput/SearchInput'
 import { useToggleWithOutsideClick } from '../../hooks/useToggle'
 import { filters } from '../../types/SearchFilters'
 import {
@@ -54,7 +54,7 @@ const SearchPage = () => {
     <>
       <SearchContainer>
         <SearchSection>
-          <FilterInput />
+          <SearchInput />
           {filters.map(filter => {
             return (
               <SearchTag

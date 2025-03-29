@@ -4,6 +4,7 @@ import { collection, deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/
 import { ListItem, User } from '../../types/UserTypes'
 import { RootState } from '../store'
 import { setUser } from './authSlice'
+import { capitalize } from '../../helpers/Capitalize'
 
 const initialState = {
   profile: null as User | null,
@@ -195,6 +196,7 @@ export const addToList = createAsyncThunk(
 
       const hasImages = (obj: any): obj is { images: { url: string }[] } => 'images' in obj
       const hasAlbumImages = (obj: any): obj is { album: { images: { url: string }[] } } => 'album' in obj
+      const hasAlbum = (obj: any): obj is { album: { release_date: string } } => obj?.album?.release_date !== undefined
 
       const filteredItem: ListItem = {
         id: item.id,
@@ -205,7 +207,14 @@ export const addToList = createAsyncThunk(
           (hasAlbumImages(item) ? item.album.images[0]?.url : ''),
         score: item.score ?? null,
         review: item.review ?? null,
-        type: item.type,
+        type: capitalize(item.type),
+        release_date:
+          item.type === 'track' && hasAlbum(item)
+            ? item.album?.release_date?.split('-')[0] || null
+            : item.type === 'artists'
+            ? null
+            : item.release_date?.split('-')[0] || null,
+        album_type: capitalize(item.type === 'album' ? item.album_type || 'album' : item.type),
       }
 
       const userSnap = await getDoc(userRef)

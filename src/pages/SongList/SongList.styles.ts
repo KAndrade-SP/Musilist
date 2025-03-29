@@ -75,7 +75,19 @@ export const FilterListItem = styled.li`
     font-size: ${fontSizes.normalFontSize};
     color: ${colors.textWhite};
     cursor: pointer;
+    padding: 0.2rem;
   `}
+`
+
+export const ListSection = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+
+export const ListDivisor = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 `
 
 export const ListBox = styled.div`
@@ -88,6 +100,7 @@ export const ListBox = styled.div`
     padding: 1rem;
     background-color: ${colors.darkPurple};
     font-size: ${fontSizes.normalFontSize};
+    margin-bottom: 1.5rem;
 
     @media (max-width: ${breakpoints.md}) {
       font-size: ${fontSizes.smallFontSize};
@@ -119,7 +132,7 @@ export const ListEntry = styled.div`
     display: contents;
     color: ${colors.textWhite};
     padding: 0.5rem 0;
-    
+    cursor: pointer;
 
     &:last-child {
       border-bottom: none;
