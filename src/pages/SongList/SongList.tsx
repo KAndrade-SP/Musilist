@@ -37,6 +37,7 @@ const SongList = ({ user }: { user: User | null }) => {
   const [toggle, setToggle] = useState(false)
   const isLargeScreen = useBreakpoint(parseInt(theme.breakpoints.xmd))
 
+  const [listFilter, setListFilter] = useState<string>('All')
   const [typeFilter, setTypeFilter] = useState<string | null>(null)
   const [yearFilter, setYearFilter] = useState<string | null>(null)
   const [sortOption, setSortOption] = useState<string | null>(null)
@@ -56,6 +57,10 @@ const SongList = ({ user }: { user: User | null }) => {
       if (sortOption === 'Score 10-1') return (b.score ?? 0) - (a.score ?? 0)
       return 0
     })
+
+  const handleListFilter = (filter: string) => {
+    setListFilter(filter)
+  }
 
   const handleClear = (type: string) => {
     if (type === 'Type') {
@@ -103,10 +108,18 @@ const SongList = ({ user }: { user: User | null }) => {
               <FiltersMenu>
                 <FilterList>
                   <FilterTitle>Lists</FilterTitle>
-                  <FilterListItem>All</FilterListItem>
-                  <FilterListItem>Completed</FilterListItem>
-                  <FilterListItem>Dropped</FilterListItem>
-                  <FilterListItem>Planning</FilterListItem>
+                  {['All', 'Completed', 'Planning', 'Dropped'].map(filter => (
+                    <FilterListItem
+                      key={filter}
+                      onClick={() => handleListFilter(filter)}
+                      style={{
+                        fontWeight: listFilter === filter ? 'bold' : 'normal',
+                        backgroundColor: listFilter === filter ? theme.colors.darkPurpleOp : 'transparent',
+                      }}
+                    >
+                      {filter}
+                    </FilterListItem>
+                  ))}
                 </FilterList>
 
                 <FiltersDivisor>
@@ -144,53 +157,55 @@ const SongList = ({ user }: { user: User | null }) => {
           <ListSection>
             {user?.lists && (
               <>
-                {(['completed', 'planning', 'dropped'] as const).map(status => {
-                  const items = filteredItems.filter(item => user.lists?.[status]?.includes(item))
+                {(['completed', 'planning', 'dropped'] as const)
+                  .filter(status => listFilter === 'All' || listFilter.toLowerCase() === status)
+                  .map(status => {
+                    const items = filteredItems.filter(item => user.lists?.[status]?.includes(item))
 
-                  return items.length > 0 ? (
-                    <ListDivisor key={status}>
-                      <ListTitle>{status.charAt(0).toUpperCase() + status.slice(1)}</ListTitle>
-                      <ListBox>
-                        <ListHeader>
-                          <ListCell>Title</ListCell>
-                          <ListCell>Score</ListCell>
-                          <ListCell>Type</ListCell>
-                        </ListHeader>
+                    return items.length > 0 ? (
+                      <ListDivisor key={status}>
+                        <ListTitle>{status.charAt(0).toUpperCase() + status.slice(1)}</ListTitle>
+                        <ListBox>
+                          <ListHeader>
+                            <ListCell>Title</ListCell>
+                            <ListCell>Score</ListCell>
+                            <ListCell>Type</ListCell>
+                          </ListHeader>
 
-                        {items.map((item, index) => (
-                          <ListEntry
-                            key={index}
-                            onClick={() =>
-                              handleMediaDetails(
-                                item.id,
-                                (item.type.toLowerCase() + 's') as 'albums' | 'artists' | 'tracks'
-                              )
-                            }
-                          >
-                            <ListImageCell>
-                              <img src={item.image} alt={item.name} />
-                              <ListTitleDivisor>
-                                <strong>{item.name}</strong>
-                                <ListScoreSpan>
-                                  <strong>Score: </strong>
-                                  {item.score ? item.score : '- / 0'}
-                                </ListScoreSpan>
-                              </ListTitleDivisor>
-                              {item.review && <MessageIcon size={20} />}
-                            </ListImageCell>
+                          {items.map((item, index) => (
+                            <ListEntry
+                              key={index}
+                              onClick={() =>
+                                handleMediaDetails(
+                                  item.id,
+                                  (item.type.toLowerCase() + 's') as 'albums' | 'artists' | 'tracks'
+                                )
+                              }
+                            >
+                              <ListImageCell>
+                                <img src={item.image} alt={item.name} />
+                                <ListTitleDivisor>
+                                  <strong>{item.name}</strong>
+                                  <ListScoreSpan>
+                                    <strong>Score: </strong>
+                                    {item.score ? item.score : '- / 0'}
+                                  </ListScoreSpan>
+                                </ListTitleDivisor>
+                                {item.review && <MessageIcon size={20} />}
+                              </ListImageCell>
 
-                            <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
-                            <ListCell>{item.type === 'Album' ? item.album_type : item.type}</ListCell>
+                              <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
+                              <ListCell>{item.type === 'Album' ? item.album_type : item.type}</ListCell>
 
-                            <ListDataDivisor>
-                              <span>{item.type === 'Album' ? item.album_type : item.type}</span>
-                            </ListDataDivisor>
-                          </ListEntry>
-                        ))}
-                      </ListBox>
-                    </ListDivisor>
-                  ) : null
-                })}
+                              <ListDataDivisor>
+                                <span>{item.type === 'Album' ? item.album_type : item.type}</span>
+                              </ListDataDivisor>
+                            </ListEntry>
+                          ))}
+                        </ListBox>
+                      </ListDivisor>
+                    ) : null
+                  })}
               </>
             )}
           </ListSection>

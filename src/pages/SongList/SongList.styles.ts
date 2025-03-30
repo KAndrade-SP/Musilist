@@ -67,7 +67,8 @@ export const FilterListItem = styled.li`
     font-size: ${fontSizes.normalFontSize};
     color: ${colors.textWhite};
     cursor: pointer;
-    padding: 0.2rem;
+    padding: 0.25rem 0.50rem;
+    border-radius: 8px;
   `}
 `
 
