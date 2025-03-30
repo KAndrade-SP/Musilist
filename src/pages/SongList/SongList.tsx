@@ -38,6 +38,7 @@ const SongList = ({ user }: { user: User | null }) => {
   const isLargeScreen = useBreakpoint(parseInt(theme.breakpoints.xmd))
 
   const [listFilter, setListFilter] = useState<string>('All')
+  const [searchTerm, setSearchTerm] = useState<string>('')
   const [typeFilter, setTypeFilter] = useState<string | null>(null)
   const [yearFilter, setYearFilter] = useState<string | null>(null)
   const [sortOption, setSortOption] = useState<string | null>(null)
@@ -50,6 +51,7 @@ const SongList = ({ user }: { user: User | null }) => {
   const filteredItems = allItems
     .filter(item => typeFilter === null || item.type + 's' === typeFilter)
     .filter(item => yearFilter === null || item.release_date === yearFilter)
+    .filter(item => item.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .sort((a, b) => {
       if (sortOption === null) return a.name.localeCompare(b.name)
       if (sortOption === 'Title Z-A') return b.name.localeCompare(a.name)
@@ -101,7 +103,7 @@ const SongList = ({ user }: { user: User | null }) => {
                   />
                 )}
               </DropdownFilter>
-              <FilterInput />
+              <FilterInput searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             </FilterSearch>
 
             {(toggle || isLargeScreen) && (
