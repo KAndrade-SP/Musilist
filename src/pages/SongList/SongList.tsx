@@ -42,7 +42,7 @@ const SongList = ({ user }: { user: User | null }) => {
 
   const allItems = Object.values(user?.lists ?? {}).flat()
   const typeOptions = ['Albums', 'Artists', 'Tracks']
-  const yearOptions = [...new Set(allItems.map(item => item.release_date))].sort()
+  const yearOptions = [...new Set(allItems.map(item => item.release_date))].filter(Boolean).sort() as string[]
   const sortOptions = ['Title Z-A', 'Score 1-10', 'Score 10-1']
 
   const filteredItems = allItems
