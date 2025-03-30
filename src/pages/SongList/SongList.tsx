@@ -142,7 +142,7 @@ const SongList = ({ user }: { user: User | null }) => {
           <ListSection>
             {user?.lists && (
               <>
-                {(Object.keys(user.lists) as Array<keyof typeof user.lists>).map(status => {
+                {(['completed', 'planning', 'dropped'] as const).map(status => {
                   const items = filteredItems.filter(item => user.lists?.[status]?.includes(item))
 
                   return items.length > 0 ? (
