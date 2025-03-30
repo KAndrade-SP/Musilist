@@ -29,6 +29,7 @@ import {
   SongListSection,
 } from './SongList.styles'
 import { useMediaNavigation } from '../../hooks/useMediaNavigation'
+import FilterInput from '../../components/FilterInput/FilterInput'
 
 const SongList = ({ user }: { user: User | null }) => {
   const theme = useTheme()
@@ -95,6 +96,7 @@ const SongList = ({ user }: { user: User | null }) => {
                   />
                 )}
               </DropdownFilter>
+              <FilterInput />
             </FilterSearch>
 
             {(toggle || isLargeScreen) && (

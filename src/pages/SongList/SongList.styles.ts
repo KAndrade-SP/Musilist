@@ -14,18 +14,9 @@ export const SongListSection = styled.section`
   }
 `
 
-export const ListTitle = styled.h2`
-  ${({ theme: { colors, fontSizes } }) => `
-    color: ${colors.lightPurple};
-    font-size: ${fontSizes.bigFontSize};
-    font-weight: 400;
-  `}
-`
-
 export const Filters = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
 `
 
 export const FiltersMenu = styled.div`
@@ -59,7 +50,7 @@ export const FilterTitle = styled.h3`
 export const FilterSearch = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 0.5rem;
+  gap: 1rem;
   align-items: center;
 `
 
@@ -68,6 +59,7 @@ export const FilterList = styled.ul`
   flex-direction: column;
   gap: 1rem;
   cursor: pointer;
+  margin-top: 1.25rem;
 `
 
 export const FilterListItem = styled.li`
@@ -82,6 +74,19 @@ export const FilterListItem = styled.li`
 export const ListSection = styled.div`
   display: flex;
   flex-direction: column;
+  margin-top: 0.25rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.xmd}) {
+    margin-top: -0.5rem;
+  }
+`
+
+export const ListTitle = styled.h2`
+  ${({ theme: { colors, fontSizes } }) => `
+    color: ${colors.lightPurple};
+    font-size: ${fontSizes.bigFontSize};
+    font-weight: 400;
+  `}
 `
 
 export const ListDivisor = styled.div`
