@@ -38,9 +38,24 @@ import {
 } from './Home.styles'
 import { Tooltip } from '../FavoritesPage/FavoritesPage.styles'
 import { useMediaNavigation } from '../../hooks/useMediaNavigation'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../redux/store'
+import { useEffect } from 'react'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { fetchActivityFeed } from '../../redux/reducers/userSlice'
+import { getActionText, getTimeAgo } from '../../helpers/getFormattedActivity'
 
 const Home = ({ user }: { user: User | null }) => {
+  const dispatch = useAppDispatch()
   const { handleMediaDetails } = useMediaNavigation()
+  const feed = useSelector((state: RootState) => state.user.activityFeed)
+  const loading = useSelector((state: RootState) => state.user.loadingFeed)
+
+  useEffect(() => {
+    if (user?.uid) {
+      dispatch(fetchActivityFeed(user.uid))
+    }
+  }, [user?.uid, dispatch])
 
   return (
     <>
@@ -75,57 +90,25 @@ const Home = ({ user }: { user: User | null }) => {
           <LastActivityArea>
             <h2>Activity</h2>
 
-            <LastActivityDivisor>
-              <LastActivityItem>
-                <LastActivityImage src={MusicImage} alt="" />
-                <span>
-                  Plans to listen <LastActivityText>Song name</LastActivityText>
-                </span>
-              </LastActivityItem>
+            {loading ? (
+              <p>Loading...</p>
+            ) : feed.length === 0 ? (
+              <p>No activity yet.</p>
+            ) : (
+              feed.map(activity => (
+                <LastActivityDivisor key={activity.id}>
+                  <LastActivityItem>
+                    <LastActivityImage src={activity.image} alt={activity.name} />
+                    <span>
+                      {getActionText(activity.listType)} <LastActivityText>{activity.name}</LastActivityText>
+                    </span>
+                  </LastActivityItem>
 
-              <LastActivityData>Artist name</LastActivityData>
-
-              <LastActivityTime>1 day ago</LastActivityTime>
-            </LastActivityDivisor>
-
-            <LastActivityDivisor>
-              <LastActivityItem>
-                <LastActivityImage src={MusicImage} alt="" />
-                <span>
-                  Completed <LastActivityText>Song name</LastActivityText>
-                </span>
-              </LastActivityItem>
-
-              <LastActivityData>Artist name</LastActivityData>
-
-              <LastActivityTime>1 day ago</LastActivityTime>
-            </LastActivityDivisor>
-
-            <LastActivityDivisor>
-              <LastActivityItem>
-                <LastActivityImage src={MusicImage} alt="" />
-                <span>
-                  Dropped <LastActivityText>Song name</LastActivityText>
-                </span>
-              </LastActivityItem>
-
-              <LastActivityData>Artist name</LastActivityData>
-
-              <LastActivityTime>1 day ago</LastActivityTime>
-            </LastActivityDivisor>
-
-            <LastActivityDivisor>
-              <LastActivityItem>
-                <LastActivityImage src={MusicImage} alt="" />
-                <span>
-                  Listened <LastActivityText>Song name</LastActivityText>
-                </span>
-              </LastActivityItem>
-
-              <LastActivityData>Artist name</LastActivityData>
-
-              <LastActivityTime>1 day ago</LastActivityTime>
-            </LastActivityDivisor>
+                  <LastActivityData>{activity.artist}</LastActivityData>
+                  <LastActivityTime>{getTimeAgo(activity.timestamp)}</LastActivityTime>
+                </LastActivityDivisor>
+              ))
+            )}
           </LastActivityArea>
 
           <GenrePlayArea>

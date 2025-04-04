@@ -1,15 +1,19 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { db } from '../../services/firebase'
-import { collection, deleteDoc, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
-import { ListItem, User } from '../../types/UserTypes'
+import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc } from 'firebase/firestore'
+import { ActivityFeedItem, ListItem, User } from '../../types/UserTypes'
 import { RootState } from '../store'
 import { setUser } from './authSlice'
 import { capitalize } from '../../helpers/Capitalize'
+import { addActivityToFeed } from '../../helpers/addActivityToFeed'
 
 const initialState = {
   profile: null as User | null,
   loading: false,
   error: null as string | null,
+  activityFeed: [] as ActivityFeedItem[],
+  loadingFeed: false,
+  errorFeed: null as string | null,
 }
 
 export const fetchUserProfile = createAsyncThunk(
@@ -242,6 +246,8 @@ export const addToList = createAsyncThunk(
 
       await setDoc(itemRef, filteredItem)
 
+      await addActivityToFeed({ uid, item: filteredItem, listType })
+
       const updatedLists = {
         ...userData.lists,
         [listType]: [...(userData.lists?.[listType] || []), filteredItem],
@@ -309,6 +315,26 @@ export const removeFromList = createAsyncThunk(
     } catch (error) {
       console.error('Error removing from list:', error)
       throw error
+    }
+  }
+)
+
+export const fetchActivityFeed = createAsyncThunk(
+  'userProfile/fetchActivityFeed',
+  async (uid: string, { rejectWithValue }) => {
+    try {
+      const feedRef = collection(db, 'users', uid, 'activityFeed')
+      const q = query(feedRef, orderBy('timestamp', 'desc'))
+      const querySnap = await getDocs(q)
+
+      const feed: ActivityFeedItem[] = []
+      querySnap.forEach(doc => {
+        feed.push(doc.data() as ActivityFeedItem)
+      })
+
+      return feed
+    } catch (error: any) {
+      return rejectWithValue(error.message)
     }
   }
 )
@@ -407,6 +433,18 @@ const userSlice = createSlice({
 
           state.profile.lists[listType] = state.profile.lists[listType].filter(item => item.id !== itemId)
         }
+      })
+      .addCase(fetchActivityFeed.pending, state => {
+        state.loadingFeed = true
+        state.errorFeed = null
+      })
+      .addCase(fetchActivityFeed.fulfilled, (state, action) => {
+        state.loadingFeed = false
+        state.activityFeed = action.payload
+      })
+      .addCase(fetchActivityFeed.rejected, (state, action) => {
+        state.loadingFeed = false
+        state.errorFeed = action.payload as string
       })
   },
 })

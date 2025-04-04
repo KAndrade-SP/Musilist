@@ -1,3 +1,14 @@
+export interface ActivityFeedItem {
+  id: string
+  itemId: string
+  name: string
+  artist: string
+  image: string
+  listType: 'completed' | 'planning' | 'dropped'
+  type: 'album' | 'artist' | 'track'
+  timestamp: number
+}
+
 export interface FavoriteItem {
   id: string
   name: string
