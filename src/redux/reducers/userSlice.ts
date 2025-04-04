@@ -196,11 +196,14 @@ export const addToList = createAsyncThunk(
 
       const hasImages = (obj: any): obj is { images: { url: string }[] } => 'images' in obj
       const hasAlbumImages = (obj: any): obj is { album: { images: { url: string }[] } } => 'album' in obj
+      const hasArtistsArray = (obj: any): obj is { artists: { name: string }[] } =>
+        Array.isArray(obj?.artists) && obj.artists.length > 0 && typeof obj.artists[0]?.name === 'string'
       const hasAlbum = (obj: any): obj is { album: { release_date: string } } => obj?.album?.release_date !== undefined
 
       const filteredItem: ListItem = {
         id: item.id,
         name: item.name,
+        artistName: hasArtistsArray(item) ? item.artists[0].name : item.name,
         image:
           item.image ||
           (hasImages(item) ? item.images[0]?.url : '') ||

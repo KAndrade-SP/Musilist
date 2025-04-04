@@ -7,6 +7,7 @@ export interface FavoriteItem {
 export interface ListItem {
   id: string
   name: string
+  artistName: string
   image: string
   score: number | null
   review: string | null
