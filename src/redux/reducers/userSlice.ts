@@ -1,6 +1,18 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit'
 import { db } from '../../services/firebase'
-import { collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc, updateDoc } from 'firebase/firestore'
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+  writeBatch,
+} from 'firebase/firestore'
 import { ActivityFeedItem, ListItem, User } from '../../types/UserTypes'
 import { RootState } from '../store'
 import { setUser } from './authSlice'
@@ -284,6 +296,7 @@ export const removeFromList = createAsyncThunk(
     try {
       const userRef = doc(db, 'users', uid)
       const itemRef = doc(db, 'users', uid, 'lists', listType, 'items', itemId)
+      const feedRef = collection(db, 'users', uid, 'activityFeed')
 
       await deleteDoc(itemRef)
 
@@ -298,6 +311,15 @@ export const removeFromList = createAsyncThunk(
       }
 
       await updateDoc(userRef, { lists: updatedLists })
+
+      const q = query(feedRef, where('itemId', '==', itemId), where('listType', '==', listType))
+      const querySnap = await getDocs(q)
+
+      const batch = writeBatch(db)
+      querySnap.forEach(docSnap => {
+        batch.delete(docSnap.ref)
+      })
+      await batch.commit()
 
       dispatch(
         setUser({
