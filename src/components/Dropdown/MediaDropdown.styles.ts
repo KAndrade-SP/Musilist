@@ -1,14 +1,16 @@
 import styled from 'styled-components'
 
-export const DropdownContainer = styled.div`
+export const MediaDropdownContainer = styled.div`
   position: relative;
-  width: 100%;
+  width: 200px;
 `
 
-export const DropdownHeader = styled.div`
+export const MediaDropdownHeader = styled.div`
   ${({ theme: { colors, fontSizes } }) => `
     padding: 8px 15px;
-    background-color: ${colors.darkPurple};
+    background-color: ${colors.textWhite};
+    color: ${colors.grayBackgroundOp};
+    font-weight: bold;
     font-size: ${fontSizes.normalFontSize};
     border-radius: 8px;
     cursor: pointer;
@@ -24,7 +26,7 @@ export const DropdownHeader = styled.div`
   }
 `
 
-export const DropdownList = styled.ul`
+export const MediaDropdownList = styled.ul`
   ${({ theme: { colors, fontSizes } }) => `
     position: absolute;
     top: 110%;
@@ -64,21 +66,7 @@ export const DropdownList = styled.ul`
   }
 `
 
-export const DropdownItem = styled.li`
-  ${({ theme: { colors } }) => `
-    padding: 10px 20px;
-    cursor: pointer;
-    color: ${colors.grayBackground};
-    transition: background-color 0.2s ease;
-    opacity: 0.7;
-
-    &:hover {
-      background-color: rgba(46, 41, 59, 0.1);
-    }
-  `}
-`
-
-export const IconButton = styled.button`
+export const MediaIconButton = styled.button`
   ${({ theme: { colors } }) => `
     background: none;
     border: none;
@@ -86,6 +74,7 @@ export const IconButton = styled.button`
     padding: 0;
     display: flex;
     align-items: center;
-    color: ${colors.textWhite};
+    color: ${colors.grayBackground};
+    opacity: 0.7;
   `}
 `

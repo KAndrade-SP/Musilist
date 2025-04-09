@@ -4,8 +4,8 @@ import { RootState } from '../redux/store'
 import { DropdownProps } from './Dropdown/Dropdown.interface'
 import { useState } from 'react'
 import { addToList, removeFromList } from '../redux/reducers/userSlice'
-import Dropdown from './Dropdown/Dropdown'
 import { useAppDispatch } from '../hooks/useAppDispatch'
+import MediaDropdown from './Dropdown/MediaDropdown'
 
 interface ListDropdownProps {
   item: ListItem
@@ -45,7 +45,7 @@ const ListDropdown: React.FC<ListDropdownProps> = ({ item }) => {
   }
 
   return (
-    <Dropdown
+    <MediaDropdown
       options={listOptions}
       defaultLabel="Add to List"
       selected={selectedList}

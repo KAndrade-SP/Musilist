@@ -1,28 +1,24 @@
 import { useParams } from 'react-router-dom'
 import {
   DetailContainer,
-  DetailContainerBackground,
   DetailContent,
-  MediaButtons,
+  MediaArtistName,
   MediaDescriptionContainer,
-  MediaImage,
   MediaInfo,
   MediaInfoContainer,
+  MediaItems,
   MediaTitle,
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
-import LikeButton from '../LikeButton'
+import LikeButton from '../LikeButton/LikeButton'
 import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 import ListDropdown from '../ListDropdown'
 import { capitalize } from '../../helpers/Capitalize'
+import MediaBanner from '../MediaBanner/MediaBanner'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
   const { data: item, loading, error } = useSpotifyDetails(id!, type!)
-
-  if (loading) return <DetailContainer>Loading...</DetailContainer>
-  if (error) return <DetailContainer>Error: {error}</DetailContainer>
-  if (!item) return <DetailContainer>Empty</DetailContainer>
 
   const getItemData = (item: any, type: 'artists' | 'tracks' | 'albums') => {
     if (!item) return null
@@ -34,53 +30,63 @@ const MediaDetails = () => {
     }
   }
 
-  if (!type) return <DetailContainer>Invalid type</DetailContainer>
+  const formattedItem = item && type ? getItemData(item, type) : null
 
-  const formattedItem = getItemData(item, type)
-  if (!formattedItem) return <DetailContainer>Empty</DetailContainer>
+  if (loading) return <DetailContainer>Loading...</DetailContainer>
+  if (error) return <DetailContainer>Error: {error}</DetailContainer>
+  if (!item || !type || !formattedItem) return <DetailContainer>Empty</DetailContainer>
 
   return (
     <DetailContainer>
-      <DetailContainerBackground>
+      <MediaBanner image={formattedItem.image}>
         <DetailContent>
           <MediaInfoContainer>
-            <MediaImage src={formattedItem.image} alt={item.name} />
-
             <MediaDescriptionContainer>
+              <MediaArtistName>{item.artists && item.artists[0]?.name}</MediaArtistName>
               <MediaTitle>{item.name}</MediaTitle>
 
               {type === 'artists' && (
                 <>
-                  <MediaInfo>Name: {item.name}</MediaInfo>
-                  <LikeButton item={formattedItem} type="artists" />
+                  <MediaItems>
+                    <ListDropdown item={item} />
+                    <LikeButton item={formattedItem} type="artists" />
+                  </MediaItems>
                 </>
               )}
 
               {type === 'tracks' && (
                 <>
-                  <MediaInfo>Artist: {item.artists[0]?.name}</MediaInfo>
-                  <MediaInfo>Album: {item.album?.name}</MediaInfo>
-                  <MediaInfo>Duration: {formatDuration(item.duration_ms)}</MediaInfo>
-                  <LikeButton item={formattedItem} type="tracks" />
+                  <MediaInfo>
+                    Album: <strong>{item.album?.name}</strong>
+                  </MediaInfo>
+                  <MediaInfo>
+                    Duration: <strong>{formatDuration(item.duration_ms)}</strong>
+                  </MediaInfo>
+                  <MediaItems>
+                    <ListDropdown item={item} />
+                    <LikeButton item={formattedItem} type="tracks" />
+                  </MediaItems>
                 </>
               )}
 
               {type === 'albums' && (
                 <>
-                  <MediaInfo>Artist: {item.artists[0]?.name}</MediaInfo>
-                  <MediaInfo>Total songs: {item.total_tracks}</MediaInfo>
-                  <MediaInfo>Type: {capitalize(item.album_type)}</MediaInfo>
-                  <LikeButton item={formattedItem} type="albums" />
+                  <MediaInfo>
+                    Total songs: <strong>{item.total_tracks}</strong>
+                  </MediaInfo>
+                  <MediaInfo>
+                    Type: <strong>{capitalize(item.album_type)}</strong>
+                  </MediaInfo>
+                  <MediaItems>
+                    <ListDropdown item={item} />
+                    <LikeButton item={formattedItem} type="albums" />
+                  </MediaItems>
                 </>
               )}
             </MediaDescriptionContainer>
-
-            <MediaButtons>
-              <ListDropdown item={item} />
-            </MediaButtons>
           </MediaInfoContainer>
         </DetailContent>
-      </DetailContainerBackground>
+      </MediaBanner>
     </DetailContainer>
   )
 }

@@ -15,6 +15,7 @@ declare module 'styled-components' {
       magentaRed: string
     }
     fontSizes: {
+      largestFontSize: string
       biggestFontSize: string
       bigFontSize: string
       normalFontSize: string

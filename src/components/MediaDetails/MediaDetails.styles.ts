@@ -5,10 +5,6 @@ export const DetailContainer = styled.div`
   margin: 0 auto;
 `
 
-export const DetailContainerBackground = styled.div`
-  background-color: ${({ theme }) => theme.colors.grayBackgroundOp};
-`
-
 export const DetailContent = styled.div`
   max-width: 1440px;
   width: 100%;
@@ -45,27 +41,23 @@ export const MediaImage = styled.img`
   border-radius: 10px;
 `
 
+export const MediaArtistName = styled.p`
+  font-size: ${({ theme }) => theme.fontSizes.bigFontSize};
+  color: rgba(234, 234, 240, 0.8);
+  margin-bottom: -1rem;
+`
+
 export const MediaTitle = styled.h1`
-  font-size: ${({ theme }) => theme.fontSizes.biggestFontSize};
+  font-size: ${({ theme }) => theme.fontSizes.largestFontSize};
 `
 
 export const MediaInfo = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.normalFontSize};
 `
 
-export const MediaButtons = styled.div`
+export const MediaItems = styled.div`
   display: flex;
   flex-direction: row;
   gap: 1rem;
   align-items: center;
-  align-self: flex-start;
-  margin-left: auto;
-  padding-top: 2rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    flex-direction: column;
-    align-self: center;
-    margin-left: 0;
-    padding-top: 0;
-  }
 `
