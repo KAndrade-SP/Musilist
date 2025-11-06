@@ -4,9 +4,12 @@ import {
   DetailContent,
   MediaArtistName,
   MediaDescriptionContainer,
+  MediaDetailPopularityArea,
+  MediaDetailStats,
   MediaInfo,
   MediaInfoContainer,
   MediaItems,
+  MediaPopularityBox,
   MediaTitle,
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
@@ -15,6 +18,7 @@ import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 import ListDropdown from '../ListDropdown'
 import { capitalize } from '../../helpers/Capitalize'
 import MediaBanner from '../MediaBanner/MediaBanner'
+import { IconCarambolaFilled, IconHeartFilled } from '@tabler/icons-react'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -87,6 +91,19 @@ const MediaDetails = () => {
           </MediaInfoContainer>
         </DetailContent>
       </MediaBanner>
+
+      <MediaDetailStats>
+        <MediaDetailPopularityArea>
+          <MediaPopularityBox>
+            <IconCarambolaFilled size={16} color="#FFEB3B" />
+            Popularity rating: <strong> {item.popularity}</strong>
+          </MediaPopularityBox>
+          <MediaPopularityBox>
+            <IconHeartFilled size={16} color="#eb3d37" />
+            Popularity rating: <strong> {item.popularity}</strong>
+          </MediaPopularityBox>
+        </MediaDetailPopularityArea>
+      </MediaDetailStats>
     </DetailContainer>
   )
 }
