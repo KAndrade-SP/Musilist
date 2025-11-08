@@ -5,12 +5,15 @@ import {
   MediaArtistName,
   MediaDescriptionContainer,
   MediaDetailPopularityArea,
+  MediaDetailReviewArea,
   MediaDetailStats,
   MediaInfo,
   MediaInfoContainer,
   MediaItems,
   MediaPopularityBox,
+  MediaPopularityItem,
   MediaTitle,
+  ReviewInput,
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
 import LikeButton from '../LikeButton/LikeButton'
@@ -95,14 +98,32 @@ const MediaDetails = () => {
       <MediaDetailStats>
         <MediaDetailPopularityArea>
           <MediaPopularityBox>
-            <IconCarambolaFilled size={16} color="#FFEB3B" />
-            Popularity rating: <strong> {item.popularity}</strong>
-          </MediaPopularityBox>
-          <MediaPopularityBox>
-            <IconHeartFilled size={16} color="#eb3d37" />
-            Popularity rating: <strong> {item.popularity}</strong>
+            {item.label && (
+              <MediaPopularityItem>
+                <strong>Label: </strong> {item.label}
+              </MediaPopularityItem>
+            )}
+            <MediaPopularityItem>
+              <strong>Popularity rating: </strong> {item.popularity}
+            </MediaPopularityItem>
+            {(item.release_date || item.album?.release_date) && (
+              <MediaPopularityItem>
+                <strong>Release date: </strong> {item.release_date || item.album?.release_date}
+              </MediaPopularityItem>
+            )}
+            {item.genres &&
+              item.album_type !== 'album' &&
+              item.album_type !== 'single' &&
+              item.album_type !== 'compilation' && (
+                <MediaPopularityItem>
+                  <strong>Genres: </strong> {item.genres.join(', ')}
+                </MediaPopularityItem>
+              )}
           </MediaPopularityBox>
         </MediaDetailPopularityArea>
+        <MediaDetailReviewArea>
+          <ReviewInput type="text" placeholder="Write a review" />
+        </MediaDetailReviewArea>
       </MediaDetailStats>
     </DetailContainer>
   )

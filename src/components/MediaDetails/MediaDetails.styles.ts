@@ -17,12 +17,49 @@ export const MediaDetailStats = styled.div`
   width: 100%;
   margin: 0 auto;
   padding: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    flex-direction: column;
+  }
 `
 
 export const MediaDetailPopularityArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+`
+
+export const MediaDetailReviewArea = styled.div`
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 1rem;
+`
+
+export const ReviewInput = styled.input`
+  ${({ theme: { colors, fontSizes } }) => `
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background-color: ${colors.darkPurple};
+    color: ${colors.textWhite};
+    font-size: ${fontSizes.normalFontSize};
+    border: none;
+    outline: none;
+    font-family: inherit;
+
+    &:focus {
+      border: none;
+      outline: none;
+    }
+
+    &::placeholder {
+      color: ${colors.textWhite};
+    }
+  `}
 `
 
 export const MediaPopularityBox = styled.div`
@@ -34,18 +71,23 @@ export const MediaPopularityBox = styled.div`
     padding: 10px 15px;
     width: 200px;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-
+    flex-direction: column;
+    gap: 1rem;
     strong {
       vertical-align: middle;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     @media (max-width: ${breakpoints.lg}) {
       font-size: ${fontSizes.smallFontSize};
     }
   `}
+`
+
+export const MediaPopularityItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 `
 
 export const MediaInfoContainer = styled.div`
