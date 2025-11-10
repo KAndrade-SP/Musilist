@@ -12,6 +12,7 @@ import {
   MediaItems,
   MediaPopularityBox,
   MediaPopularityItem,
+  MediaPopularityItemLink,
   MediaTitle,
   ReviewInput,
 } from './MediaDetails.styles'
@@ -21,7 +22,7 @@ import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 import ListDropdown from '../ListDropdown'
 import { capitalize } from '../../helpers/Capitalize'
 import MediaBanner from '../MediaBanner/MediaBanner'
-import { IconCarambolaFilled, IconHeartFilled } from '@tabler/icons-react'
+import { IconBrandSpotifyFilled, IconCarambolaFilled, IconHeartFilled } from '@tabler/icons-react'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -98,6 +99,15 @@ const MediaDetails = () => {
       <MediaDetailStats>
         <MediaDetailPopularityArea>
           <MediaPopularityBox>
+            {item.external_urls?.spotify && (
+              <MediaPopularityItem>
+                <strong>Spotify: </strong>{' '}
+                <MediaPopularityItemLink href={item.external_urls?.spotify} target="_blank" rel="noopener noreferrer">
+                  <IconBrandSpotifyFilled size={16} />
+                  {item.name}
+                </MediaPopularityItemLink>
+              </MediaPopularityItem>
+            )}
             {item.label && (
               <MediaPopularityItem>
                 <strong>Label: </strong> {item.label}

@@ -73,13 +73,41 @@ export const MediaPopularityBox = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+
     strong {
       vertical-align: middle;
       font-weight: 700;
+      color: ${colors.lightPurple};
     }
 
-    @media (max-width: ${breakpoints.lg}) {
+    @media (max-width: ${breakpoints.md}) {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 3rem;
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 8px;
       font-size: ${fontSizes.smallFontSize};
+
+      &::-webkit-scrollbar {
+        height: 6px;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: ${colors.lightPurple};
+        border-radius: 4px;
+      }
+      &::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      > * {
+        flex: 0 0 auto;
+      }
     }
   `}
 `
@@ -88,6 +116,19 @@ export const MediaPopularityItem = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  color: ${({ theme }) => theme.colors.textWhite};
+`
+
+export const MediaPopularityItemLink = styled.a`
+  color: ${({ theme }) => theme.colors.textWhite};
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.2rem;
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
 `
 
 export const MediaInfoContainer = styled.div`
