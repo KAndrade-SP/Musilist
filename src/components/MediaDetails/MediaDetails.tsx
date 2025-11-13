@@ -23,6 +23,7 @@ import { formatDuration } from '../../helpers/FormatDuration'
 import LikeButton from '../LikeButton/LikeButton'
 import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 import ListDropdown from '../ListDropdown'
+import ScoreDropdown from '../ScoreDropdown/ScoreDropdown'
 import { capitalize } from '../../helpers/Capitalize'
 import MediaBanner from '../MediaBanner/MediaBanner'
 import { IconBrandSpotifyFilled } from '@tabler/icons-react'
@@ -106,6 +107,7 @@ const MediaDetails = () => {
                 <>
                   <MediaItems>
                     <ListDropdown item={item} />
+                    <ScoreDropdown item={item} />
                     <LikeButton item={formattedItem} type="artists" />
                   </MediaItems>
                 </>
@@ -121,6 +123,7 @@ const MediaDetails = () => {
                   </MediaInfo>
                   <MediaItems>
                     <ListDropdown item={item} />
+                    <ScoreDropdown item={item} />
                     <LikeButton item={formattedItem} type="tracks" />
                   </MediaItems>
                 </>
@@ -136,6 +139,7 @@ const MediaDetails = () => {
                   </MediaInfo>
                   <MediaItems>
                     <ListDropdown item={item} />
+                    <ScoreDropdown item={item} />
                     <LikeButton item={formattedItem} type="albums" />
                   </MediaItems>
                 </>

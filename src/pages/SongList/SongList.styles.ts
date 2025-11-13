@@ -227,16 +227,93 @@ export const MessageIcon = styled(IconMessageCircleFilled)`
   ${({ theme: { colors, breakpoints } }) => `
     color: ${colors.textWhite};
     margin-left: auto;
-
-    @media (max-width: ${breakpoints.sm}) {
-      display: none;
-    }
+    cursor: pointer;
 
     @media (max-width: ${breakpoints.md}) {
       width: 16px;
       height: 16px;
     }
   `}
+`
+
+export const ReviewIconWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  &:hover .review-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    &:hover .review-tooltip {
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+    }
+  }
+`
+
+export const ReviewTooltip = styled.div`
+  ${({ theme: { colors, fontSizes, breakpoints } }) => `
+    position: absolute;
+    bottom: calc(100% + 8px);
+    right: 0;
+    background-color: ${colors.darkPurple};
+    color: ${colors.textWhite};
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    width: 220px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    font-size: ${fontSizes.smallFontSize};
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+    z-index: 20;
+    word-break: break-word;
+
+    @media (max-width: ${breakpoints.sm}) {
+      top: calc(100% + 8px);
+      bottom: auto;
+      left: 50%;
+      right: auto;
+      width: 190px;
+      transform: translate(-50%, 10px);
+    }
+  `}
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    right: 12px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: ${props => props.theme.colors.darkPurple} transparent transparent transparent;
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+      top: auto;
+      bottom: 100%;
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      border-color: transparent transparent ${props => props.theme.colors.darkPurple} transparent;
+    }
+  }
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+
+    @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+      transform: translate(-50%, 0);
+    }
+  }
 `
 
 export const ListCell = styled.span`

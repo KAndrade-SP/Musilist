@@ -389,6 +389,54 @@ export const updateItemReview = createAsyncThunk(
   }
 )
 
+export const updateItemScore = createAsyncThunk(
+  'userProfile/updateItemScore',
+  async (
+    {
+      uid,
+      listType,
+      itemId,
+      score,
+    }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; itemId: string; score: number | null },
+    { dispatch, getState }
+  ) => {
+    try {
+      const userRef = doc(db, 'users', uid)
+      const itemRef = doc(db, 'users', uid, 'lists', listType, 'items', itemId)
+
+      await updateDoc(itemRef, { score })
+
+      const userSnap = await getDoc(userRef)
+      const userData = userSnap.exists() ? userSnap.data() : null
+
+      if (!userData) throw new Error('User not found')
+
+      const updatedLists = {
+        ...userData.lists,
+        [listType]:
+          userData.lists?.[listType]?.map((item: ListItem) => (item.id === itemId ? { ...item, score } : item)) || [],
+      }
+
+      await updateDoc(userRef, { lists: updatedLists })
+
+      const { user } = (getState() as RootState).auth
+      if (user) {
+        dispatch(
+          setUser({
+            ...user,
+            lists: updatedLists,
+          })
+        )
+      }
+
+      return { listType, itemId, score }
+    } catch (error) {
+      console.error('Error updating item score:', error)
+      throw error
+    }
+  }
+)
+
 export const fetchActivityFeed = createAsyncThunk(
   'userProfile/fetchActivityFeed',
   async (uid: string, { rejectWithValue }) => {
@@ -512,6 +560,17 @@ const userSlice = createSlice({
 
           state.profile.lists[listType] = state.profile.lists[listType].map(item =>
             item.id === itemId ? { ...item, review } : item
+          )
+        }
+      })
+      .addCase(updateItemScore.fulfilled, (state, action) => {
+        if (state.profile) {
+          const { listType, itemId, score } = action.payload
+
+          if (!state.profile.lists) return
+
+          state.profile.lists[listType] = state.profile.lists[listType].map(item =>
+            item.id === itemId ? { ...item, score } : item
           )
         }
       })

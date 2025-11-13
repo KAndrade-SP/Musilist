@@ -48,7 +48,7 @@ export const MediaDetailReviewArea = styled.div`
 export const ReviewAddButton = styled.button`
   ${({ theme: { colors, fontSizes } }) => `
     flex-shrink: 0;
-    width: 200px;
+    width: 150px;
     padding: 10px 15px;
     border-radius: 5px;
     text-align: center;
@@ -211,4 +211,8 @@ export const MediaItems = styled.div`
   flex-direction: row;
   gap: 1rem;
   align-items: center;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    flex-direction: column-reverse;
+  }
 `

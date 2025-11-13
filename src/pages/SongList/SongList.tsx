@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { MouseEvent, useState } from 'react'
 import { User } from '../../types/UserTypes'
 import { Container } from '../../components/Container'
 import Dropdown from '../../components/Dropdown/Dropdown'
@@ -26,6 +26,8 @@ import {
   ListTitle,
   ListTitleDivisor,
   MessageIcon,
+  ReviewIconWrapper,
+  ReviewTooltip,
   SongListSection,
 } from './SongList.styles'
 import { useMediaNavigation } from '../../hooks/useMediaNavigation'
@@ -42,6 +44,7 @@ const SongList = ({ user }: { user: User | null }) => {
   const [typeFilter, setTypeFilter] = useState<string | null>(null)
   const [yearFilter, setYearFilter] = useState<string | null>(null)
   const [sortOption, setSortOption] = useState<string | null>(null)
+  const [activeReviewId, setActiveReviewId] = useState<string | null>(null)
 
   const allItems = Object.values(user?.lists ?? {}).flat()
   const typeOptions = ['Albums', 'Artists', 'Tracks']
@@ -76,6 +79,24 @@ const SongList = ({ user }: { user: User | null }) => {
 
   const handleClick = () => {
     setToggle(!toggle)
+  }
+
+  const isMobileScreen = !useBreakpoint(parseInt(theme.breakpoints.sm))
+
+  const handleReviewIconClick = (event: MouseEvent, id: string) => {
+    event.stopPropagation()
+    if (!isMobileScreen) return
+    setActiveReviewId(prev => (prev === id ? null : id))
+  }
+
+  const handleReviewIconMouseEnter = (id: string) => {
+    if (isMobileScreen) return
+    setActiveReviewId(id)
+  }
+
+  const handleReviewIconMouseLeave = () => {
+    if (isMobileScreen) return
+    setActiveReviewId(null)
   }
 
   return (
@@ -193,7 +214,20 @@ const SongList = ({ user }: { user: User | null }) => {
                                     {item.score ? item.score : '- / 0'}
                                   </ListScoreSpan>
                                 </ListTitleDivisor>
-                                {item.review && <MessageIcon size={20} />}
+                                {item.review && (
+                                  <ReviewIconWrapper
+                                    onMouseEnter={() => handleReviewIconMouseEnter(item.id)}
+                                    onMouseLeave={handleReviewIconMouseLeave}
+                                    onClick={event => handleReviewIconClick(event, item.id)}
+                                  >
+                                    <MessageIcon size={20} />
+                                    <ReviewTooltip
+                                      className={`review-tooltip${activeReviewId === item.id ? ' visible' : ''}`}
+                                    >
+                                      {item.review}
+                                    </ReviewTooltip>
+                                  </ReviewIconWrapper>
+                                )}
                               </ListImageCell>
 
                               <ListCell>{item.score ? item.score : '- / 0'}</ListCell>
