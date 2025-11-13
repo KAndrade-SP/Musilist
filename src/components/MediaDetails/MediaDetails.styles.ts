@@ -34,14 +34,47 @@ export const MediaDetailPopularityArea = styled.div`
 
 export const MediaDetailReviewArea = styled.div`
   display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
   width: 100%;
-  flex-direction: column;
   gap: 1rem;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
+
+export const ReviewAddButton = styled.button`
+  ${({ theme: { colors, fontSizes } }) => `
+    flex-shrink: 0;
+    width: 200px;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    background-color: ${colors.darkPurple};
+    color: ${colors.textWhite};
+    font-size: ${fontSizes.normalFontSize};
+    border: none;
+    outline: none;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: ${colors.darkPurpleOp};
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  `}
 `
 
 export const ReviewInput = styled.input`
-  ${({ theme: { colors, fontSizes } }) => `
-    width: 100%;
+  ${({ theme: { colors, fontSizes, breakpoints } }) => `
+    flex: 1;
     padding: 10px 15px;
     border-radius: 5px;
     background-color: ${colors.darkPurple};
@@ -51,13 +84,12 @@ export const ReviewInput = styled.input`
     outline: none;
     font-family: inherit;
 
-    &:focus {
-      border: none;
-      outline: none;
-    }
-
     &::placeholder {
       color: ${colors.textWhite};
+    }
+
+    @media (max-width: ${breakpoints.md}) {
+      width: 100%;
     }
   `}
 `

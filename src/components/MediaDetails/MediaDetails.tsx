@@ -1,4 +1,6 @@
 import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import {
   DetailContainer,
   DetailContent,
@@ -14,6 +16,7 @@ import {
   MediaPopularityItem,
   MediaPopularityItemLink,
   MediaTitle,
+  ReviewAddButton,
   ReviewInput,
 } from './MediaDetails.styles'
 import { formatDuration } from '../../helpers/FormatDuration'
@@ -22,11 +25,18 @@ import { useSpotifyDetails } from '../../hooks/useSpotifyDetails'
 import ListDropdown from '../ListDropdown'
 import { capitalize } from '../../helpers/Capitalize'
 import MediaBanner from '../MediaBanner/MediaBanner'
-import { IconBrandSpotifyFilled, IconCarambolaFilled, IconHeartFilled } from '@tabler/icons-react'
+import { IconBrandSpotifyFilled } from '@tabler/icons-react'
+import { RootState } from '../../redux/store'
+import { useAppDispatch } from '../../hooks/useAppDispatch'
+import { updateItemReview } from '../../redux/reducers/userSlice'
+import { toast } from 'react-toastify'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
   const { data: item, loading, error } = useSpotifyDetails(id!, type!)
+  const dispatch = useAppDispatch()
+  const user = useSelector((state: RootState) => state.auth.user)
+  const [reviewText, setReviewText] = useState('')
 
   const getItemData = (item: any, type: 'artists' | 'tracks' | 'albums') => {
     if (!item) return null
@@ -39,6 +49,45 @@ const MediaDetails = () => {
   }
 
   const formattedItem = item && type ? getItemData(item, type) : null
+
+  const getItemListInfo = () => {
+    if (!user?.lists || !id) return null
+
+    for (const listType of ['planning', 'completed', 'dropped'] as const) {
+      const foundItem = user.lists[listType]?.find(i => i.id === id)
+      if (foundItem) {
+        return { listType, item: foundItem }
+      }
+    }
+    return null
+  }
+
+  const listInfo = getItemListInfo()
+  const isItemInList = !!listInfo
+  const isButtonDisabled = !isItemInList
+
+  useEffect(() => {
+    if (listInfo?.item?.review !== undefined) {
+      setReviewText(listInfo.item.review || '')
+    } else if (!listInfo) {
+      setReviewText('')
+    }
+  }, [listInfo?.item?.id, listInfo?.item?.review])
+
+  const handleAddReview = () => {
+    if (!user || !listInfo) return
+
+    dispatch(
+      updateItemReview({
+        uid: user.uid,
+        listType: listInfo.listType,
+        itemId: id!,
+        review: reviewText.trim(),
+      })
+    )
+
+    toast.success('Review updated successfully!')
+  }
 
   if (loading) return <DetailContainer>Loading...</DetailContainer>
   if (error) return <DetailContainer>Error: {error}</DetailContainer>
@@ -132,7 +181,15 @@ const MediaDetails = () => {
           </MediaPopularityBox>
         </MediaDetailPopularityArea>
         <MediaDetailReviewArea>
-          <ReviewInput type="text" placeholder="Write a review" />
+          <ReviewInput
+            type="text"
+            placeholder="Write a review"
+            value={reviewText}
+            onChange={e => setReviewText(e.target.value)}
+          />
+          <ReviewAddButton onClick={handleAddReview} disabled={isButtonDisabled}>
+            Save Review
+          </ReviewAddButton>
         </MediaDetailReviewArea>
       </MediaDetailStats>
     </DetailContainer>

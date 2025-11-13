@@ -341,6 +341,54 @@ export const removeFromList = createAsyncThunk(
   }
 )
 
+export const updateItemReview = createAsyncThunk(
+  'userProfile/updateItemReview',
+  async (
+    {
+      uid,
+      listType,
+      itemId,
+      review,
+    }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; itemId: string; review: string },
+    { dispatch, getState }
+  ) => {
+    try {
+      const userRef = doc(db, 'users', uid)
+      const itemRef = doc(db, 'users', uid, 'lists', listType, 'items', itemId)
+
+      await updateDoc(itemRef, { review })
+
+      const userSnap = await getDoc(userRef)
+      const userData = userSnap.exists() ? userSnap.data() : null
+
+      if (!userData) throw new Error('User not found')
+
+      const updatedLists = {
+        ...userData.lists,
+        [listType]:
+          userData.lists?.[listType]?.map((item: ListItem) => (item.id === itemId ? { ...item, review } : item)) || [],
+      }
+
+      await updateDoc(userRef, { lists: updatedLists })
+
+      const { user } = (getState() as RootState).auth
+      if (user) {
+        dispatch(
+          setUser({
+            ...user,
+            lists: updatedLists,
+          })
+        )
+      }
+
+      return { listType, itemId, review }
+    } catch (error) {
+      console.error('Error updating item review:', error)
+      throw error
+    }
+  }
+)
+
 export const fetchActivityFeed = createAsyncThunk(
   'userProfile/fetchActivityFeed',
   async (uid: string, { rejectWithValue }) => {
@@ -454,6 +502,17 @@ const userSlice = createSlice({
           if (!state.profile.lists) return
 
           state.profile.lists[listType] = state.profile.lists[listType].filter(item => item.id !== itemId)
+        }
+      })
+      .addCase(updateItemReview.fulfilled, (state, action) => {
+        if (state.profile) {
+          const { listType, itemId, review } = action.payload
+
+          if (!state.profile.lists) return
+
+          state.profile.lists[listType] = state.profile.lists[listType].map(item =>
+            item.id === itemId ? { ...item, review } : item
+          )
         }
       })
       .addCase(fetchActivityFeed.pending, state => {
