@@ -5,10 +5,9 @@ import MediaDropdown from '../Dropdown/MediaDropdown'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { RootState } from '../../redux/store'
 import { updateItemScore } from '../../redux/reducers/userSlice'
-import { ListItem } from '../../types/UserTypes'
 
 interface ScoreDropdownProps {
-  item: ListItem
+  item: any
 }
 
 const ScoreDropdown: React.FC<ScoreDropdownProps> = ({ item }) => {
@@ -60,13 +59,30 @@ const ScoreDropdown: React.FC<ScoreDropdownProps> = ({ item }) => {
     return listInfo
   }
 
+  const getItemDataForScore = () => {
+    return {
+      id: item.id,
+      name: item.name,
+      image: item.images?.[0]?.url || item.album?.images?.[0]?.url || '',
+      type: item.type,
+    }
+  }
+
   const handleSelect = (value: string) => {
     const info = ensureItemInList()
     if (!info || !user) return
 
     const numericScore = parseFloat(value)
 
-    dispatch(updateItemScore({ uid: user.uid, listType: info.listType, itemId: item.id, score: numericScore }))
+    dispatch(
+      updateItemScore({
+        uid: user.uid,
+        listType: info.listType,
+        itemId: item.id,
+        score: numericScore,
+        itemData: getItemDataForScore(),
+      })
+    )
       .unwrap()
       .then(() => {
         setSelectedScore(value)
@@ -80,7 +96,15 @@ const ScoreDropdown: React.FC<ScoreDropdownProps> = ({ item }) => {
     const info = ensureItemInList()
     if (!info || !user) return
 
-    dispatch(updateItemScore({ uid: user.uid, listType: info.listType, itemId: item.id, score: null }))
+    dispatch(
+      updateItemScore({
+        uid: user.uid,
+        listType: info.listType,
+        itemId: item.id,
+        score: null,
+        itemData: getItemDataForScore(),
+      })
+    )
       .unwrap()
       .then(() => {
         setSelectedScore(null)

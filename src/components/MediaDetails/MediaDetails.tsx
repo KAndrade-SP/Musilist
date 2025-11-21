@@ -31,6 +31,8 @@ import { RootState } from '../../redux/store'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { updateItemReview } from '../../redux/reducers/userSlice'
 import { toast } from 'react-toastify'
+import { doc, getDoc } from 'firebase/firestore'
+import { db } from '../../services/firebase'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -89,6 +91,30 @@ const MediaDetails = () => {
 
     toast.success('Review updated successfully!')
   }
+
+  const [globalRating, setGlobalRating] = useState<{
+    averageScore: number
+    totalRatings: number
+  } | null>(null)
+
+  useEffect(() => {
+    const fetchRating = async () => {
+      const ref = doc(db, 'ratings', id!)
+      const snap = await getDoc(ref)
+
+      if (snap.exists()) {
+        const data = snap.data()
+        setGlobalRating({
+          averageScore: data.averageScore,
+          totalRatings: data.totalRatings,
+        })
+      } else {
+        setGlobalRating(null)
+      }
+    }
+
+    fetchRating()
+  }, [id])
 
   if (loading) return <DetailContainer>Loading...</DetailContainer>
   if (error) return <DetailContainer>Error: {error}</DetailContainer>
@@ -164,6 +190,12 @@ const MediaDetails = () => {
             {item.label && (
               <MediaPopularityItem>
                 <strong>Label: </strong> {item.label}
+              </MediaPopularityItem>
+            )}
+            {globalRating && (
+              <MediaPopularityItem>
+                <strong>Community Rating: </strong>
+                {globalRating.averageScore.toFixed(1)}
               </MediaPopularityItem>
             )}
             <MediaPopularityItem>

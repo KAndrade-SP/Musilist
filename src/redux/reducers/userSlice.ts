@@ -397,7 +397,14 @@ export const updateItemScore = createAsyncThunk(
       listType,
       itemId,
       score,
-    }: { uid: string; listType: 'planning' | 'completed' | 'dropped'; itemId: string; score: number | null },
+      itemData,
+    }: {
+      uid: string
+      listType: 'planning' | 'completed' | 'dropped'
+      itemId: string
+      score: number | null
+      itemData: { id: string; name: string; image: string; type: string }
+    },
     { dispatch, getState }
   ) => {
     try {
@@ -406,15 +413,51 @@ export const updateItemScore = createAsyncThunk(
 
       await updateDoc(itemRef, { score })
 
-      const userSnap = await getDoc(userRef)
-      const userData = userSnap.exists() ? userSnap.data() : null
+      const ratingRef = doc(db, 'ratings', itemId)
+      const ratingSnap = await getDoc(ratingRef)
 
-      if (!userData) throw new Error('User not found')
+      let ratingData
+
+      if (!ratingSnap.exists()) {
+        ratingData = {
+          itemId,
+          name: itemData.name,
+          image: itemData.image,
+          type: itemData.type,
+          scores: { [uid]: score },
+          averageScore: score ?? 0,
+          totalRatings: score ? 1 : 0,
+        }
+      } else {
+        ratingData = ratingSnap.data()
+
+        const newScores = { ...ratingData.scores }
+
+        if (score === null) {
+          delete newScores[uid]
+        } else {
+          newScores[uid] = score
+        }
+
+        const ratingValues = Object.values(newScores).filter(n => typeof n === 'number') as number[]
+
+        ratingData = {
+          ...ratingData,
+          scores: newScores,
+          totalRatings: ratingValues.length,
+          averageScore: ratingValues.length > 0 ? ratingValues.reduce((a, b) => a + b, 0) / ratingValues.length : 0,
+        }
+      }
+
+      await setDoc(ratingRef, ratingData, { merge: true })
+
+      const userSnap = await getDoc(userRef)
+      const userData = userSnap.data() ?? { lists: {} }
 
       const updatedLists = {
         ...userData.lists,
         [listType]:
-          userData.lists?.[listType]?.map((item: ListItem) => (item.id === itemId ? { ...item, score } : item)) || [],
+          userData.lists[listType]?.map((item: ListItem) => (item.id === itemId ? { ...item, score } : item)) ?? [],
       }
 
       await updateDoc(userRef, { lists: updatedLists })
