@@ -12,7 +12,7 @@ export const DetailContent = styled.div`
   padding: 2rem;
 `
 
-export const MediaDetailStats = styled.div`
+export const MediaDetailsInfo = styled.div`
   max-width: 1440px;
   width: 100%;
   margin: 0 auto;
@@ -30,6 +30,13 @@ export const MediaDetailPopularityArea = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+`
+
+export const MediaDetailStats = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 2rem;
 `
 
 export const MediaDetailReviewArea = styled.div`

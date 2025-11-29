@@ -8,6 +8,7 @@ import {
   MediaDescriptionContainer,
   MediaDetailPopularityArea,
   MediaDetailReviewArea,
+  MediaDetailsInfo,
   MediaDetailStats,
   MediaInfo,
   MediaInfoContainer,
@@ -33,6 +34,7 @@ import { updateItemReview } from '../../redux/reducers/userSlice'
 import { toast } from 'react-toastify'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../../services/firebase'
+import ScoreBarChart from '../ScoreBarChart'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -40,6 +42,11 @@ const MediaDetails = () => {
   const dispatch = useAppDispatch()
   const user = useSelector((state: RootState) => state.auth.user)
   const [reviewText, setReviewText] = useState('')
+  const [globalRating, setGlobalRating] = useState<{
+    averageScore: number
+    totalRatings: number
+  } | null>(null)
+  const [scoreDistribution, setScoreDistribution] = useState<number[]>([])
 
   const getItemData = (item: any, type: 'artists' | 'tracks' | 'albums') => {
     if (!item) return null
@@ -92,11 +99,6 @@ const MediaDetails = () => {
     toast.success('Review updated successfully!')
   }
 
-  const [globalRating, setGlobalRating] = useState<{
-    averageScore: number
-    totalRatings: number
-  } | null>(null)
-
   useEffect(() => {
     const fetchRating = async () => {
       const ref = doc(db, 'ratings', id!)
@@ -114,6 +116,33 @@ const MediaDetails = () => {
     }
 
     fetchRating()
+  }, [id])
+
+  useEffect(() => {
+    const fetchDistribution = async () => {
+      const ref = doc(db, 'ratings', id!)
+      const snap = await getDoc(ref)
+
+      if (!snap.exists()) {
+        setScoreDistribution(Array(10).fill(0))
+        return
+      }
+
+      const data = snap.data()
+      const scores = data.scores || {}
+
+      const distribution = Array(10).fill(0)
+
+      ;(Object.values(scores) as number[]).forEach(score => {
+        if (score >= 1 && score <= 10) {
+          distribution[score - 1]++
+        }
+      })
+
+      setScoreDistribution(distribution)
+    }
+
+    fetchDistribution()
   }, [id])
 
   if (loading) return <DetailContainer>Loading...</DetailContainer>
@@ -175,7 +204,7 @@ const MediaDetails = () => {
         </DetailContent>
       </MediaBanner>
 
-      <MediaDetailStats>
+      <MediaDetailsInfo>
         <MediaDetailPopularityArea>
           <MediaPopularityBox>
             {item.external_urls?.spotify && (
@@ -216,18 +245,21 @@ const MediaDetails = () => {
               )}
           </MediaPopularityBox>
         </MediaDetailPopularityArea>
-        <MediaDetailReviewArea>
-          <ReviewInput
-            type="text"
-            placeholder="Write a review"
-            value={reviewText}
-            onChange={e => setReviewText(e.target.value)}
-          />
-          <ReviewAddButton onClick={handleAddReview} disabled={isButtonDisabled}>
-            Save Review
-          </ReviewAddButton>
-        </MediaDetailReviewArea>
-      </MediaDetailStats>
+        <MediaDetailStats>
+          <MediaDetailReviewArea>
+            <ReviewInput
+              type="text"
+              placeholder="Write a review"
+              value={reviewText}
+              onChange={e => setReviewText(e.target.value)}
+            />
+            <ReviewAddButton onClick={handleAddReview} disabled={isButtonDisabled}>
+              Save Review
+            </ReviewAddButton>
+          </MediaDetailReviewArea>
+          <ScoreBarChart distribution={scoreDistribution} />
+        </MediaDetailStats>
+      </MediaDetailsInfo>
     </DetailContainer>
   )
 }
