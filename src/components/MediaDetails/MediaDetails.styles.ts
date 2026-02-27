@@ -39,6 +39,18 @@ export const MediaDetailStats = styled.div`
   gap: 2rem;
 `
 
+export const MediaDetailStatsDistributionArea = styled.div`
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(360px, 1.35fr);
+  gap: 1rem;
+  align-items: stretch;
+  width: 100%;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
+    grid-template-columns: 1fr;
+  }
+`
+
 export const MediaDetailReviewArea = styled.div`
   display: flex;
   align-items: flex-start;
@@ -201,7 +213,7 @@ export const MediaImage = styled.img`
 
 export const MediaArtistName = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.bigFontSize};
-  color: rgba(234, 234, 240, 0.8);
+  color: ${({ theme }) => theme.colors.textWhiteMuted};
   margin-bottom: -1rem;
 `
 
@@ -223,3 +235,7 @@ export const MediaItems = styled.div`
     flex-direction: column-reverse;
   }
 `
+
+
+
+

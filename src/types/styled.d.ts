@@ -11,8 +11,16 @@ declare module 'styled-components' {
       grayBackground: string
       grayBackgroundOp: string
       darkBackground: string
+      darkBackgroundStrong: string
       textWhite: string
+      textWhiteMuted: string
       magentaRed: string
+      statusCompleted: string
+      statusPlanning: string
+      statusDropped: string
+      chartGrid: string
+      chartAxis: string
+      chartCursor: string
     }
     fontSizes: {
       largestFontSize: string

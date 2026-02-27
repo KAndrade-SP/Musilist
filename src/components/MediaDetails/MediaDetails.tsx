@@ -10,6 +10,7 @@ import {
   MediaDetailReviewArea,
   MediaDetailsInfo,
   MediaDetailStats,
+  MediaDetailStatsDistributionArea,
   MediaInfo,
   MediaInfoContainer,
   MediaItems,
@@ -32,9 +33,10 @@ import { RootState } from '../../redux/store'
 import { useAppDispatch } from '../../hooks/useAppDispatch'
 import { updateItemReview } from '../../redux/reducers/userSlice'
 import { toast } from 'react-toastify'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, onSnapshot } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 import ScoreBarChart from '../ScoreBarChart'
+import StatsDistribution from '../StatsDistribution/StatsDistribution'
 
 const MediaDetails = () => {
   const { type, id } = useParams<{ type: 'artists' | 'tracks' | 'albums'; id: string }>()
@@ -100,37 +102,19 @@ const MediaDetails = () => {
   }
 
   useEffect(() => {
-    const fetchRating = async () => {
-      const ref = doc(db, 'ratings', id!)
-      const snap = await getDoc(ref)
+    if (!id) return
 
-      if (snap.exists()) {
-        const data = snap.data()
-        setGlobalRating({
-          averageScore: data.averageScore,
-          totalRatings: data.totalRatings,
-        })
-      } else {
-        setGlobalRating(null)
-      }
-    }
+    const ratingRef = doc(db, 'ratings', id)
 
-    fetchRating()
-  }, [id])
-
-  useEffect(() => {
-    const fetchDistribution = async () => {
-      const ref = doc(db, 'ratings', id!)
-      const snap = await getDoc(ref)
-
+    const unsubscribe = onSnapshot(ratingRef, snap => {
       if (!snap.exists()) {
+        setGlobalRating(null)
         setScoreDistribution(Array(10).fill(0))
         return
       }
 
       const data = snap.data()
       const scores = data.scores || {}
-
       const distribution = Array(10).fill(0)
 
       ;(Object.values(scores) as number[]).forEach(score => {
@@ -139,10 +123,14 @@ const MediaDetails = () => {
         }
       })
 
+      setGlobalRating({
+        averageScore: data.averageScore || 0,
+        totalRatings: data.totalRatings || 0,
+      })
       setScoreDistribution(distribution)
-    }
+    })
 
-    fetchDistribution()
+    return () => unsubscribe()
   }, [id])
 
   if (loading) return <DetailContainer>Loading...</DetailContainer>
@@ -212,7 +200,7 @@ const MediaDetails = () => {
                 <strong>Spotify: </strong>{' '}
                 <MediaPopularityItemLink href={item.external_urls?.spotify} target="_blank" rel="noopener noreferrer">
                   <IconBrandSpotifyFilled size={16} />
-                  {item.name}
+                  Open in Spotify
                 </MediaPopularityItemLink>
               </MediaPopularityItem>
             )}
@@ -257,7 +245,10 @@ const MediaDetails = () => {
               Save Review
             </ReviewAddButton>
           </MediaDetailReviewArea>
-          <ScoreBarChart distribution={scoreDistribution} />
+          <MediaDetailStatsDistributionArea>
+            <StatsDistribution itemId={id!} />
+            <ScoreBarChart distribution={scoreDistribution} />
+          </MediaDetailStatsDistributionArea>
         </MediaDetailStats>
       </MediaDetailsInfo>
     </DetailContainer>
@@ -265,3 +256,4 @@ const MediaDetails = () => {
 }
 
 export default MediaDetails
+

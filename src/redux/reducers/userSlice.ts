@@ -18,6 +18,7 @@ import { RootState } from '../store'
 import { setUser } from './authSlice'
 import { capitalize } from '../../helpers/Capitalize'
 import { addActivityToFeed } from '../../helpers/addActivityToFeed'
+import { updateGlobalStats } from '../../helpers/updateGlobalStats'
 
 const initialState = {
   profile: null as User | null,
@@ -230,7 +231,7 @@ export const addToList = createAsyncThunk(
         release_date:
           item.type === 'track' && hasAlbum(item)
             ? item.album?.release_date?.split('-')[0] || null
-            : item.type === 'artists'
+            : item.type === 'artist'
             ? null
             : item.release_date?.split('-')[0] || null,
         album_type: capitalize(item.type === 'album' ? item.album_type || 'album' : item.type),
@@ -242,6 +243,12 @@ export const addToList = createAsyncThunk(
       if (!userData) throw new Error('User not found')
 
       let previousList: 'planning' | 'completed' | 'dropped' | null = null
+      const isAlreadyInTargetList = userData.lists?.[listType]?.some((i: ListItem) => i.id === item.id)
+
+      if (isAlreadyInTargetList) {
+        return { listType, item: filteredItem, skipped: true }
+      }
+
       for (const key of ['planning', 'completed', 'dropped'] as const) {
         if (key !== listType && userData.lists?.[key]?.some((i: ListItem) => i.id === item.id)) {
           previousList = key
@@ -258,7 +265,22 @@ export const addToList = createAsyncThunk(
 
       await setDoc(itemRef, filteredItem)
 
+      const statsUpdatePromise = updateGlobalStats({
+        item: {
+          id: filteredItem.id,
+          name: filteredItem.name,
+          image: filteredItem.image,
+          type: filteredItem.type,
+        },
+        previousList,
+        newList: listType,
+      }).catch(statsError => {
+        console.warn('Failed to update global stats on addToList:', statsError)
+      })
+
       await addActivityToFeed({ uid, item: filteredItem, listType })
+
+      void statsUpdatePromise
 
       const updatedLists = {
         ...userData.lists,
@@ -279,7 +301,7 @@ export const addToList = createAsyncThunk(
         })
       )
 
-      return { listType, item }
+      return { listType, item: filteredItem, skipped: false }
     } catch (error) {
       console.error('Error adding to list:', error)
       throw error
@@ -298,12 +320,30 @@ export const removeFromList = createAsyncThunk(
       const itemRef = doc(db, 'users', uid, 'lists', listType, 'items', itemId)
       const feedRef = collection(db, 'users', uid, 'activityFeed')
 
-      await deleteDoc(itemRef)
-
       const userSnap = await getDoc(userRef)
       const userData = userSnap.exists() ? userSnap.data() : null
 
       if (!userData) throw new Error('User not found')
+
+      const removedItem = userData.lists?.[listType]?.find((item: ListItem) => item.id === itemId)
+      if (!removedItem) {
+        return { listType, itemId }
+      }
+
+      await deleteDoc(itemRef)
+
+      const statsUpdatePromise = updateGlobalStats({
+        item: {
+          id: removedItem.id,
+          name: removedItem.name,
+          image: removedItem.image,
+          type: removedItem.type,
+        },
+        previousList: listType,
+        newList: null,
+      }).catch(statsError => {
+        console.warn('Failed to update global stats on removeFromList:', statsError)
+      })
 
       const updatedLists = {
         ...userData.lists,
@@ -320,6 +360,8 @@ export const removeFromList = createAsyncThunk(
         batch.delete(docSnap.ref)
       })
       await batch.commit()
+
+      void statsUpdatePromise
 
       dispatch(
         setUser({
@@ -577,11 +619,17 @@ const userSlice = createSlice({
       })
       .addCase(addToList.fulfilled, (state, action) => {
         if (state.profile) {
-          const { listType, item } = action.payload
+          const { listType, item, skipped } = action.payload
+
+          if (skipped) return
 
           if (!state.profile.lists) {
             state.profile.lists = { planning: [], completed: [], dropped: [] }
           }
+
+          ;(['planning', 'completed', 'dropped'] as const).forEach(key => {
+            state.profile!.lists![key] = state.profile!.lists![key].filter(listItem => listItem.id !== item.id)
+          })
 
           state.profile.lists[listType].push(item)
         }
@@ -633,3 +681,9 @@ const userSlice = createSlice({
 })
 
 export default userSlice.reducer
+
+
+
+
+
+
